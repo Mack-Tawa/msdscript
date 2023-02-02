@@ -1,0 +1,6 @@
+# ninja log v5
+1	243	1675363585405628525	CMakeFiles/clion_bull.dir/Expr.cpp.o	b34979f8c9454640
+1	281	1675363585442302698	CMakeFiles/clion_bull.dir/main.cpp.o	feb5b526b9a7043d
+1	353	1675363585515645792	CMakeFiles/clion_bull.dir/expTest.cpp.o	de030c7414242b77
+1	2277	1675363587430946952	CMakeFiles/clion_bull.dir/cmdline.cpp.o	ee7b3bfca2a1bcf3
+2277	2336	1675363587499825779	clion_bull	9ae4c5c86409d519

@@ -1,0 +1,3 @@
+/Users/jammerkoi/Desktop/clion bull/cmake-build-debug/CMakeFiles/clion_bull.dir
+/Users/jammerkoi/Desktop/clion bull/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/jammerkoi/Desktop/clion bull/cmake-build-debug/CMakeFiles/rebuild_cache.dir
