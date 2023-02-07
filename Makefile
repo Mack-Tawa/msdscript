@@ -25,3 +25,8 @@ expTest.o: expTest.cpp expTest.h
 
 clean:
 	rm -f *.o program
+
+.PHONY:
+
+doc:
+	cd documentation && doxygen

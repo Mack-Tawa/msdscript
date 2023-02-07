@@ -1,4 +1,4 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S "/Users/jammerkoi/Desktop/clion bull" -B "/Users/jammerkoi/Desktop/clion bull/cmake-build-debug"
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S /Users/jammerkoi/6015/msdscript/msdscript -B /Users/jammerkoi/6015/msdscript/msdscript/cmake-build-debug
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/jammerkoi/Desktop/clion bull/cmake-build-debug
+-- Build files have been written to: /Users/jammerkoi/6015/msdscript/msdscript/cmake-build-debug

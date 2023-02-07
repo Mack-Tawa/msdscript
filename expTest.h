@@ -78,8 +78,24 @@ TEST_CASE("Checking substituting something that isn't in there") {
     CHECK( (new Mult(new Var("x"), new Num(24)))
                    ->subst("z", new Var("y"))
                    ->equals(new Mult(new Var("x"), new Num(24))) );
-
-    
 }
 
-#endif //MSDSCRIPT_EXPTEST_H
+TEST_CASE("CHECKING PRINT") {
+    CHECK( (new Num(10))->to_string() == "10" );
+}
+
+TEST_CASE("CHECKING PRETTY PRINT") {
+//    new Mult (new Mult (new Num(2), new Num(3)), new Num(4))->equals()
+//    CHECK(((new Mult( new Num(1), new Add(new Num(2), new Num(3)))->pretty_print_to_string()) == "1 * (2 + 3)");
+    //->to_string()->equals("1 * (2+3")));
+    CHECK( (new Mult (new Mult (new Num(2), new Num(3)), new Num(4)))->pretty_print_to_string() == "(2 * 3) * 4");
+    CHECK((new Num(1))->pretty_print_to_string() == "1");
+    CHECK((new Var("a"))->pretty_print_to_string() == "a");
+    CHECK((new Add( new Num(1), new Num(3)))->pretty_print_to_string() == "1 + 3");
+
+
+}
+
+
+
+#endif MSDSCRIPT_EXPTEST_H

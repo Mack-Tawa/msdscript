@@ -1,4 +1,4 @@
-# Install script for directory: /Users/jammerkoi/Desktop/clion bull
+# Install script for directory: /Users/jammerkoi/6015/msdscript/msdscript
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/jammerkoi/Desktop/clion bull/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/jammerkoi/6015/msdscript/msdscript/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="_class_expr" xml:lang="en-US">
+<title>Expr Class Reference</title>
+<indexterm><primary>Expr</primary></indexterm>
+<para>Inheritance diagram for Expr:    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_expr.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+<simplesect>
+    <title>Public Member Functions    </title>
+        <itemizedlist>
+            <listitem><para>virtual bool <link linkend="_class_expr_1abf9cdb765fb84304881789d273d7594f">equals</link> (<link linkend="_class_expr">Expr</link> *e)=0</para>
+</listitem>
+            <listitem><para>virtual int <link linkend="_class_expr_1aeba8585d8225419d49166371306542c1">interp</link> ()=0</para>
+</listitem>
+            <listitem><para>virtual bool <link linkend="_class_expr_1a92dc26078993a4b9721ea732274a435c">has_variable</link> ()=0</para>
+</listitem>
+            <listitem><para>virtual <link linkend="_class_expr">Expr</link> * <link linkend="_class_expr_1abb2babb548c67221fe2e7adadbbec7a0">subst</link> (std::string variable, <link linkend="_class_expr">Expr</link> *expr)=0</para>
+</listitem>
+            <listitem><para>virtual void <link linkend="_class_expr_1a8e34377af275f60532d1ba76e6feaceb">print</link> (std::ostream &amp;stream)=0</para>
+</listitem>
+            <listitem><para>std::string <link linkend="_class_expr_1abe130f37bd185ec13c5113de16fc7bf7">to_string</link> ()</para>
+
+<para><itemizedlist>
+<listitem>
+<para>Returns an expression as a string </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para>std::string <link linkend="_class_expr_1a94393142ad5e0d1d67f937568d0d325a">pretty_print_to_string</link> ()</para>
+
+<para><itemizedlist>
+<listitem>
+<para>Returns an expression with correct parentheses </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para>void <link linkend="_class_expr_1ad196f223df20df6e8c9f11f0013191ef">pretty_print</link> (std::ostream &amp;stream)</para>
+
+<para><itemizedlist>
+<listitem>
+<para>Prints to console the correct parentheses </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para>virtual void <link linkend="_class_expr_1aa1b3d5b06d906d61678a5143a2ea935f">pretty_print_at</link> (std::ostream &amp;stream, precedence_t prec)=0</para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<section>
+<title>Member Function Documentation</title>
+<anchor xml:id="_class_expr_1abf9cdb765fb84304881789d273d7594f"/><section>
+    <title>equals()</title>
+<indexterm><primary>equals</primary><secondary>Expr</secondary></indexterm>
+<indexterm><primary>Expr</primary><secondary>equals</secondary></indexterm>
+<para><computeroutput>virtual bool Expr::equals (<link linkend="_class_expr">Expr</link> * e)<computeroutput>[pure virtual]</computeroutput></computeroutput></para><para>
+Implemented in <link linkend="_class_num_1a07f51df870e2a49e0ea88603c442a974">Num</link>, <link linkend="_class_var_1ad9ce0a9a73711a7294607821e1410171">Var</link>, <link linkend="_class_add_1a5d92e11ff0afc75546a51ac79e8fd0f8">Add</link>, and <link linkend="_class_mult_1ac2fa5546caf388d4e9e6f0ed38087db0">Mult</link>.</para>
+</section>
+<anchor xml:id="_class_expr_1a92dc26078993a4b9721ea732274a435c"/><section>
+    <title>has_variable()</title>
+<indexterm><primary>has_variable</primary><secondary>Expr</secondary></indexterm>
+<indexterm><primary>Expr</primary><secondary>has_variable</secondary></indexterm>
+<para><computeroutput>virtual bool Expr::has_variable ( )<computeroutput>[pure virtual]</computeroutput></computeroutput></para><para>
+Implemented in <link linkend="_class_num_1ad0ce114704933a1ebe4629848d3e2d6d">Num</link>, <link linkend="_class_var_1a6083356e4955e1edfb76b8432672c93e">Var</link>, <link linkend="_class_add_1a882db0df18673599f4d1248e17fb24cb">Add</link>, and <link linkend="_class_mult_1ab53cc8634d4ebad5aaa2dc818c0de598">Mult</link>.</para>
+</section>
+<anchor xml:id="_class_expr_1aeba8585d8225419d49166371306542c1"/><section>
+    <title>interp()</title>
+<indexterm><primary>interp</primary><secondary>Expr</secondary></indexterm>
+<indexterm><primary>Expr</primary><secondary>interp</secondary></indexterm>
+<para><computeroutput>virtual int Expr::interp ( )<computeroutput>[pure virtual]</computeroutput></computeroutput></para><para>
+Implemented in <link linkend="_class_num_1a24f8a1c7ccad82bf7ed1080b59cda6dd">Num</link>, <link linkend="_class_var_1ac6df55db7c2447d3090dd99ae247ae80">Var</link>, <link linkend="_class_add_1a63c445ae0ea8ecc0d0765378e630a06f">Add</link>, and <link linkend="_class_mult_1a7d3fba024174b294a7e1c145485b9d38">Mult</link>.</para>
+</section>
+<anchor xml:id="_class_expr_1ad196f223df20df6e8c9f11f0013191ef"/><section>
+    <title>pretty_print()</title>
+<indexterm><primary>pretty_print</primary><secondary>Expr</secondary></indexterm>
+<indexterm><primary>Expr</primary><secondary>pretty_print</secondary></indexterm>
+<para><computeroutput>void Expr::pretty_print (std::ostream &amp; stream)</computeroutput></para><para>
+
+<para><itemizedlist>
+<listitem>
+<para>Prints to console the correct parentheses </para>
+</listitem></itemizedlist>
+</para>
+</para>
+
+<para>
+                <formalpara>
+                    <title>
+Parameters</title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+<entry>stream</entry><entry>
+<para>- the stream input to console </para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                </para>
+</section>
+<anchor xml:id="_class_expr_1aa1b3d5b06d906d61678a5143a2ea935f"/><section>
+    <title>pretty_print_at()</title>
+<indexterm><primary>pretty_print_at</primary><secondary>Expr</secondary></indexterm>
+<indexterm><primary>Expr</primary><secondary>pretty_print_at</secondary></indexterm>
+<para><computeroutput>virtual void Expr::pretty_print_at (std::ostream &amp; stream, precedence_t prec)<computeroutput>[pure virtual]</computeroutput></computeroutput></para><para>
+Implemented in <link linkend="_class_num_1afb48796143f3e51cb5b1520339ee0522">Num</link>, <link linkend="_class_var_1ab6700c4c0052abe648466bbcf6b51382">Var</link>, <link linkend="_class_add_1ae9792aa106988bd9a05c165ea16affdd">Add</link>, and <link linkend="_class_mult_1a7a1da192b2fbe109b93e619acd713b06">Mult</link>.</para>
+</section>
+<anchor xml:id="_class_expr_1a94393142ad5e0d1d67f937568d0d325a"/><section>
+    <title>pretty_print_to_string()</title>
+<indexterm><primary>pretty_print_to_string</primary><secondary>Expr</secondary></indexterm>
+<indexterm><primary>Expr</primary><secondary>pretty_print_to_string</secondary></indexterm>
+<para><computeroutput>std::string Expr::pretty_print_to_string ( )</computeroutput></para><para>
+
+<para><itemizedlist>
+<listitem>
+<para>Returns an expression with correct parentheses </para>
+</listitem></itemizedlist>
+</para>
+</para>
+
+<para><formalpara><title>Returns</title>
+
+<para>- Returns a string to be printed </para>
+</formalpara>
+</para>
+</section>
+<anchor xml:id="_class_expr_1a8e34377af275f60532d1ba76e6feaceb"/><section>
+    <title>print()</title>
+<indexterm><primary>print</primary><secondary>Expr</secondary></indexterm>
+<indexterm><primary>Expr</primary><secondary>print</secondary></indexterm>
+<para><computeroutput>virtual void Expr::print (std::ostream &amp; stream)<computeroutput>[pure virtual]</computeroutput></computeroutput></para><para>
+Implemented in <link linkend="_class_num_1a27856ae7c15a69317a8e2900c04a6964">Num</link>, <link linkend="_class_var_1a2fece9cf25bfaf4e1632064babaf97ee">Var</link>, <link linkend="_class_add_1a8ff08b38f4552717c52e6d181564c50e">Add</link>, and <link linkend="_class_mult_1af0dc03633da9d7d8dc7d6c8b4762afc7">Mult</link>.</para>
+</section>
+<anchor xml:id="_class_expr_1abb2babb548c67221fe2e7adadbbec7a0"/><section>
+    <title>subst()</title>
+<indexterm><primary>subst</primary><secondary>Expr</secondary></indexterm>
+<indexterm><primary>Expr</primary><secondary>subst</secondary></indexterm>
+<para><computeroutput>virtual <link linkend="_class_expr">Expr</link> * Expr::subst (std::string variable, <link linkend="_class_expr">Expr</link> * expr)<computeroutput>[pure virtual]</computeroutput></computeroutput></para><para>
+Implemented in <link linkend="_class_num_1aa01c23928cd1956fcb379abb02fc1864">Num</link>, <link linkend="_class_var_1a6ef68dd71aa26f457cf31f8e0e18175c">Var</link>, <link linkend="_class_add_1abcc0fe43eb138643fc2505491120cc0d">Add</link>, and <link linkend="_class_mult_1a815b8a865e65aaf706824aa9654c874e">Mult</link>.</para>
+</section>
+<anchor xml:id="_class_expr_1abe130f37bd185ec13c5113de16fc7bf7"/><section>
+    <title>to_string()</title>
+<indexterm><primary>to_string</primary><secondary>Expr</secondary></indexterm>
+<indexterm><primary>Expr</primary><secondary>to_string</secondary></indexterm>
+<para><computeroutput>std::string Expr::to_string ( )</computeroutput></para><para>
+
+<para><itemizedlist>
+<listitem>
+<para>Returns an expression as a string </para>
+</listitem></itemizedlist>
+</para>
+</para>
+
+<para>
+                <formalpara>
+                    <title>
+Parameters</title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+<entry>-</entry><entry>
+<para>Takes in the expression that calls it @return - Returns an expression as a string </para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                </para>
+</section>
+<para>
+The documentation for this class was generated from the following files:</para>
+/Users/jammerkoi/6015/msdscript/msdscript/Expr.h/Users/jammerkoi/6015/msdscript/msdscript/Expr.cpp</section>
+</section>

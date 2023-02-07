@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="_exp_test_8h_source" xml:lang="en-US">
+<title>/Users/jammerkoi/6015/msdscript/msdscript/expTest.h</title>
+<programlisting linenumbering="unnumbered">1 <emphasis role="comment">//</emphasis>
+2 <emphasis role="comment">//&#32;Created&#32;by&#32;Mack&#32;on&#32;1/19/23.</emphasis>
+3 <emphasis role="comment">//</emphasis>
+4 
+5 <emphasis role="preprocessor">#ifndef&#32;MSDSCRIPT_EXPTEST_H</emphasis>
+6 <emphasis role="preprocessor">#define&#32;MSDSCRIPT_EXPTEST_H</emphasis>
+7 <emphasis role="preprocessor">#include&#32;&quot;catch.h&quot;</emphasis>
+8 <emphasis role="preprocessor">#include&#32;&quot;Expr.h&quot;</emphasis>
+9 
+18 TEST_CASE(<emphasis role="stringliteral">&quot;interp&quot;</emphasis>)
+19 {
+20 &#32;&#32;&#32;&#32;CHECK(&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(3),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(2)))
+21 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;interp()==6&#32;);
+22 &#32;&#32;&#32;&#32;CHECK(&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(10),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(15)),<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(20),<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(20))))
+23 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;interp()==65);
+24 }
+25 
+26 TEST_CASE(&#32;<emphasis role="stringliteral">&quot;equals&quot;</emphasis>&#32;)&#32;{
+27 &#32;&#32;&#32;&#32;CHECK((<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(1))-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(1))&#32;==&#32;<emphasis role="keyword">true</emphasis>&#32;);
+28 &#32;&#32;&#32;&#32;CHECK((<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;x&quot;</emphasis>))-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>))&#32;==&#32;<emphasis role="keyword">false</emphasis>&#32;);
+29 &#32;&#32;&#32;&#32;CHECK((<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(2),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(3)))-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;&#32;<link linkend="_class_num">Num</link>(2),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(3)))&#32;==&#32;<emphasis role="keyword">true</emphasis>&#32;);
+30 }
+31 
+32 <emphasis role="comment">//&#32;&#32;&#32;&#32;TEST_CASE(&#32;&quot;not&#32;equals&quot;&#32;)&#32;{</emphasis>
+33 <emphasis role="comment">//&#32;&#32;&#32;&#32;CHECK((new&#32;Mult(new&#32;Num(1),&#32;new&#32;Num(2)))-&gt;equals(new&#32;Add(new&#32;Num(1),&#32;new&#32;Num(2)))&#32;==&#32;false);</emphasis>
+34 <emphasis role="comment">//&#32;&#32;&#32;&#32;CHECK((new&#32;Add(new&#32;Num(2),&#32;new&#32;Num(3)))-&gt;equals(new&#32;Add(new&#32;Num(3),&#32;new&#32;Num(2)))&#32;==&#32;false);</emphasis>
+35 <emphasis role="comment">//</emphasis>
+36 <emphasis role="comment">//}</emphasis>
+37 
+38 TEST_CASE(&#32;<emphasis role="stringliteral">&quot;different&#32;types&#32;same&#32;Num&#32;vals&quot;</emphasis>&#32;)&#32;{
+39 &#32;&#32;&#32;&#32;CHECK((<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(2),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(2),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))&#32;==&#32;<emphasis role="keyword">false</emphasis>);
+40 &#32;&#32;&#32;&#32;CHECK((<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(-143),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(25)))-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(-143),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(25)))&#32;==&#32;<emphasis role="keyword">false</emphasis>);
+41 &#32;&#32;&#32;&#32;CHECK_FALSE((<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(1))-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(5)));
+42 <emphasis role="comment">//&#32;&#32;&#32;&#32;CHECK_FALSE((new&#32;Num(1))-&gt;equals(new&#32;Num(5)));</emphasis>
+43 &#32;&#32;&#32;&#32;CHECK((<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(4),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(6)),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(5)),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(55))-&gt;equals
+44 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;((<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(4),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(6)),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(5)),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(55)))&#32;==&#32;<emphasis role="keyword">true</emphasis>);
+45 }
+46 
+47 TEST_CASE(<emphasis role="stringliteral">&quot;checking&#32;sub&#32;for&#32;add&quot;</emphasis>)&#32;{
+48 &#32;&#32;&#32;&#32;CHECK(&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;x&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))
+49 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;subst(<emphasis role="stringliteral">&quot;x&quot;</emphasis>,&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>))
+50 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))&#32;);
+51 
+52 &#32;&#32;&#32;&#32;CHECK(&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;x&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(7)))
+53 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;subst(<emphasis role="stringliteral">&quot;x&quot;</emphasis>,&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>))
+54 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(7)))&#32;);
+55 
+56 &#32;&#32;&#32;&#32;CHECK(&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;x&quot;</emphasis>))
+57 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;subst(<emphasis role="stringliteral">&quot;x&quot;</emphasis>,&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>),<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(7)))
+58 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>),<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(7))));
+59 
+60 
+61 }
+62 
+63 TEST_CASE(<emphasis role="stringliteral">&quot;Checking&#32;mult&#32;expression&#32;substitution&quot;</emphasis>)&#32;{
+64 &#32;&#32;&#32;&#32;CHECK(&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;x&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))
+65 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;subst(<emphasis role="stringliteral">&quot;x&quot;</emphasis>,&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>))
+66 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))&#32;);
+67 
+68 &#32;&#32;&#32;&#32;CHECK_FALSE(&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;x&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))
+69 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;subst(<emphasis role="stringliteral">&quot;z&quot;</emphasis>,&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>))
+70 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))&#32;);
+71 }
+72 
+73 TEST_CASE(<emphasis role="stringliteral">&quot;Checking&#32;substituting&#32;something&#32;that&#32;isn&apos;t&#32;in&#32;there&quot;</emphasis>)&#32;{
+74 &#32;&#32;&#32;&#32;CHECK(&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;x&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))
+75 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;subst(<emphasis role="stringliteral">&quot;z&quot;</emphasis>,&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>))
+76 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;x&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))&#32;);
+77 
+78 &#32;&#32;&#32;&#32;CHECK(&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;x&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))
+79 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;subst(<emphasis role="stringliteral">&quot;z&quot;</emphasis>,&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;y&quot;</emphasis>))
+80 &#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;-&gt;equals(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;x&quot;</emphasis>),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(24)))&#32;);
+81 }
+82 
+83 TEST_CASE(<emphasis role="stringliteral">&quot;CHECKING&#32;PRINT&quot;</emphasis>)&#32;{
+84 &#32;&#32;&#32;&#32;CHECK(&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(10))-&gt;to_string()&#32;==&#32;<emphasis role="stringliteral">&quot;10&quot;</emphasis>&#32;);
+85 }
+86 
+87 TEST_CASE(<emphasis role="stringliteral">&quot;CHECKING&#32;PRETTY&#32;PRINT&quot;</emphasis>)&#32;{
+88 <emphasis role="comment">//&#32;&#32;&#32;&#32;new&#32;Mult&#32;(new&#32;Mult&#32;(new&#32;Num(2),&#32;new&#32;Num(3)),&#32;new&#32;Num(4))-&gt;equals()</emphasis>
+89 <emphasis role="comment">//&#32;&#32;&#32;&#32;CHECK(((new&#32;Mult(&#32;new&#32;Num(1),&#32;new&#32;Add(new&#32;Num(2),&#32;new&#32;Num(3)))-&gt;pretty_print_to_string())&#32;==&#32;&quot;1&#32;*&#32;(2&#32;+&#32;3)&quot;);</emphasis>
+90 &#32;&#32;&#32;&#32;<emphasis role="comment">//-&gt;to_string()-&gt;equals(&quot;1&#32;*&#32;(2+3&quot;)));</emphasis>
+91 &#32;&#32;&#32;&#32;CHECK(&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_mult">Mult</link>&#32;(<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(2),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(3)),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(4)))-&gt;pretty_print_to_string()&#32;==&#32;<emphasis role="stringliteral">&quot;(2&#32;*&#32;3)&#32;*&#32;4&quot;</emphasis>);
+92 &#32;&#32;&#32;&#32;CHECK((<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(1))-&gt;pretty_print_to_string()&#32;==&#32;<emphasis role="stringliteral">&quot;1&quot;</emphasis>);
+93 &#32;&#32;&#32;&#32;CHECK((<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_var">Var</link>(<emphasis role="stringliteral">&quot;a&quot;</emphasis>))-&gt;pretty_print_to_string()&#32;==&#32;<emphasis role="stringliteral">&quot;a&quot;</emphasis>);
+94 &#32;&#32;&#32;&#32;CHECK((<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_add">Add</link>(&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(1),&#32;<emphasis role="keyword">new</emphasis>&#32;<link linkend="_class_num">Num</link>(3)))-&gt;pretty_print_to_string()&#32;==&#32;<emphasis role="stringliteral">&quot;1&#32;+&#32;3&quot;</emphasis>);
+95 
+96 
+97 }
+98 
+99 
+100 
+101 <emphasis role="preprocessor">#endif&#32;MSDSCRIPT_EXPTEST_H</emphasis>
+</programlisting></section>

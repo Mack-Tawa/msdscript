@@ -1,7 +1,7 @@
 # ninja log v5
-1	1967	1675363577041984312	CMakeFiles/clion_bull.dir/cmdline.cpp.o	852ff56bf8e4f263
-1	217	1675363575297599666	CMakeFiles/clion_bull.dir/Expr.cpp.o	9ffb0dbe04cf52c5
-0	244	1675363575324303268	CMakeFiles/clion_bull.dir/main.cpp.o	1d66b4802a3dd373
-1	307	1675363575387475002	CMakeFiles/clion_bull.dir/expTest.cpp.o	2816cb71fa550ad0
-1	45	1675363584126541931	build.ninja	e4508bdc4ac23f7
-1968	2025	1675363577106144041	clion_bull	6b4006a056da1cd8
+2	1976	1675728102866367299	CMakeFiles/clion_bull.dir/cmdline.cpp.o	8a2cec4a2abbe631
+12	507	1675732283598088785	CMakeFiles/clion_bull.dir/Expr.cpp.o	e29605dd2f5e90b0
+1	253	1675728101148114856	CMakeFiles/clion_bull.dir/main.cpp.o	5665942caf5b673e
+13	547	1675732283648169255	CMakeFiles/clion_bull.dir/expTest.cpp.o	4a8d825e347a652d
+1	45	1675732286188677525	build.ninja	e4508bdc4ac23f7
+548	632	1675732283735431398	clion_bull	6b4006a056da1cd8

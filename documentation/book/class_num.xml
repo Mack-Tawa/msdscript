@@ -1,0 +1,370 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="_class_num" xml:lang="en-US">
+<title>Num Class Reference</title>
+<indexterm><primary>Num</primary></indexterm>
+<para>Inheritance diagram for Num:    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_num.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+<simplesect>
+    <title>Public Member Functions    </title>
+        <itemizedlist>
+            <listitem><para><link linkend="_class_num_1a9fce58e650a99ae50f4140ed9c87ec9f">Num</link> (int val)</para>
+
+<para><itemizedlist>
+<listitem>
+<para>Constructor for a number </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para>bool <link linkend="_class_num_1a07f51df870e2a49e0ea88603c442a974">equals</link> (<link linkend="_class_expr">Expr</link> *n)</para>
+
+<para><itemizedlist>
+<listitem>
+<para>returns if an expression is equal to another </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para>int <link linkend="_class_num_1a24f8a1c7ccad82bf7ed1080b59cda6dd">interp</link> ()</para>
+
+<para><itemizedlist>
+<listitem>
+<para>Gives the value of the number </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para>bool <link linkend="_class_num_1ad0ce114704933a1ebe4629848d3e2d6d">has_variable</link> ()</para>
+
+<para><itemizedlist>
+<listitem>
+<para>Checks to see if the number has any variables which is always false </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para><link linkend="_class_expr">Expr</link> * <link linkend="_class_num_1aa01c23928cd1956fcb379abb02fc1864">subst</link> (std::string variable, <link linkend="_class_expr">Expr</link> *expr)</para>
+
+<para><itemizedlist>
+<listitem>
+<para>Returns a number being called </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para>void <link linkend="_class_num_1a27856ae7c15a69317a8e2900c04a6964">print</link> (std::ostream &amp;stream)</para>
+
+<para><itemizedlist>
+<listitem>
+<para>prints the object calling to the stream </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para>void <link linkend="_class_num_1afb48796143f3e51cb5b1520339ee0522">pretty_print_at</link> (std::ostream &amp;stream, precedence_t prec)</para>
+
+<para><itemizedlist>
+<listitem>
+<para>utilizes the precedence from the parent to print correct parentheses </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+Public Member Functions inherited from <link linkend="_class_expr">Expr</link>        <itemizedlist>
+            <listitem><para>virtual bool <link linkend="_class_expr_1abf9cdb765fb84304881789d273d7594f">equals</link> (<link linkend="_class_expr">Expr</link> *e)=0</para>
+</listitem>
+            <listitem><para>virtual int <link linkend="_class_expr_1aeba8585d8225419d49166371306542c1">interp</link> ()=0</para>
+</listitem>
+            <listitem><para>virtual bool <link linkend="_class_expr_1a92dc26078993a4b9721ea732274a435c">has_variable</link> ()=0</para>
+</listitem>
+            <listitem><para>virtual <link linkend="_class_expr">Expr</link> * <link linkend="_class_expr_1abb2babb548c67221fe2e7adadbbec7a0">subst</link> (std::string variable, <link linkend="_class_expr">Expr</link> *expr)=0</para>
+</listitem>
+            <listitem><para>virtual void <link linkend="_class_expr_1a8e34377af275f60532d1ba76e6feaceb">print</link> (std::ostream &amp;stream)=0</para>
+</listitem>
+            <listitem><para>std::string <link linkend="_class_expr_1abe130f37bd185ec13c5113de16fc7bf7">to_string</link> ()</para>
+
+<para><itemizedlist>
+<listitem>
+<para>Returns an expression as a string </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para>std::string <link linkend="_class_expr_1a94393142ad5e0d1d67f937568d0d325a">pretty_print_to_string</link> ()</para>
+
+<para><itemizedlist>
+<listitem>
+<para>Returns an expression with correct parentheses </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para>void <link linkend="_class_expr_1ad196f223df20df6e8c9f11f0013191ef">pretty_print</link> (std::ostream &amp;stream)</para>
+
+<para><itemizedlist>
+<listitem>
+<para>Prints to console the correct parentheses </para>
+</listitem></itemizedlist>
+</para>
+</listitem>
+            <listitem><para>virtual void <link linkend="_class_expr_1aa1b3d5b06d906d61678a5143a2ea935f">pretty_print_at</link> (std::ostream &amp;stream, precedence_t prec)=0</para>
+</listitem>
+        </itemizedlist>
+<simplesect>
+    <title>Public Attributes    </title>
+        <itemizedlist>
+            <listitem><para><anchor xml:id="_class_num_1ab0654582066deb3adbbd64cf7190a7b7"/>int <emphasis role="strong">val</emphasis></para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<section>
+<title>Constructor &amp; Destructor Documentation</title>
+<anchor xml:id="_class_num_1a9fce58e650a99ae50f4140ed9c87ec9f"/><section>
+    <title>Num()</title>
+<indexterm><primary>Num</primary><secondary>Num</secondary></indexterm>
+<indexterm><primary>Num</primary><secondary>Num</secondary></indexterm>
+<para><computeroutput>Num::Num (int val)</computeroutput></para><para>
+
+<para><itemizedlist>
+<listitem>
+<para>Constructor for a number </para>
+</listitem></itemizedlist>
+</para>
+</para>
+
+<para>
+                <formalpara>
+                    <title>
+Parameters</title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+<entry>val</entry><entry>
+<para>- takes in an int </para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                </para>
+</section>
+</section>
+<section>
+<title>Member Function Documentation</title>
+<anchor xml:id="_class_num_1a07f51df870e2a49e0ea88603c442a974"/><section>
+    <title>equals()</title>
+<indexterm><primary>equals</primary><secondary>Num</secondary></indexterm>
+<indexterm><primary>Num</primary><secondary>equals</secondary></indexterm>
+<para><computeroutput>bool Num::equals (<link linkend="_class_expr">Expr</link> * e)<computeroutput>[virtual]</computeroutput></computeroutput></para><para>
+
+<para><itemizedlist>
+<listitem>
+<para>returns if an expression is equal to another </para>
+</listitem></itemizedlist>
+</para>
+</para>
+
+<para>
+                <formalpara>
+                    <title>
+Parameters</title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+<entry>e</entry><entry>
+<para>- the expression on the right </para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                <formalpara><title>Returns</title>
+
+<para>- if expression is equal to another </para>
+</formalpara>
+</para>
+<para>
+Implements <link linkend="_class_expr">Expr</link>.</para>
+</section>
+<anchor xml:id="_class_num_1ad0ce114704933a1ebe4629848d3e2d6d"/><section>
+    <title>has_variable()</title>
+<indexterm><primary>has_variable</primary><secondary>Num</secondary></indexterm>
+<indexterm><primary>Num</primary><secondary>has_variable</secondary></indexterm>
+<para><computeroutput>bool Num::has_variable ( )<computeroutput>[virtual]</computeroutput></computeroutput></para><para>
+
+<para><itemizedlist>
+<listitem>
+<para>Checks to see if the number has any variables which is always false </para>
+</listitem></itemizedlist>
+</para>
+</para>
+
+<para><formalpara><title>Returns</title>
+
+<para>- False since a num can&apos;t have a var </para>
+</formalpara>
+</para>
+<para>
+Implements <link linkend="_class_expr">Expr</link>.</para>
+</section>
+<anchor xml:id="_class_num_1a24f8a1c7ccad82bf7ed1080b59cda6dd"/><section>
+    <title>interp()</title>
+<indexterm><primary>interp</primary><secondary>Num</secondary></indexterm>
+<indexterm><primary>Num</primary><secondary>interp</secondary></indexterm>
+<para><computeroutput>int Num::interp ( )<computeroutput>[virtual]</computeroutput></computeroutput></para><para>
+
+<para><itemizedlist>
+<listitem>
+<para>Gives the value of the number </para>
+</listitem></itemizedlist>
+</para>
+</para>
+
+<para><formalpara><title>Returns</title>
+
+<para>- Returns the value of the number </para>
+</formalpara>
+</para>
+<para>
+Implements <link linkend="_class_expr">Expr</link>.</para>
+</section>
+<anchor xml:id="_class_num_1afb48796143f3e51cb5b1520339ee0522"/><section>
+    <title>pretty_print_at()</title>
+<indexterm><primary>pretty_print_at</primary><secondary>Num</secondary></indexterm>
+<indexterm><primary>Num</primary><secondary>pretty_print_at</secondary></indexterm>
+<para><computeroutput>void Num::pretty_print_at (std::ostream &amp; stream, precedence_t prec_none)<computeroutput>[virtual]</computeroutput></computeroutput></para><para>
+
+<para><itemizedlist>
+<listitem>
+<para>utilizes the precedence from the parent to print correct parentheses </para>
+</listitem></itemizedlist>
+</para>
+</para>
+
+<para>
+                <formalpara>
+                    <title>
+Parameters</title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+<entry>stream</entry><entry>
+<para>- the stream being utilized </para>
+</entry>
+                            </row>
+                            <row>
+<entry>prec_none</entry><entry>
+<para>- the precedence is always zero for nums </para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                </para>
+<para>
+Implements <link linkend="_class_expr">Expr</link>.</para>
+</section>
+<anchor xml:id="_class_num_1a27856ae7c15a69317a8e2900c04a6964"/><section>
+    <title>print()</title>
+<indexterm><primary>print</primary><secondary>Num</secondary></indexterm>
+<indexterm><primary>Num</primary><secondary>print</secondary></indexterm>
+<para><computeroutput>void Num::print (std::ostream &amp; stream)<computeroutput>[virtual]</computeroutput></computeroutput></para><para>
+
+<para><itemizedlist>
+<listitem>
+<para>prints the object calling to the stream </para>
+</listitem></itemizedlist>
+</para>
+</para>
+
+<para>
+                <formalpara>
+                    <title>
+Parameters</title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+<entry>stream</entry><entry>
+<para>- the stream being utilized </para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                </para>
+<para>
+Implements <link linkend="_class_expr">Expr</link>.</para>
+</section>
+<anchor xml:id="_class_num_1aa01c23928cd1956fcb379abb02fc1864"/><section>
+    <title>subst()</title>
+<indexterm><primary>subst</primary><secondary>Num</secondary></indexterm>
+<indexterm><primary>Num</primary><secondary>subst</secondary></indexterm>
+<para><computeroutput><link linkend="_class_expr">Expr</link> * Num::subst (std::string variable, <link linkend="_class_expr">Expr</link> * expr)<computeroutput>[virtual]</computeroutput></computeroutput></para><para>
+
+<para><itemizedlist>
+<listitem>
+<para>Returns a number being called </para>
+</listitem></itemizedlist>
+</para>
+</para>
+
+<para>
+                <formalpara>
+                    <title>
+Parameters</title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+<entry>variable</entry><entry>
+<para>- the variable being checked in string format </para>
+</entry>
+                            </row>
+                            <row>
+<entry>expr</entry><entry>
+<para>- the expression being checked </para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                <formalpara><title>Returns</title>
+
+<para>- the number being called </para>
+</formalpara>
+</para>
+<para>
+Implements <link linkend="_class_expr">Expr</link>.</para>
+</section>
+<para>
+The documentation for this class was generated from the following files:</para>
+/Users/jammerkoi/6015/msdscript/msdscript/Expr.h/Users/jammerkoi/6015/msdscript/msdscript/Expr.cpp</section>
+</section>
