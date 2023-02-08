@@ -36,3 +36,5 @@ Xcode 4)
 *.o
 executable
 *.zip
+#doxygen
+documentation
