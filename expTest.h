@@ -4,6 +4,8 @@
 
 #ifndef MSDSCRIPT_EXPTEST_H
 #define MSDSCRIPT_EXPTEST_H
+
+#include <sstream>
 #include "catch.h"
 #include "Expr.h"
 
@@ -92,10 +94,116 @@ TEST_CASE("CHECKING PRETTY PRINT") {
     CHECK((new Num(1))->pretty_print_to_string() == "1");
     CHECK((new Var("a"))->pretty_print_to_string() == "a");
     CHECK((new Add( new Num(1), new Num(3)))->pretty_print_to_string() == "1 + 3");
+    CHECK((new Mult (new Num(2), new Mult (new Num(3), new Num(4))))->pretty_print_to_string() == "2 * 3 * 4");
 
 
 }
 
+TEST_CASE("Branden's tests") {
+    Mult* complexMultExprWithVar = new Mult(new Add(new Var("x"), new Mult(new Num(2), new Num(3))), new Num(3));
+    Mult* complexMultExprWithNoVar = new Mult(new Add(new Num(2), new Mult(new Num(2), new Num(3))), new Num(3));
+
+CHECK(complexMultExprWithNoVar->pretty_print_to_string() == "(2 + 2 * 3) * 3");
+CHECK(complexMultExprWithVar->pretty_print_to_string() == "(x + 2 * 3) * 3");
+CHECK((new Mult (new Mult (new Num(2), new Num(3)), new Num(4)))->pretty_print_to_string() == "(2 * 3) * 4");
+CHECK((new Mult (new Num(2), new Mult (new Num(3), new Num(4))))->pretty_print_to_string() == "2 * 3 * 4");
+CHECK((new Mult (new Mult(new Num(1), new Num(2) ), new Mult (new Num(3), new Num(4))))->pretty_print_to_string() == "(1 * 2) * 3 * 4");
+CHECK((new Mult (new Num(2), new Mult (new Num(3), new Num(4))))->pretty_print_to_string() == "2 * 3 * 4");
+CHECK((new Mult(new Num(1), new Add(new Num(2), new Num(3))))->pretty_print_to_string() == "1 * (2 + 3)");
+    CHECK( (new Mult (new Num(1), new Add(new Num(2),new Num(3))))->pretty_print_to_string() == "1 * (2 + 3)");
+}
+
+//Jons tests
+    TEST_CASE("Pretty Print -- Add"){
+        Num* testNum1 = new Num(1);
+        Num* testNum2 = new Num(2);
+        Num* testNum3 = new Num(3);
+        Num* testNum4 = new Num(4);
+
+        Var* testVar1 = new Var("a");
+        Var* testVar2 = new Var("b");
+
+        Add* testAdd1 = new Add(testNum1, testNum2);
+        Add* testAdd2 = new Add(testNum3, testAdd1);
+        Add* testAdd3 = new Add(testAdd1, testNum3);
+        Add* testAdd4 = new Add(testNum3, testNum4);
+        Add* testAdd5 = new Add(testAdd1, testAdd4);
+
+        Add* testAdd6 = new Add(testNum1, testVar1);
+
+        Mult* testMult1 = new Mult(testNum3, testNum4);
+
+        Add* testMixed1 = new Add(testNum1, testMult1);
+
+        std::stringstream out("");
+        testAdd2->pretty_print(out);
+        CHECK(out.str() == "3 + 1 + 2");
+
+        out.str("");
+        testAdd3->pretty_print(out);
+        CHECK(out.str() == "(1 + 2) + 3");
+
+        out.str("");
+        testMixed1->pretty_print(out);
+        CHECK(out.str() == "1 + 3 * 4");
+
+        out.str("");
+        testAdd5->pretty_print(out);
+        CHECK(out.str() == "(1 + 2) + 3 + 4");
+
+        out.str("");
+        testAdd6->pretty_print(out);
+        CHECK(out.str() == "1 + a");
+    }
+
+    TEST_CASE("Pretty Print -- Mult"){
+        Num* testNum1 = new Num(1);
+        Num* testNum2 = new Num(2);
+        Num* testNum3 = new Num(3);
+        Num* testNum4 = new Num(4);
+
+        Add* testAdd1 = new Add(testNum1, testNum2);
+        Add* testAdd2 = new Add(testNum3, testNum4);
+
+        Mult* testMult1 = new Mult(testNum1, testNum2);
+        Mult* testMult2 = new Mult(testNum3, testMult1);
+        Mult* testMult3 = new Mult(testMult1, testNum3);
+        Mult* testMult4 = new Mult(testNum3, testNum4);
+        Mult* testMult5 = new Mult(testMult1, testMult4);
+
+        std::stringstream out("");
+        testMult2->pretty_print(out);
+        CHECK(out.str() == "3 * 1 * 2");
+
+        out.str("");
+        testMult3->pretty_print(out);
+        CHECK(out.str() == "(1 * 2) * 3");
+
+        out.str("");
+        testMult5->pretty_print(out);
+        CHECK(out.str() == "(1 * 2) * 3 * 4");
+
+        Mult* testMixed1 = new Mult(testNum3, testAdd1);
+        Mult* testMixed2 = new Mult(testAdd1, testNum3);
+        Mult* testMixed3 = new Mult(testAdd1, testAdd2);
+
+        out.str("");
+        testMixed1->pretty_print(out);
+        CHECK(out.str() == "3 * (1 + 2)");
+
+        out.str("");
+        testMixed2->pretty_print(out);
+        CHECK(out.str() == "(1 + 2) * 3");
+
+        out.str("");
+        testMixed3->pretty_print(out);
+        CHECK(out.str() == "(1 + 2) * (3 + 4)");
+    }
+TEST_CASE("mult_mults_mults_mults from william ")
+{
+CHECK((new Mult( new Mult(new Num(10), new Mult(new Mult(new Num(10), new Num(10)), new Num(10))), new Mult(new Num(10), new Num(10))))
+              ->pretty_print_to_string()  == "(10 * (10 * 10) * 10) * 10 * 10");
+}
 
 
 #endif MSDSCRIPT_EXPTEST_H

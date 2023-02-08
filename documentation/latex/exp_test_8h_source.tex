@@ -87,12 +87,26 @@
 \DoxyCodeLine{00092\ \ \ \ \ CHECK((\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(1))-\/>pretty\_print\_to\_string()\ ==\ \textcolor{stringliteral}{"{}1"{}});}
 \DoxyCodeLine{00093\ \ \ \ \ CHECK((\textcolor{keyword}{new}\ \mbox{\hyperlink{class_var}{Var}}(\textcolor{stringliteral}{"{}a"{}}))-\/>pretty\_print\_to\_string()\ ==\ \textcolor{stringliteral}{"{}a"{}});}
 \DoxyCodeLine{00094\ \ \ \ \ CHECK((\textcolor{keyword}{new}\ \mbox{\hyperlink{class_add}{Add}}(\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(1),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(3)))-\/>pretty\_print\_to\_string()\ ==\ \textcolor{stringliteral}{"{}1\ +\ 3"{}});}
-\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00095\ \ \ \ \ CHECK((\textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}\ (\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(2),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}\ (\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(3),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(4))))-\/>pretty\_print\_to\_string()\ ==\ \textcolor{stringliteral}{"{}2\ *\ 3\ *\ 4"{}});}
 \DoxyCodeLine{00096\ }
-\DoxyCodeLine{00097\ \}}
-\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \}}
 \DoxyCodeLine{00099\ }
-\DoxyCodeLine{00100\ }
-\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#endif\ MSDSCRIPT\_EXPTEST\_H}}
+\DoxyCodeLine{00100\ TEST\_CASE(\textcolor{stringliteral}{"{}Branden's\ tests"{}})\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \mbox{\hyperlink{class_mult}{Mult}}*\ complexMultExprWithVar\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_add}{Add}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_var}{Var}}(\textcolor{stringliteral}{"{}x"{}}),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(2),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(3))),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(3));}
+\DoxyCodeLine{00102\ \ \ \ \ \mbox{\hyperlink{class_mult}{Mult}}*\ complexMultExprWithNoVar\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_add}{Add}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(2),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(2),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(3))),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(3));}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ CHECK(complexMultExprWithNoVar-\/>\mbox{\hyperlink{class_expr_a94393142ad5e0d1d67f937568d0d325a}{pretty\_print\_to\_string}}()\ ==\ \textcolor{stringliteral}{"{}(2\ +\ 2\ *\ 3)\ *\ 3"{}});}
+\DoxyCodeLine{00105\ CHECK(complexMultExprWithVar-\/>\mbox{\hyperlink{class_expr_a94393142ad5e0d1d67f937568d0d325a}{pretty\_print\_to\_string}}()\ ==\ \textcolor{stringliteral}{"{}(x\ +\ 2\ *\ 3)\ *\ 3"{}});}
+\DoxyCodeLine{00106\ CHECK((\textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}\ (\textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}\ (\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(2),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(3)),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(4)))-\/>pretty\_print\_to\_string()\ ==\ \textcolor{stringliteral}{"{}(2\ *\ 3)\ *\ 4"{}});}
+\DoxyCodeLine{00107\ CHECK((\textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}\ (\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(2),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}\ (\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(3),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(4))))-\/>pretty\_print\_to\_string()\ ==\ \textcolor{stringliteral}{"{}2\ *\ 3\ *\ 4"{}});}
+\DoxyCodeLine{00108\ CHECK((\textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}\ (\textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(1),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(2)\ ),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}\ (\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(3),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(4))))-\/>pretty\_print\_to\_string()\ ==\ \textcolor{stringliteral}{"{}(1\ *\ 2)\ *\ 3\ *\ 4"{}});}
+\DoxyCodeLine{00109\ CHECK((\textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}\ (\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(2),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}\ (\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(3),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(4))))-\/>pretty\_print\_to\_string()\ ==\ \textcolor{stringliteral}{"{}2\ *\ 3\ *\ 4"{}});}
+\DoxyCodeLine{00110\ CHECK((\textcolor{keyword}{new}\ \mbox{\hyperlink{class_mult}{Mult}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(1),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_add}{Add}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(2),\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_num}{Num}}(3))))-\/>pretty\_print\_to\_string()\ ==\ \textcolor{stringliteral}{"{}1\ *\ (2\ +\ 3)"{}});}
+\DoxyCodeLine{00111\ \}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#endif\ MSDSCRIPT\_EXPTEST\_H}}
 
 \end{DoxyCode}

@@ -244,18 +244,16 @@ void Add::print(std::ostream& stream) {
  */
 void Add::pretty_print_at(std::ostream &stream, precedence_t prec) {
 
-    if (prec > prec_add) {
+    if (prec >= prec_add) {
         stream<<("(");
     }
     lhs->pretty_print_at(stream, prec_add);
     stream<<(" + ");
     rhs->pretty_print_at(stream, prec_none);
 
-    if (prec > prec_add) {
+    if (prec >= prec_add) {
         stream<<(")");
     }
-
-
 }
 
 //**************Mult class methods***************
@@ -331,9 +329,12 @@ void Mult::print(std::ostream& stream) {
 void Mult::pretty_print_at(std::ostream &stream, precedence_t prec) {
 
 
+
+
     if (prec == prec_mult) {
         stream << ("(");
     }
+
 
     lhs->pretty_print_at(stream, prec_mult);
     stream << (" * ");
@@ -343,4 +344,5 @@ void Mult::pretty_print_at(std::ostream &stream, precedence_t prec) {
         stream << (")");
 
     }
+
 }

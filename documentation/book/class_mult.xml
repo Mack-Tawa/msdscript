@@ -69,6 +69,8 @@
 </listitem></itemizedlist>
 </para>
 </listitem>
+            <listitem><para><anchor xml:id="_class_mult_1a494ed6f3cffcd96aca4fcd0d41a1e6f3"/>void <emphasis role="strong">no_parentheses</emphasis> (std::ostream &amp;stream)</para>
+</listitem>
         </itemizedlist>
 </simplesect>
 Public Member Functions inherited from <link linkend="_class_expr">Expr</link>        <itemizedlist>

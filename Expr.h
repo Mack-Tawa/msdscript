@@ -83,6 +83,8 @@ public:
     void print(std::ostream& stream);
 
     void pretty_print_at(std::ostream& stream, precedence_t prec);
+
+    void no_parentheses(std::ostream &stream);
 };
 
 #endif //EXPRESSIONSHW_EXPR_H

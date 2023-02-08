@@ -86,7 +86,9 @@
 83 &#32;&#32;&#32;&#32;<emphasis role="keywordtype">void</emphasis>&#32;<link linkend="_class_mult_1af0dc03633da9d7d8dc7d6c8b4762afc7">print</link>(std::ostream&amp;&#32;stream);
 84 
 85 &#32;&#32;&#32;&#32;<emphasis role="keywordtype">void</emphasis>&#32;<link linkend="_class_mult_1a7a1da192b2fbe109b93e619acd713b06">pretty_print_at</link>(std::ostream&amp;&#32;stream,&#32;precedence_t&#32;prec);
-86 };
-87 
-88 <emphasis role="preprocessor">#endif&#32;</emphasis><emphasis role="comment">//EXPRESSIONSHW_EXPR_H</emphasis>
+86 
+87 &#32;&#32;&#32;&#32;<emphasis role="keywordtype">void</emphasis>&#32;no_parentheses(std::ostream&#32;&amp;stream);
+88 };
+89 
+90 <emphasis role="preprocessor">#endif&#32;</emphasis><emphasis role="comment">//EXPRESSIONSHW_EXPR_H</emphasis>
 </programlisting></section>
