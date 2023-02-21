@@ -8,6 +8,9 @@ EXECUTABLE = ./msdscript
 
 all: $(EXECUTABLE)
 
+run:
+	./msdscript --test
+
 msdscript: $(CXXSOURCE)
 	$(CXX) $(CXXFLAGS) -o msdscript $(CXXSOURCE)
 
@@ -25,8 +28,3 @@ expTest.o: expTest.cpp expTest.h
 
 clean:
 	rm -f *.o program
-
-.PHONY:
-
-doc:
-	cd documentation && doxygen

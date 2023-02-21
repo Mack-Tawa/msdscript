@@ -32,7 +32,9 @@ std::string Expr::pretty_print_to_string(){
  * \param stream - the stream input to console
  */
 void Expr::pretty_print(std::ostream &stream) {
-    pretty_print_at(stream, prec_none);
+    std::streampos sPos = 0;
+    bool needsPar = false;
+    pretty_print_at(stream, prec_none, sPos, needsPar);
 }
 
 //**************Num class methods***************
@@ -97,7 +99,7 @@ void Num::print(std::ostream& stream){
  * \param stream - the stream being utilized
  * \param prec_none - the precedence is always zero for nums
  */
-void Num::pretty_print_at(std::ostream& stream, precedence_t prec_none) {
+void Num::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) {
     stream<<this->val;
 }
 
@@ -131,7 +133,7 @@ void Var::print(std::ostream& stream) {
  * \param stream - the stream being utilized
  * \param prec_none - the precedence is always zero for nums
  */
-void Var::pretty_print_at(std::ostream &stream, precedence_t prec_none) {
+void Var::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) {
     stream<<this->val;
 }
 
@@ -242,14 +244,14 @@ void Add::print(std::ostream& stream) {
  * \param stream - the stream being utilized
  * \param prec - the precedence is always 1 for Adds
  */
-void Add::pretty_print_at(std::ostream &stream, precedence_t prec) {
+void Add::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) {
 
     if (prec >= prec_add) {
         stream<<("(");
     }
-    lhs->pretty_print_at(stream, prec_add);
+    lhs->pretty_print_at(stream, prec_add, sPos, true);
     stream<<(" + ");
-    rhs->pretty_print_at(stream, prec_none);
+    rhs->pretty_print_at(stream, prec_none, sPos, false);
 
     if (prec >= prec_add) {
         stream<<(")");
@@ -326,23 +328,90 @@ void Mult::print(std::ostream& stream) {
  * \param stream - the stream being utilized
  * \param prec - the precedence is always 2 for Mults
  */
-void Mult::pretty_print_at(std::ostream &stream, precedence_t prec) {
-
-
-
+void Mult::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) {
 
     if (prec == prec_mult) {
         stream << ("(");
     }
 
-
-    lhs->pretty_print_at(stream, prec_mult);
+    lhs->pretty_print_at(stream, prec_mult, sPos, false);
     stream << (" * ");
-    rhs->pretty_print_at(stream, prec_add);
+    rhs->pretty_print_at(stream, prec_add, sPos, true);
 
     if (prec == prec_mult) {
         stream << (")");
+    }
+}
 
+Let::Let(std::string lhs, Expr *rhs, Expr *body) {
+    this->lhs = lhs;
+    this->rhs = rhs;
+    this->body = body;
+}
+
+bool Let::has_variable() {
+    return (this->rhs->has_variable() || this->body->has_variable());
+}
+
+bool Let::equals(Expr *e) {
+    Let *n = dynamic_cast<Let *>(e);
+    if (n == nullptr) {
+        return false;
+    } else {
+        return (this->lhs == (n->lhs)
+                && this->rhs->equals(n->rhs)
+                && this->body->equals(n->body));
+    }
+}
+
+void Let::print(std::ostream& stream) {
+    stream<<"(";
+    stream<<"_let ";
+    stream<<lhs << "=" << rhs->to_string();
+    stream<<" _in ";
+    stream<<body->to_string();
+    stream<<")";
+}
+
+void Let::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) {
+    if (needPar) {
+        stream << "(";
+    }
+    int temp = stream.tellp();
+    int indent = temp - sPos;
+
+    stream << "_let ";
+    stream << lhs << " = ";
+    rhs->pretty_print_at(stream, prec_none, sPos, false);
+    stream<<"\n";
+    sPos = stream.tellp();
+
+
+    for (int i = 0; i < indent; i++) {
+        stream << ' ';
+    }
+
+    stream << "_in  ";
+    body->pretty_print_at(stream, prec_none, sPos, false);
+
+    if (needPar) {
+        stream << ")";
     }
 
 }
+
+Expr* Let::subst(std::string variable, Expr* expr){
+    if (lhs == variable) {
+        return new Let(lhs, rhs->subst(variable, expr), body);
+    }
+    return new Let(lhs, (rhs->subst(variable, expr)), body->subst(variable, expr));
+}
+
+int Let::interp(){
+
+    return body->subst(lhs, rhs)->interp();
+
+}
+
+
+//

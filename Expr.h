@@ -25,7 +25,7 @@ public:
     std::string to_string();
     std::string pretty_print_to_string();
     void pretty_print(std::ostream&stream);
-    virtual void pretty_print_at(std::ostream& stream, precedence_t prec)= 0;
+    virtual void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)= 0;
 
 
 
@@ -35,12 +35,12 @@ class Num : public Expr {
 public:
     int val;
     Num(int val);
-    bool equals(Expr *n);
-    int interp();
-    bool has_variable();
-    Expr* subst(std::string variable, Expr* expr);
-    void print(std::ostream& stream);
-    void pretty_print_at(std::ostream& stream, precedence_t prec);
+    bool equals(Expr *n)override;
+    int interp()override;
+    bool has_variable()override;
+    Expr* subst(std::string variable, Expr* expr)override;
+    void print(std::ostream& stream)override;
+    void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
 
 };
 
@@ -49,12 +49,12 @@ public:
     std::string val;
     Var(std::string val);
     bool equals(Expr *n) override;
-    int interp();
-    bool has_variable();
-    Expr* subst(std::string variable, Expr* expr);
-    void print(std::ostream& stream);
+    int interp()override;
+    bool has_variable()override;
+    Expr* subst(std::string variable, Expr* expr)override;
+    void print(std::ostream& stream)override;
 
-    void pretty_print_at(std::ostream& stream, precedence_t prec);
+    void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
 };
 
 class Add : public Expr {
@@ -63,12 +63,12 @@ public:
     Expr *rhs;
     Add(Expr *lhs, Expr *rhs);
     bool equals(Expr *n) override;
-    int interp();
-    bool has_variable();
-    Expr* subst(std::string variable, Expr* expr);
-    void print(std::ostream& stream);
+    int interp()override;
+    bool has_variable()override;
+    Expr* subst(std::string variable, Expr* expr)override;
+    void print(std::ostream& stream)override;
 
-    void pretty_print_at(std::ostream& stream, precedence_t prec);
+    void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
 };
 
 class Mult : public Expr {
@@ -77,14 +77,29 @@ public:
     Expr *rhs;
     Mult(Expr *lhs, Expr *rhs);
     bool equals(Expr *n) override;
-    int interp();
-    bool has_variable();
-    Expr* subst(std::string variable, Expr* expr);
-    void print(std::ostream& stream);
+    int interp()override;
+    bool has_variable()override;
+    Expr* subst(std::string variable, Expr* expr) override;
+    void print(std::ostream& stream) override;
+    void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
 
-    void pretty_print_at(std::ostream& stream, precedence_t prec);
+};
 
-    void no_parentheses(std::ostream &stream);
+class Let : public Expr {
+public:
+
+    Let(std::string lhs, Expr *rhs, Expr *body);
+
+    std::string lhs;
+    Expr *rhs;
+    Expr *body;
+    bool equals(Expr *n) override;
+    int interp() override;
+    bool has_variable() override;
+    Expr* subst(std::string variable, Expr* expr) override;
+    void print(std::ostream& stream) override;
+
+    void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) override;
 };
 
 #endif //EXPRESSIONSHW_EXPR_H
