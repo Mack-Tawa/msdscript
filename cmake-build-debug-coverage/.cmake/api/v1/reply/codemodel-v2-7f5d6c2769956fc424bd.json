@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "clion_bull::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-clion_bull-Debug-0a3fd105e581701fe923.json",
+					"jsonFile" : "target-clion_bull-Debug-3127c3c7a84f4f4fcb3b.json",
 					"name" : "clion_bull",
 					"projectIndex" : 0
 				}
@@ -49,7 +49,7 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/Users/jammerkoi/6015/msdscript/msdscript/cmake-build-debug",
+		"build" : "/Users/jammerkoi/6015/msdscript/msdscript/cmake-build-debug-coverage",
 		"source" : "/Users/jammerkoi/6015/msdscript/msdscript"
 	},
 	"version" : 

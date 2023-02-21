@@ -14,6 +14,8 @@ typedef enum {
     prec_mult       // = 2
 } precedence_t;
 
+
+
 class Expr {
 
 public:
@@ -26,6 +28,9 @@ public:
     std::string pretty_print_to_string();
     void pretty_print(std::ostream&stream);
     virtual void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)= 0;
+
+
+
 
 
 
@@ -101,5 +106,7 @@ public:
 
     void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) override;
 };
+
+
 
 #endif //EXPRESSIONSHW_EXPR_H

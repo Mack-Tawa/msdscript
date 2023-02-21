@@ -6,6 +6,8 @@
 #define HW1_CMDLINE_H
 using namespace std;
 
+
+
 int use_arguments(int argc, char** argv);
 
 #endif //HW1_CMDLINE_H

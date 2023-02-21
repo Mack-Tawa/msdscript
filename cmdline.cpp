@@ -4,6 +4,9 @@
 
 //
 // Created by Mack on 1/13/23.
+
+
+
 int use_arguments(int argc, char** argv) {
     bool tested = false;
     for (int i = 1; i < argc; i++) {
@@ -18,7 +21,24 @@ int use_arguments(int argc, char** argv) {
         if ((std::string) argv[i] == "--test") {
             Catch::Session().run(1, argv);
             tested = true;
-        } else {
+        }
+        if ((std::string) argv[i] == "--interp") {
+            Catch::Session().run(1, argv);
+            tested = true;
+        }
+        if ((std::string) argv[i] == "--print") {
+            Catch::Session().run(1, argv);
+            tested = true;
+        }
+        if ((std::string) argv[i] == "--interp") {
+            Catch::Session().run(1, argv);
+            tested = true;
+        }
+        if ((std::string) argv[i] == "--pretty-print") {
+            Catch::Session().run(1, argv);
+            tested = true;
+        }
+        else {
             std::cerr << "unknown input" << "\n";
             exit(1);
         }

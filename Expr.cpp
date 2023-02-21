@@ -4,6 +4,13 @@
 
 #include <sstream>
 #include "Expr.h"
+//
+//
+//Expr *parse_expr(std::istream &in);
+//Expr *parse_num(std::istream &in);
+//Expr *parse_multicand(std::istream &in);
+//Expr *parse_addend(std::istream &in);
+//
 
 /**
  * \brief - Returns an expression as a string
@@ -16,6 +23,8 @@ std::string Expr::to_string() {
     this->print(st);
     return st.str();
 }
+
+
 
 /**
  * \brief - Returns an expression with correct parentheses
@@ -412,6 +421,10 @@ int Let::interp(){
     return body->subst(lhs, rhs)->interp();
 
 }
+
+
+
+
 
 
 //
