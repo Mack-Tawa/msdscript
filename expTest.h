@@ -9,6 +9,8 @@
 #include "catch.h"
 #include "Expr.h"
 #include "Parse.h"
+#include <fstream>
+#include <iostream>
 
 /**
  * making tests: maybe have vars at top like setup in JUnit.
@@ -391,7 +393,7 @@ TEST_CASE ("Let_interp_mine") {
     }
 }
 
-TEST_CASE("parse") {
+TEST_CASE("Nabil's parse") {
     CHECK_THROWS_WITH(parse_str("()"), "invalid input");
 
 //
@@ -405,13 +407,8 @@ TEST_CASE("parse") {
     CHECK( parse_str("-3")->equals(new Num(-3)) );
     CHECK( parse_str("  \n 5  ")->equals(new Num(5)) );
     CHECK_THROWS_WITH( parse_str("-"), "invalid input" );
-//
-    // This was some temporary debugging code:
-//      std::istringstream in("-");
-//      parse_num(in)->print(std::cout); std::cout << "\n";
 
     CHECK_THROWS_WITH( parse_str(" -   5  "), "invalid input" );
-//////
     CHECK( parse_str("x")->equals(new Var("x")) );
     CHECK( parse_str("xyz")->equals(new Var("xyz")) );
     CHECK( parse_str("xYz")->equals(new Var("xYz")) );
@@ -429,4 +426,33 @@ TEST_CASE("parse") {
                    ->equals(new Mult(new Var("z"),
                                      new Add(new Var("x"), new Var("y"))) ));
 }
+
+TEST_CASE("my parse") {
+    CHECK(parse_str("_let x=5 _in ((_let y=3 _in (y+2))+x)")->equals(new Let("x", new Num(5), new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2))), new Var("x")))));
+    CHECK(parse_str("_let x = 2 _in x + 5")->equals(new Let("x", new Num(2), new Add(new Var("x"), new Num(5)))));
+}
+
+TEST_CASE("consume") {
+    //static void consume(std::istream &in, int expect) {
+//    std::filebuf fb;
+//    std::istream is(&fb);
+    std::stringstream ss;
+    ss.put('h');
+    ss.put('e');
+    ss.put('k');
+    CHECK_THROWS_WITH(consume(ss, 'j'), "consume mismatch");
+}
+
+TEST_CASE("parse") {
+    std::string test = "yeehaw";
+    std::stringstream ss(test);
+
+    ss.put('2');
+    ss.put('+');
+    ss.put('3');
+
+    CHECK((parse(ss))->equals(new Add(new Num(2), new Num(3))));
+
+}
+
 #endif //MSDSCRIPT_EXPTEST_H

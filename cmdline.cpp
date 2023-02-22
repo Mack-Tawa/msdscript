@@ -33,6 +33,5 @@ run_mode_t use_arguments(int argc, char** argv) {
             cerr<<"No available command requested";
             exit(1);
         }
-
     }
 }

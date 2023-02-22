@@ -6,7 +6,7 @@
 #include <sstream>
 #include <iostream>
 
-Expr *parse (std::istream in) {
+Expr *parse (std::istream& in) {
     return parse_expr(in);
 }
 
@@ -120,7 +120,6 @@ Expr *parseLet(std::istream &in) {
     building->body = parse_expr(in);
 
     return building;
-
 }
 
 Expr *parse_multicand(std::istream &in) {
@@ -190,7 +189,7 @@ void skip_whitespace(std::istream &in) {
 }
 
 
-static void consume(std::istream &in, int expect) {
+void consume(std::istream &in, int expect) {
     int c = in.get();
     if (c != expect)
         throw std::runtime_error("consume mismatch");

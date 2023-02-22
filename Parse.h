@@ -10,9 +10,7 @@
 #include <iosfwd>
 #include <iostream>
 
-static void consume(std::istream &istream, int c);
 
-void skip_whitespace(std::istream &istream);
 
 Expr *parse_expr(std::istream &in);
 
@@ -26,13 +24,13 @@ void skip_whitespace(std::istream &in);
 
 Expr *parseVar(std::istream &in);
 
-static void consume(std::istream &in, int expect);
+void consume(std::istream &in, int expect);
 
 Expr *parseLet(std::istream &in);
 
 Expr *parse_str(std::string s);
 
-Expr *parse (std::istream in);
+Expr *parse (std::istream& in);
 
 
 #endif //CLION_BULL_PARSE_H
