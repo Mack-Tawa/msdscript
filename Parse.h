@@ -30,5 +30,9 @@ static void consume(std::istream &in, int expect);
 
 Expr *parseLet(std::istream &in);
 
+Expr *parse_str(std::string s);
+
+Expr *parse (std::istream in);
+
 
 #endif //CLION_BULL_PARSE_H

@@ -8,8 +8,8 @@ EXECUTABLE = ./msdscript
 
 all: $(EXECUTABLE)
 
-run:
-	./msdscript --test
+#run:
+#	./msdscript --test
 
 msdscript: $(CXXSOURCE)
 	$(CXX) $(CXXFLAGS) -o msdscript $(CXXSOURCE)

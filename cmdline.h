@@ -6,8 +6,17 @@
 #define HW1_CMDLINE_H
 using namespace std;
 
+typedef enum {
+
+    do_nothing,
+    do_interp,
+    do_print,
+    do_pretty_print
+
+} run_mode_t;
 
 
-int use_arguments(int argc, char** argv);
+
+run_mode_t use_arguments(int argc, char** argv);
 
 #endif //HW1_CMDLINE_H

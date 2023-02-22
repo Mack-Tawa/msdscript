@@ -11,11 +11,10 @@ Expr *parse (std::istream in) {
 }
 
 Expr *parse_str(std::string s) {
-    std::istream in = 0;
+    std::stringstream in(s);
 
-    Expr *test = parse(in)
-
-    return parse(in)->to
+    Expr *e = parse_expr(in);
+    return e;
 
 }
 
@@ -24,16 +23,29 @@ Expr *parse_str(std::string s) {
 Expr *parse_expr(std::istream &in) {
 //    std::cout<<"we're in parse expression";
     Expr *e;
-    e = parse_addend(in);
-    skip_whitespace(in);
-    int c = in.peek();
-    if (c == '+') {
-        consume(in, '+');
-        Expr *rhs = parse_expr(in);
-        return new Add(e, rhs);
-    } else
-        return e;
-}
+//    try
+//    {
+
+
+        e = parse_addend(in);
+        skip_whitespace(in);
+        int c = in.peek();
+        if (c == '+') {
+            consume(in, '+');
+            Expr *rhs = parse_expr(in);
+
+            return new Add(e, rhs);
+
+        } else {
+            return e;
+        }
+    }
+//    catch(exception & e)
+//    {
+//        throw (std::runtime_error("invalid input"));
+//    }
+
+//}
 
 Expr* parse_addend(std::istream &in) {
 
@@ -53,6 +65,10 @@ Expr *parseVar(std::istream &in) {
     stringstream ss;
     while (1) {
         int c = in.peek();
+        if (c == '_') {
+            consume(in, c);
+            throw ("invalid input");
+        }
         if (isalpha(c)) {
             ss.put( c);
             consume(in, c);
@@ -85,7 +101,6 @@ Expr *parseLet(std::istream &in) {
     }
 
     building->lhs = ss.str();
-//    std::cout<< "The varName is: " << building->lhs;
 
     skip_whitespace(in);
 
@@ -95,7 +110,6 @@ Expr *parseLet(std::istream &in) {
 
     building->rhs = parse_expr(in);
 
-//    std::cout<<"The rhs is: " << building->rhs->to_string();
     skip_whitespace(in);
 
     consume(in, '_');
@@ -107,11 +121,6 @@ Expr *parseLet(std::istream &in) {
 
     return building;
 
-
-
-
-
-
 }
 
 Expr *parse_multicand(std::istream &in) {
@@ -122,7 +131,7 @@ Expr *parse_multicand(std::istream &in) {
     else if (isalpha(c)) {
         return parseVar(in);
     }
-    if ((c == '_')){
+    if (c == '_'){
         return parseLet(in);
     }
     else if (c == '(') {
@@ -142,13 +151,23 @@ Expr *parse_multicand(std::istream &in) {
 Expr *parse_num(std::istream &in) {
     int n = 0;
     bool negative = false;
-    if (in.peek() == '-') {
+    int d = in.peek();
+    if (d == '-') {
         negative = true;
         consume(in, '-');
+        if (!isdigit(in.peek())){
+            throw std::runtime_error("invalid input");
+        }
+
     }
+//    std::cout<<(in.peek());
+//    if (isalpha(in.peek()) || in.peek() ==  ' ' || toascii(in.peek()) == 10) {
+//        throw std::runtime_error("invalid input");
+//    }
 
     while (1) {
         int c = in.peek();
+
         if (isdigit(c)) {
             consume(in, c);
             n = n*10 + (c - '0');
