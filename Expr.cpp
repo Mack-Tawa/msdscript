@@ -343,9 +343,12 @@ void Mult::pretty_print_at(std::ostream &stream, precedence_t prec, std::streamp
         stream << ("(");
     }
 
-    lhs->pretty_print_at(stream, prec_mult, sPos, false);
+    lhs->pretty_print_at(stream, prec_mult, sPos, true);
     stream << (" * ");
-    rhs->pretty_print_at(stream, prec_add, sPos, true);
+    if(prec == prec_add) {
+        rhs->pretty_print_at(stream,prec_add,sPos, true);
+    }
+    else rhs->pretty_print_at(stream, prec_add, sPos, false);
 
     if (prec == prec_mult) {
         stream << (")");
@@ -418,7 +421,9 @@ Expr* Let::subst(std::string variable, Expr* expr){
 
 int Let::interp(){
 
-    return body->subst(lhs, rhs)->interp();
+    Expr *expr = body->subst(lhs, new Num(this->rhs->interp()));
+
+    return expr->interp();
 
 }
 

@@ -6,6 +6,8 @@ HEADERS = ${wildcards *.h}
 CXXFLAGS = --std=c++17 -O2
 EXECUTABLE = ./msdscript
 
+otherEXECUTABLE = test_msdscript.o exec.o
+
 all: $(EXECUTABLE)
 
 #run:
@@ -13,6 +15,9 @@ all: $(EXECUTABLE)
 
 msdscript: $(CXXSOURCE)
 	$(CXX) $(CXXFLAGS) -o msdscript $(CXXSOURCE)
+
+test_msdscript: $(otherEXECUTABLE)
+	$(CXX) $(CXXFLAGS) -o test_msdscript $(otherEXECUTABLE)
 
 main.o: main.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c  main.cpp
@@ -28,5 +33,12 @@ expTest.o: expTest.cpp expTest.h
 
 Parse.o: Parse.cpp Parse.h
 	$(CXX) $(CXXFLAGS) -c Parse.cpp
+
+test_msdscript.o: test_msdscript.cpp test_msdscript.h
+	$(CXX) $(CXXFLAGS) -c test_msdscript.cpp
+
+exec.o: exec.cpp exec.h
+	$(CXX) $(CXXFLAGS) -c exec.cpp
+
 clean:
 	rm -f *.o program

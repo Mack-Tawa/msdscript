@@ -76,6 +76,18 @@ build CMakeFiles/clion_bull.dir/Parse.cpp.o: CXX_COMPILER__clion_bull_Debug /Use
   OBJECT_DIR = CMakeFiles/clion_bull.dir
   OBJECT_FILE_DIR = CMakeFiles/clion_bull.dir
 
+build CMakeFiles/clion_bull.dir/exec.cpp.o: CXX_COMPILER__clion_bull_Debug /Users/jammerkoi/6015/msdscript/msdscript/exec.cpp || cmake_object_order_depends_target_clion_bull
+  DEP_FILE = CMakeFiles/clion_bull.dir/exec.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -fcolor-diagnostics -std=gnu++17
+  OBJECT_DIR = CMakeFiles/clion_bull.dir
+  OBJECT_FILE_DIR = CMakeFiles/clion_bull.dir
+
+build CMakeFiles/clion_bull.dir/test_msdscript.cpp.o: CXX_COMPILER__clion_bull_Debug /Users/jammerkoi/6015/msdscript/msdscript/test_msdscript.cpp || cmake_object_order_depends_target_clion_bull
+  DEP_FILE = CMakeFiles/clion_bull.dir/test_msdscript.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -fcolor-diagnostics -std=gnu++17
+  OBJECT_DIR = CMakeFiles/clion_bull.dir
+  OBJECT_FILE_DIR = CMakeFiles/clion_bull.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target clion_bull
@@ -84,7 +96,7 @@ build CMakeFiles/clion_bull.dir/Parse.cpp.o: CXX_COMPILER__clion_bull_Debug /Use
 #############################################
 # Link the executable clion_bull
 
-build clion_bull: CXX_EXECUTABLE_LINKER__clion_bull_Debug CMakeFiles/clion_bull.dir/main.cpp.o CMakeFiles/clion_bull.dir/cmdline.cpp.o CMakeFiles/clion_bull.dir/Expr.cpp.o CMakeFiles/clion_bull.dir/expTest.cpp.o CMakeFiles/clion_bull.dir/Parse.cpp.o
+build clion_bull: CXX_EXECUTABLE_LINKER__clion_bull_Debug CMakeFiles/clion_bull.dir/main.cpp.o CMakeFiles/clion_bull.dir/cmdline.cpp.o CMakeFiles/clion_bull.dir/Expr.cpp.o CMakeFiles/clion_bull.dir/expTest.cpp.o CMakeFiles/clion_bull.dir/Parse.cpp.o CMakeFiles/clion_bull.dir/exec.cpp.o CMakeFiles/clion_bull.dir/test_msdscript.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk
   OBJECT_DIR = CMakeFiles/clion_bull.dir
   POST_BUILD = :

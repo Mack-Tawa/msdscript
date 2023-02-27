@@ -455,4 +455,87 @@ TEST_CASE("parse") {
 
 }
 
+TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let again") {
+    Let* tripleNestedLet = new Let("x", new Num(1),
+                                   new Let("y", new Num(1),
+                                           new Mult(new Add(new Var("x"), new Var("y")), new Var("z"))));
+    Let* tripleNestedLet2 = new Let("x", new Num(1),
+                                    new Let("y", new Num(1),
+                                            new Let("z", new Add(new Var("x"), new Num(1)),
+                                                    new Add(new Add(new Var("x"), new Var("y")), new Var("z")))));
+    Let* tripleNestedLet3 = new Let("x", new Num(1),
+                                    new Let("y", new Num(1),
+                                            new Let("z", new Add(new Var("x"), new Num(1)),
+                                                    new Mult(new Add(new Var("x"), new Var("y")), new Var("z")))));
+
+
+    CHECK(tripleNestedLet -> pretty_print_to_string() ==
+          "_let x = 1\n"
+          "_in  _let y = 1\n"
+          "     _in  (x + y) * z"
+    );
+    CHECK(tripleNestedLet2 -> pretty_print_to_string() ==
+          "_let x = 1\n"
+          "_in  _let y = 1\n"
+          "     _in  _let z = x + 1\n"
+          "          _in  (x + y) + z"
+    );
+    CHECK(tripleNestedLet3 -> pretty_print_to_string() ==
+          "_let x = 1\n"
+          "_in  _let y = 1\n"
+          "     _in  _let z = x + 1\n"
+          "          _in  (x + y) * z"
+    );
+    Let* tripleNestedLet4 =new Let("x", new Num(5),
+                                   new Let("y", new Num(3),
+                                           new Add(new Var("y"), new Num(2))));
+    Let* tripleNestedLet5 =new Let("x", new Num(5),
+                                   new Add(new Let("y", new Num(3),
+                                                   new Add(new Var("y"), new Num(2))), new Var("x")));
+    std::stringstream out("");
+    out.str("");
+    tripleNestedLet4->pretty_print(out);
+    CHECK(out.str() ==
+          "_let x = 5\n"
+          "_in  _let y = 3\n"
+          "     _in  y + 2"
+    );
+
+    CHECK(tripleNestedLet5 -> pretty_print_to_string() == "_let x = 5\n"
+                                                          "_in  (_let y = 3\n"
+                                                          "      _in  y + 2) + x");
+    SECTION("assignment_examples") {
+        CHECK( (new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))-> pretty_print_to_string()
+               == "5 * (_let x = 5\n"
+                  "     _in  x) + 1");
+        CHECK( (new Mult(new Mult(new Num (2), new Let("x", new Num(5), new Add(new Var("x") ,new  Num(1)) )), new Num(3) )) -> pretty_print_to_string()
+               == "(2 * _let x = 5\n"
+                  "     _in  x + 1) * 3");
+    }
+        // A _let needs parentheses when it is nested immediately as the right argument of an unparenthesized *
+        // where _let would have needed parentheses in the surrounding context
+        // (that is, if the _let used in place of the whole * would need parentheses,
+        // then it still needs parentheses within the right-hand size of *).
+    SECTION("new_edge") {
+        CHECK( (new Mult(new Num (2), new Let("x", new Num(5), new Add(new Var("x") ,new  Num(1)) ) )) -> pretty_print_to_string()
+               == "2 * _let x = 5\n"
+                  "    _in  x + 1");
+        CHECK( (new Add(new Mult(new Num(5), new Let("x", new Num(5), new Mult(new Var("x"), new Num(2)))), new Num(1)))-> pretty_print_to_string()
+               == "5 * (_let x = 5\n"
+                  "     _in  x * 2) + 1");
+        CHECK( (new Mult((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Mult(new Var("x"), new Num(2)))), new Num(1))), new Num(7)))-> pretty_print_to_string()
+               == "(5 * (_let x = 5\n"
+                  "      _in  x * 2) + 1) * 7");
+        CHECK( (new Let("x", new Num(10), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Num(10))), new Mult(new Num(10), new Num(10)))))
+                       ->pretty_print_to_string()  == "_let x = 10\n"
+                                                      "_in  (x * (10 * 10) * 10) * 10 * 10");
+        CHECK( (new Let("x", new Num(1), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Var("x"))), new Mult(new Num(10), new Num(10)))))
+                       -> pretty_print_to_string() == "_let x = 1\n"
+                                                      "_in  (x * (10 * 10) * x) * 10 * 10" );
+        CHECK( (new Let("x", new Num(1), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Var("x"))), new Mult(new Var("y"), new Num(10)))))
+                       -> pretty_print_to_string() == "_let x = 1\n"
+                                                      "_in  (x * (10 * 10) * x) * y * 10" );
+    }
+}
+
 #endif //MSDSCRIPT_EXPTEST_H

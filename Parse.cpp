@@ -101,24 +101,16 @@ Expr *parseLet(std::istream &in) {
     }
 
     building->lhs = ss.str();
-
     skip_whitespace(in);
-
     consume(in, '=');
-
     skip_whitespace(in);
-
     building->rhs = parse_expr(in);
-
     skip_whitespace(in);
-
     consume(in, '_');
     consume(in, 'i');
     consume(in, 'n');
     skip_whitespace(in);
-
     building->body = parse_expr(in);
-
     return building;
 }
 
@@ -157,12 +149,7 @@ Expr *parse_num(std::istream &in) {
         if (!isdigit(in.peek())){
             throw std::runtime_error("invalid input");
         }
-
     }
-//    std::cout<<(in.peek());
-//    if (isalpha(in.peek()) || in.peek() ==  ' ' || toascii(in.peek()) == 10) {
-//        throw std::runtime_error("invalid input");
-//    }
 
     while (1) {
         int c = in.peek();
@@ -178,7 +165,6 @@ Expr *parse_num(std::istream &in) {
     return new Num(n);
 }
 
-
 void skip_whitespace(std::istream &in) {
     while (1) {
         int c = in.peek();
@@ -187,7 +173,6 @@ void skip_whitespace(std::istream &in) {
         consume(in, c);
     }
 }
-
 
 void consume(std::istream &in, int expect) {
     int c = in.get();

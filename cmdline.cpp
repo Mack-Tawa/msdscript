@@ -9,7 +9,6 @@
 
 
 run_mode_t use_arguments(int argc, char** argv) {
-    bool tested = false;
     for (int i = 1; i < 2; i++) {
 
         if ((std::string) argv[i] == "--test") {
@@ -25,7 +24,7 @@ run_mode_t use_arguments(int argc, char** argv) {
         else if ((std::string) argv[i] == "--print") {
             return do_print;
         }
-        else if ((std::string) argv[i] == "--prettyPrint") {
+        else if ((std::string) argv[i] == "--pretty-print") {
             return do_pretty_print;
         }
 
