@@ -9,12 +9,13 @@
 
 using namespace std;
 
+//add way to pick pretty/print/interp
 
 int main(int argc, char **argv) {
 
     if (argc == 2) {
 
-        const char *const interp1_argv[] = {argv[1], "--print"};
+        const char *const interp1_argv[] = {argv[1], "--pretty-print"};
         for (int i = 0; i < 5000; i++) {
             std::string in = random_expr_string();
             std::cout << "Trying " << in << "\n";
@@ -106,15 +107,16 @@ std::string random_expr_string() {
         }
         return result;
     } else if ((rand() % 10) < 3) {
-
         result += random_expr_string() + "*" + random_expr_string();
         if (chance == 1) {
             result += ")";
         }
         return result;
-    } else if ((rand() % 10) < 1) {
+    }
+    else if ((rand() % 10) < 4) {
         return (letGen());
-    } else {
+    }
+    else {
         result += to_string(rInt);
         if (chance == 1) {
             result += ")";
