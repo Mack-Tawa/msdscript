@@ -1,7 +1,7 @@
 CXX = c++
 CFLAGS = -std=c++11
 CCSOURCE = ${wildcards *.cpp}
-CXXSOURCE = main.o cmdline.o Expr.o expTest.o Parse.o
+CXXSOURCE = main.o cmdline.o Expr.o expTest.o Parse.o val.o
 HEADERS = ${wildcards *.h}
 CXXFLAGS = --std=c++17 -O2
 EXECUTABLE = ./msdscript
@@ -39,6 +39,10 @@ test_msdscript.o: test_msdscript.cpp test_msdscript.h
 
 exec.o: exec.cpp exec.h
 	$(CXX) $(CXXFLAGS) -c exec.cpp
+
+val.o: val.cpp val.h
+	$(CXX) $(CXXFLAGS) -c val.cpp
+
 
 clean:
 	rm -f *.o program

@@ -2,6 +2,7 @@
 #include "cmdline.h"
 #include "Expr.h"
 #include "Parse.h"
+#include "val.h"
 
 
 
@@ -16,10 +17,10 @@ int main(int argc, const char * argv[]) {
 
         }
         else if (temp == do_interp) {
-//            std::cout<<"Interpreting"<<endl;
             Expr *e = parse_expr(std::cin);
-            int result = e->interp();
-            std::cout<<result<<endl;
+            Val* result = e->interp();
+            std::string resultString = result->to_string();
+            std::cout<<resultString<<endl;
             exit(0);
         }
         else if (temp == do_print) {

@@ -15,12 +15,12 @@ typedef enum {
 } precedence_t;
 
 
-
+class Val;
 class Expr {
 
 public:
     virtual bool equals(Expr *e) = 0; // 0 means subclass must overwrite equals
-    virtual int interp() = 0;
+    virtual Val* interp() = 0;
     virtual bool has_variable() = 0;
     virtual Expr* subst(std::string variable, Expr* expr) = 0;
     virtual void print(std::ostream& stream) = 0;
@@ -29,11 +29,6 @@ public:
     void pretty_print(std::ostream&stream);
     virtual void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)= 0;
 
-
-
-
-
-
 };
 
 class Num : public Expr {
@@ -41,7 +36,7 @@ public:
     int val;
     Num(int val);
     bool equals(Expr *n)override;
-    int interp()override;
+    Val* interp()override;
     bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr)override;
     void print(std::ostream& stream)override;
@@ -54,7 +49,7 @@ public:
     std::string val;
     Var(std::string val);
     bool equals(Expr *n) override;
-    int interp()override;
+    Val* interp()override;
     bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr)override;
     void print(std::ostream& stream)override;
@@ -68,7 +63,7 @@ public:
     Expr *rhs;
     Add(Expr *lhs, Expr *rhs);
     bool equals(Expr *n) override;
-    int interp()override;
+    Val* interp()override;
     bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr)override;
     void print(std::ostream& stream)override;
@@ -82,7 +77,7 @@ public:
     Expr *rhs;
     Mult(Expr *lhs, Expr *rhs);
     bool equals(Expr *n) override;
-    int interp()override;
+    Val* interp()override;
     bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr) override;
     void print(std::ostream& stream) override;
@@ -99,7 +94,7 @@ public:
     Expr *rhs;
     Expr *body;
     bool equals(Expr *n) override;
-    int interp() override;
+    Val* interp() override;
     bool has_variable() override;
     Expr* subst(std::string variable, Expr* expr) override;
     void print(std::ostream& stream) override;

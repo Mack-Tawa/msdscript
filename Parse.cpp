@@ -21,31 +21,18 @@ Expr *parse_str(std::string s) {
 
 
 Expr *parse_expr(std::istream &in) {
-//    std::cout<<"we're in parse expression";
     Expr *e;
-//    try
-//    {
-
-
         e = parse_addend(in);
         skip_whitespace(in);
         int c = in.peek();
         if (c == '+') {
             consume(in, '+');
             Expr *rhs = parse_expr(in);
-
             return new Add(e, rhs);
-
         } else {
             return e;
         }
     }
-//    catch(exception & e)
-//    {
-//        throw (std::runtime_error("invalid input"));
-//    }
-
-//}
 
 Expr* parse_addend(std::istream &in) {
 

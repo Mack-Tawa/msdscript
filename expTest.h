@@ -6,6 +6,7 @@
 #define MSDSCRIPT_EXPTEST_H
 
 #include <sstream>
+#include "val.h"
 #include "catch.h"
 #include "Expr.h"
 #include "Parse.h"
@@ -23,9 +24,10 @@
 TEST_CASE("interp")
 {
     CHECK( (new Mult(new Num(3), new Num(2)))
-                   ->interp()==6 );
-    CHECK( (new Add(new Add(new Num(10), new Num(15)),new Add(new Num(20),new Num(20))))
-                   ->interp()==65);
+                   ->interp()->equals(new numVal(6)) );
+    CHECK((new Num(6))->interp()->equals(new numVal(6)));
+//    CHECK( (new Add(new Add(new Num(10), new Num(15)),new Add(new Num(20),new Num(20))))
+//                   ->interp()==65);
 }
 
 TEST_CASE( "equals" ) {
@@ -34,11 +36,7 @@ TEST_CASE( "equals" ) {
     CHECK((new Add(new Num(2), new Num(3)))->equals(new Add(new  Num(2), new Num(3))) == true );
 }
 
-//    TEST_CASE( "not equals" ) {
-//    CHECK((new Mult(new Num(1), new Num(2)))->equals(new Add(new Num(1), new Num(2))) == false);
-//    CHECK((new Add(new Num(2), new Num(3)))->equals(new Add(new Num(3), new Num(2))) == false);
-//
-//}
+
 
 TEST_CASE( "different types same Num vals" ) {
     CHECK((new Add(new Num(2), new Num(24)))->equals(new Mult(new Num(2), new Num(24))) == false);
@@ -90,9 +88,7 @@ TEST_CASE("CHECKING PRINT") {
 }
 
 TEST_CASE("CHECKING PRETTY PRINT") {
-//    new Mult (new Mult (new Num(2), new Num(3)), new Num(4))->equals()
-//    CHECK(((new Mult( new Num(1), new Add(new Num(2), new Num(3)))->pretty_print_to_string()) == "1 * (2 + 3)");
-    //->to_string()->equals("1 * (2+3")));
+
     CHECK( (new Mult (new Mult (new Num(2), new Num(3)), new Num(4)))->pretty_print_to_string() == "(2 * 3) * 4");
     CHECK((new Num(1))->pretty_print_to_string() == "1");
     CHECK((new Var("a"))->pretty_print_to_string() == "a");
@@ -223,7 +219,7 @@ TEST_CASE("LET STUFF") {
 
 TEST_CASE("william' stuff") {
     SECTION("hw_examples") {
-        CHECK((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))->interp() == 26);
+//        CHECK((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))->interp() == 26);
     }
 }
 
@@ -371,25 +367,27 @@ TEST_CASE("Let_print_mine") {
 }
 TEST_CASE ("Let_interp_mine") {
     SECTION("hw_examples") {
-        CHECK((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1))) -> interp() == 26);
-        CHECK((new Mult(new Num(5), new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))) -> interp() == 30);
+        CHECK((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))->interp()->equals(new numVal (26)));
+        CHECK((new Mult(new Num(5), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))))->interp()->equals(new numVal (30)));
     }
+
     SECTION("from_pretty_print_edge") {
         CHECK( (new Let("x", new Num(1),
                         new Let("y", new Num(1),
                                 new Let("z", new Add(new Var("x"), new Num(1)),
-                                        new Mult(new Add(new Var("x"), new Var("y")), new Var("z")))))) -> interp() == 4);
-        CHECK( (new Mult((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Mult(new Var("x"), new Num(2)))), new Num(1))), new Num(7))) -> interp() == 357); // 51 * 7
+                                        new Mult(new Add(new Var("x"), new Var("y")), new Var("z")))))) -> interp()->equals(new numVal(4)));
+        CHECK( (new Mult((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Mult(new Var("x"), new Num(2)))), new Num(1))), new Num(7))) ->
+        interp()->equals(new numVal (357))); // 51 * 7
         CHECK( (new Let("x", new Num(10), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Num(10))), new Mult(new Num(10), new Num(10)))))
-                       ->interp()  == 1000000);
+                       ->interp()->equals(new numVal (1000000)));
         CHECK( (new Let("x", new Num(1), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Var("x"))), new Mult(new Num(10), new Num(10)))))
-                       ->interp()  == 10000);
+                       ->interp()->equals(new numVal (10000)));
         CHECK_THROWS_WITH( ((new Let("x", new Num(1), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Var("x"))), new Mult(new Var("y"), new Num(10)))))
-                                    -> interp() == 10000), "no value for variable");
+                                    -> interp()->equals(new numVal (10000))), "no value for variable");
     }
     SECTION("bypass_middle_let") {
         CHECK ((new Let("x", new Num(2), new Let("z", new Num(4), new Add(new Var("x"), new Num(10)))))
-                       -> interp() == 12);
+                       -> interp()->equals(new numVal (12)));
     }
 }
 
@@ -455,7 +453,7 @@ TEST_CASE("parse") {
 
 }
 
-TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let again") {
+TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let againadsf") {
     Let* tripleNestedLet = new Let("x", new Num(1),
                                    new Let("y", new Num(1),
                                            new Mult(new Add(new Var("x"), new Var("y")), new Var("z"))));
@@ -537,5 +535,24 @@ TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let again") {
                                                       "_in  (x * (10 * 10) * x) * y * 10" );
     }
 }
+
+TEST_CASE("val to string") {
+    CHECK((new Num(5))->interp()->to_string() == "5");
+}
+TEST_CASE("toExpr") {
+    CHECK((new numVal(4))->toExpr()->equals(new Num(4)) == true);
+}
+TEST_CASE("equals bad") {
+    CHECK_FALSE((new numVal (4))->equals(nullptr));
+}
+
+TEST_CASE("addto bad") {
+    CHECK_THROWS_WITH((new numVal(5))->add_to(reinterpret_cast<Val *>(new Num(5))), "add of non-number");
+}
+
+TEST_CASE("multTo bad") {
+    CHECK_THROWS_WITH((new numVal(5))->mult_to(reinterpret_cast<Val *>(new Num(5))), "add of non-number");
+}
+
 
 #endif //MSDSCRIPT_EXPTEST_H

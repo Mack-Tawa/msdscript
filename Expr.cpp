@@ -3,6 +3,7 @@
 //
 
 #include <sstream>
+#include "val.h"
 #include "Expr.h"
 //
 //
@@ -73,8 +74,9 @@ bool Num::equals(Expr *e) {
  * \brief - Gives the value of the number
  * \return - Returns the value of the number
  */
-int Num::interp() {
-    return (this->val);
+Val* Num::interp() {
+    numVal *v = new numVal(this->val);
+    return v;
 }
 
 /**
@@ -179,7 +181,7 @@ bool Var::equals(Expr *e) {
  * \brief - throws an exception as there is no value for Vars
  * \return - exception
  */
-int Var::interp() {
+Val* Var::interp() {
     throw std::runtime_error( "no value for variable" );
 }
 
@@ -198,8 +200,9 @@ Add::Add(Expr *lhs, Expr *rhs) {
  * \brief - Gives the value of the number at the bottom of the expression
  * \return - Returns the value of the number adding to the other bottom of the expression
  */
-int Add::interp() {
-    return this->lhs->interp() + this->rhs->interp();
+Val* Add::interp() {
+
+    return this->lhs->interp()->add_to(this->rhs->interp());
 }
 
 /**
@@ -282,8 +285,8 @@ Mult::Mult(Expr *lhs, Expr *rhs) {
  * \brief - Gives the value of the number at the bottom of the expression
  * \return - Returns the value of the number adding to the other bottom of the expression
  */
-int Mult::interp() {
-    return this->lhs->interp() * this->rhs->interp();
+Val* Mult::interp() {
+    return this->lhs->interp()->mult_to(this->rhs->interp());
 }
 
 /**
@@ -419,11 +422,10 @@ Expr* Let::subst(std::string variable, Expr* expr){
     return new Let(lhs, (rhs->subst(variable, expr)), body->subst(variable, expr));
 }
 
-int Let::interp(){
+Val* Let::interp(){
 
-    Expr *expr = body->subst(lhs, new Num(this->rhs->interp()));
 
-    return expr->interp();
+    return(this->body->subst(lhs,rhs)->interp());
 
 }
 
