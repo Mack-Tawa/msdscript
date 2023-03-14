@@ -6,7 +6,7 @@
 #include <sstream>
 #include <iostream>
 
-Expr *parse (std::istream& in) {
+Expr *parse(std::istream &in) {
     return parse_expr(in);
 }
 
@@ -18,13 +18,12 @@ Expr *parse_str(std::string s) {
 
 std::string parse_keyword(std::istream &in) {
     std::string result = "";
-    while(true) {
+    while (true) {
         char c = in.peek();
         if (isalpha(c)) {
             result += c;
             consume(in, c);
-        }
-        else {
+        } else {
             break;
         }
     }
@@ -34,20 +33,37 @@ std::string parse_keyword(std::istream &in) {
 
 Expr *parse_expr(std::istream &in) {
     Expr *e;
-        e = parse_addend(in);
+    e = parse_comparg(in);
     skip_whitespace(in);
 
     int c = in.peek();
-        if (c == '+') {
-            consume(in, '+');
-            Expr *rhs = parse_expr(in);
-            return new AddExpr(e, rhs);
-        } else {
-            return e;
-        }
+    if (c == '=') {
+        consume(in, '=');
+        consume(in, '=');
+        Expr *rhs = parse_expr(in);
+        return new EqExpr(e, rhs);
+    } else {
+        return e;
     }
+}
 
-Expr* parse_addend(std::istream &in) {
+//new com
+Expr *parse_comparg(std::istream &in) {
+    Expr *e;
+    e = parse_addend(in);
+    skip_whitespace(in);
+
+    int c = in.peek();
+    if (c == '+') {
+        consume(in, '+');
+        Expr *rhs = parse_expr(in);
+        return new AddExpr(e, rhs);
+    } else {
+        return e;
+    }
+}
+
+Expr *parse_addend(std::istream &in) {
 
     Expr *e;
     e = parse_multicand(in);
@@ -70,7 +86,7 @@ Expr *parseVar(std::istream &in) {
             throw ("invalid input");
         }
         if (isalpha(c)) {
-            ss.put( c);
+            ss.put(c);
             consume(in, c);
         } else
             break;
@@ -111,7 +127,7 @@ Expr *parseLet(std::istream &in) {
 Expr *parseIf(std::istream &in) {
     skip_whitespace(in);
 
-    Expr* statement = parse_expr(in);
+    Expr *statement = parse_expr(in);
     skip_whitespace(in);
 
     consume(in, '_');
@@ -119,7 +135,7 @@ Expr *parseIf(std::istream &in) {
     if (parse_keyword(in) != "then") {
         throw std::runtime_error("invalid argument for 'then' statement");
     }
-    Expr* then = parse_expr(in);
+    Expr *then = parse_expr(in);
     skip_whitespace(in);
 
 
@@ -127,7 +143,7 @@ Expr *parseIf(std::istream &in) {
     if (parse_keyword(in) != "else") {
         throw std::runtime_error("invalid argument for 'else' statement");
     }
-    Expr* els = parse_expr(in);
+    Expr *els = parse_expr(in);
 
     return new IfExpr(statement, then, els);
 
@@ -142,29 +158,23 @@ Expr *parse_multicand(std::istream &in) {
         return parse_num(in);
     else if (isalpha(c)) {
         return parseVar(in);
-    }
-    else if (c == '_'){
+    } else if (c == '_') {
         consume(in, '_');
         std::string result = parse_keyword(in);
         if (result == "let") {
             return parseLet(in);
-        }
-        else if (result == "if") {
+        } else if (result == "if") {
             return parseIf(in);
-        }
-        else if (result == "true") {
-            cout<<"in true";
+        } else if (result == "true") {
+            cout << "in true";
             return new BoolExpr(true);
-        }
-        else if (result == "false") {
-            cout<<"in false";
+        } else if (result == "false") {
+            cout << "in false";
             return new BoolExpr(false);
+        } else {
+            throw runtime_error("did not get a proper command");
         }
-        else {
-            throw runtime_error("don't ride through");
-        }
-    }
-    else if (c == '(') {
+    } else if (c == '(') {
         consume(in, '(');
         Expr *e = parse_expr(in);
         skip_whitespace(in);
@@ -185,7 +195,7 @@ Expr *parse_num(std::istream &in) {
     if (d == '-') {
         negative = true;
         consume(in, '-');
-        if (!isdigit(in.peek()) || in.peek() == EOF){
+        if (!isdigit(in.peek()) || in.peek() == EOF) {
             throw std::runtime_error("invalid input");
         }
     }
@@ -194,7 +204,7 @@ Expr *parse_num(std::istream &in) {
         int c = in.peek();
         if (isdigit(c)) {
             consume(in, c);
-            n = n*10 + (c - '0');
+            n = n * 10 + (c - '0');
         } else
             break;
     }

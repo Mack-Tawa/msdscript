@@ -32,5 +32,7 @@ Expr *parse_str(std::string s);
 
 Expr *parse (std::istream& in);
 
+Expr *parse_comparg(std::istream &in);
+
 
 #endif //CLION_BULL_PARSE_H

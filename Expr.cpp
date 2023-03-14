@@ -509,8 +509,8 @@ bool IfExpr::equals(Expr *e) {
     if (n == nullptr) {
         return false;
     } else {
-        return (this->test_part->equals(n)
-                && this->then_part->equals(n) && this->else_part->equals(n));
+        return (this->test_part->equals(n->test_part)
+                && this->then_part->equals(n->then_part) && this->else_part->equals(n->else_part));
     }
 }
 
@@ -580,13 +580,19 @@ Expr* EqExpr::subst(std::string variable, Expr* expr) {
 }
 
 void EqExpr::print(std::ostream& stream) {
+    stream<<"(";
     lhs->print(stream);
     stream<<"==";
     rhs->print(stream);
+    stream<<")";
 }
 
 void EqExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
-    this->print(stream);
+    stream<<"(";
+    lhs->print(stream);
+    stream<<" == ";
+    rhs->print(stream);
+    stream<<")";
 }
 
 
