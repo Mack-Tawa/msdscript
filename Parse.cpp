@@ -12,23 +12,36 @@ Expr *parse (std::istream& in) {
 
 Expr *parse_str(std::string s) {
     std::stringstream in(s);
-
     Expr *e = parse_expr(in);
     return e;
-
 }
 
+std::string parse_keyword(std::istream &in) {
+    std::string result = "";
+    while(true) {
+        char c = in.peek();
+        if (isalpha(c)) {
+            result += c;
+            consume(in, c);
+        }
+        else {
+            break;
+        }
+    }
+    return result;
 
+}
 
 Expr *parse_expr(std::istream &in) {
     Expr *e;
         e = parse_addend(in);
-        skip_whitespace(in);
-        int c = in.peek();
+    skip_whitespace(in);
+
+    int c = in.peek();
         if (c == '+') {
             consume(in, '+');
             Expr *rhs = parse_expr(in);
-            return new Add(e, rhs);
+            return new AddExpr(e, rhs);
         } else {
             return e;
         }
@@ -43,7 +56,7 @@ Expr* parse_addend(std::istream &in) {
     if (c == '*') {
         consume(in, '*');
         Expr *rhs = parse_addend(in);
-        return new Mult(e, rhs);
+        return new MultExpr(e, rhs);
     } else
         return e;
 }
@@ -62,32 +75,25 @@ Expr *parseVar(std::istream &in) {
         } else
             break;
     }
-    return new Var(ss.str());
+    return new VarExpr(ss.str());
 }
 
 Expr *parseLet(std::istream &in) {
+    LetExpr *building = new LetExpr("test", 0, 0);
 
-    Let *building = new Let("test", 0, 0);
-
+    skip_whitespace(in);
     int c = in.peek();
-    if (c == '_') {
-        consume(in, '_');
-        consume(in, 'l');
-        consume(in, 'e');
-        consume(in, 't');
-        skip_whitespace(in);
-    }
-    stringstream ss;
+
+    std::string variableName = "";
     while (1) {
         int c = in.peek();
         if (isalpha(c)) {
-            ss.put( c);
+            variableName += c;
             consume(in, c);
         } else
             break;
     }
-
-    building->lhs = ss.str();
+    building->lhs = variableName;
     skip_whitespace(in);
     consume(in, '=');
     skip_whitespace(in);
@@ -97,9 +103,37 @@ Expr *parseLet(std::istream &in) {
     consume(in, 'i');
     consume(in, 'n');
     skip_whitespace(in);
+
     building->body = parse_expr(in);
     return building;
 }
+
+Expr *parseIf(std::istream &in) {
+    skip_whitespace(in);
+
+    Expr* statement = parse_expr(in);
+    skip_whitespace(in);
+
+    consume(in, '_');
+
+    if (parse_keyword(in) != "then") {
+        throw std::runtime_error("invalid argument for 'then' statement");
+    }
+    Expr* then = parse_expr(in);
+    skip_whitespace(in);
+
+
+    consume(in, '_');
+    if (parse_keyword(in) != "else") {
+        throw std::runtime_error("invalid argument for 'else' statement");
+    }
+    Expr* els = parse_expr(in);
+
+    return new IfExpr(statement, then, els);
+
+
+}
+
 
 Expr *parse_multicand(std::istream &in) {
     skip_whitespace(in);
@@ -109,8 +143,26 @@ Expr *parse_multicand(std::istream &in) {
     else if (isalpha(c)) {
         return parseVar(in);
     }
-    if (c == '_'){
-        return parseLet(in);
+    else if (c == '_'){
+        consume(in, '_');
+        std::string result = parse_keyword(in);
+        if (result == "let") {
+            return parseLet(in);
+        }
+        else if (result == "if") {
+            return parseIf(in);
+        }
+        else if (result == "true") {
+            cout<<"in true";
+            return new BoolExpr(true);
+        }
+        else if (result == "false") {
+            cout<<"in false";
+            return new BoolExpr(false);
+        }
+        else {
+            throw runtime_error("don't ride through");
+        }
     }
     else if (c == '(') {
         consume(in, '(');
@@ -133,27 +185,30 @@ Expr *parse_num(std::istream &in) {
     if (d == '-') {
         negative = true;
         consume(in, '-');
-        if (!isdigit(in.peek())){
+        if (!isdigit(in.peek()) || in.peek() == EOF){
             throw std::runtime_error("invalid input");
         }
     }
 
     while (1) {
         int c = in.peek();
-
         if (isdigit(c)) {
             consume(in, c);
             n = n*10 + (c - '0');
         } else
             break;
     }
+
     if (negative)
         n = -n;
-    return new Num(n);
+    return new NumExpr(n);
 }
 
 void skip_whitespace(std::istream &in) {
-    while (1) {
+    if (in.peek() == 10) {
+        return;
+    }
+    while (true) {
         int c = in.peek();
         if (!isspace(c))
             break;
@@ -166,3 +221,4 @@ void consume(std::istream &in, int expect) {
     if (c != expect)
         throw std::runtime_error("consume mismatch");
 }
+

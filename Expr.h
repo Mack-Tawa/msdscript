@@ -31,10 +31,10 @@ public:
 
 };
 
-class Num : public Expr {
+class NumExpr : public Expr {
 public:
     int val;
-    Num(int val);
+    NumExpr(int val);
     bool equals(Expr *n)override;
     Val* interp()override;
     bool has_variable()override;
@@ -44,10 +44,10 @@ public:
 
 };
 
-class Var : public Expr {
+class VarExpr : public Expr {
 public:
     std::string val;
-    Var(std::string val);
+    VarExpr(std::string val);
     bool equals(Expr *n) override;
     Val* interp()override;
     bool has_variable()override;
@@ -57,25 +57,24 @@ public:
     void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
 };
 
-class Add : public Expr {
+class AddExpr : public Expr {
 public:
     Expr *lhs;
     Expr *rhs;
-    Add(Expr *lhs, Expr *rhs);
+    AddExpr(Expr *lhs, Expr *rhs);
     bool equals(Expr *n) override;
     Val* interp()override;
     bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr)override;
     void print(std::ostream& stream)override;
-
     void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
 };
 
-class Mult : public Expr {
+class MultExpr : public Expr {
 public:
     Expr *lhs;
     Expr *rhs;
-    Mult(Expr *lhs, Expr *rhs);
+    MultExpr(Expr *lhs, Expr *rhs);
     bool equals(Expr *n) override;
     Val* interp()override;
     bool has_variable()override;
@@ -85,10 +84,10 @@ public:
 
 };
 
-class Let : public Expr {
+class LetExpr : public Expr {
 public:
 
-    Let(std::string lhs, Expr *rhs, Expr *body);
+    LetExpr(std::string lhs, Expr *rhs, Expr *body);
 
     std::string lhs;
     Expr *rhs;
@@ -102,6 +101,46 @@ public:
     void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) override;
 };
 
+class BoolExpr : public Expr {
+public:
+    BoolExpr(bool);
+    bool b;
+    bool equals(Expr *e) override;
+    Val* interp()override;
+    bool has_variable()override;
+    Expr* subst(std::string variable, Expr* expr)override;
+    void print(std::ostream& stream)override;
+    void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
+};
 
+class IfExpr : public Expr {
+public:
+    Expr *test_part;
+    Expr *then_part;
+    Expr *else_part;
 
+    IfExpr(Expr* test, Expr* then, Expr* els);
+
+    bool equals(Expr *e)override ;
+    Val* interp()override;
+    bool has_variable()override;
+    Expr* subst(std::string variable, Expr* expr)override;
+    void print(std::ostream& stream)override;
+    void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
+
+};
+
+class EqExpr : public Expr {
+public:
+    Expr* lhs;
+    Expr* rhs;
+    EqExpr(Expr*lhs, Expr*rhs);
+    bool equals(Expr *e) override;
+    Val* interp()override;
+    bool has_variable()override;
+    Expr* subst(std::string variable, Expr* expr)override;
+    void print(std::ostream& stream)override;
+    void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
+
+};
 #endif //EXPRESSIONSHW_EXPR_H

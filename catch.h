@@ -6698,7 +6698,7 @@ namespace Catch {
             struct is_related
                 : std::is_same<Decay<T>, Decay<U>> {};
 
-            /// We need to reinvent std::function because every piece of code that might Add overhead
+            /// We need to reinvent std::function because every piece of code that might AddExpr overhead
             /// in a measurement context needs to have consistent performance characteristics so that we
             /// can account for it in the measurement.
             /// Implementations of std::function with optimizations that aren't always applicable, like
@@ -11311,7 +11311,7 @@ namespace Catch {
     std::string TagInfo::all() const {
         size_t size = 0;
         for (auto const& spelling : spellings) {
-            // Add 2 for the brackes
+            // AddExpr 2 for the brackes
             size += spelling.size() + 2;
         }
 
@@ -14092,7 +14092,7 @@ namespace Catch {
             }
         }
         if( isHidden ) {
-            // Add all "hidden" tags to make them behave identically
+            // AddExpr all "hidden" tags to make them behave identically
             tags.insert( tags.end(), { ".", "!hide" } );
         }
 

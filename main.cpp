@@ -18,9 +18,12 @@ int main(int argc, const char * argv[]) {
         }
         else if (temp == do_interp) {
             Expr *e = parse_expr(std::cin);
+            cout<<endl;
+            e->print(std::cout);
             Val* result = e->interp();
             std::string resultString = result->to_string();
-            std::cout<<resultString<<endl;
+
+            std::cout<<endl<<"main reuslt is: "<<resultString<<endl;
             exit(0);
         }
         else if (temp == do_print) {

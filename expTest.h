@@ -23,116 +23,116 @@
 
 TEST_CASE("interp")
 {
-    CHECK( (new Mult(new Num(3), new Num(2)))
+    CHECK( (new MultExpr(new NumExpr(3), new NumExpr(2)))
                    ->interp()->equals(new numVal(6)) );
-    CHECK((new Num(6))->interp()->equals(new numVal(6)));
-//    CHECK( (new Add(new Add(new Num(10), new Num(15)),new Add(new Num(20),new Num(20))))
+    CHECK((new NumExpr(6))->interp()->equals(new numVal(6)));
+//    CHECK( (new AddExpr(new AddExpr(new NumExpr(10), new NumExpr(15)),new AddExpr(new NumExpr(20),new NumExpr(20))))
 //                   ->interp()==65);
 }
 
 TEST_CASE( "equals" ) {
-    CHECK((new Num(1))->equals(new Num(1)) == true );
-    CHECK((new Var("x"))->equals(new Var("y")) == false );
-    CHECK((new Add(new Num(2), new Num(3)))->equals(new Add(new  Num(2), new Num(3))) == true );
+    CHECK((new NumExpr(1))->equals(new NumExpr(1)) == true );
+    CHECK((new VarExpr("x"))->equals(new VarExpr("y")) == false );
+    CHECK((new AddExpr(new NumExpr(2), new NumExpr(3)))->equals(new AddExpr(new  NumExpr(2), new NumExpr(3))) == true );
 }
 
 
 
-TEST_CASE( "different types same Num vals" ) {
-    CHECK((new Add(new Num(2), new Num(24)))->equals(new Mult(new Num(2), new Num(24))) == false);
-    CHECK((new Add(new Num(-143), new Num(25)))->equals(new Mult(new Num(-143), new Num(25))) == false);
-    CHECK_FALSE((new Num(1))->equals(new Num(5)));
-//    CHECK_FALSE((new Num(1))->equals(new Num(5)));
-    CHECK((new Mult(new Mult(new Num(4), new Num(6)), new Num(5)), new Num(55))->equals
-          ((new Mult(new Mult(new Num(4), new Num(6)), new Num(5)), new Num(55))) == true);
+TEST_CASE( "different types same NumExpr vals" ) {
+    CHECK((new AddExpr(new NumExpr(2), new NumExpr(24)))->equals(new MultExpr(new NumExpr(2), new NumExpr(24))) == false);
+    CHECK((new AddExpr(new NumExpr(-143), new NumExpr(25)))->equals(new MultExpr(new NumExpr(-143), new NumExpr(25))) == false);
+    CHECK_FALSE((new NumExpr(1))->equals(new NumExpr(5)));
+//    CHECK_FALSE((new NumExpr(1))->equals(new NumExpr(5)));
+    CHECK((new MultExpr(new MultExpr(new NumExpr(4), new NumExpr(6)), new NumExpr(5)), new NumExpr(55))->equals
+          ((new MultExpr(new MultExpr(new NumExpr(4), new NumExpr(6)), new NumExpr(5)), new NumExpr(55))) == true);
 }
 
 TEST_CASE("checking sub for add") {
-    CHECK( (new Add(new Var("x"), new Num(24)))
-                   ->subst("x", new Var("y"))
-                   ->equals(new Add(new Var("y"), new Num(24))) );
+    CHECK( (new AddExpr(new VarExpr("x"), new NumExpr(24)))
+                   ->subst("x", new VarExpr("y"))
+                   ->equals(new AddExpr(new VarExpr("y"), new NumExpr(24))) );
 
-    CHECK( (new Add(new Var("x"), new Num(7)))
-                   ->subst("x", new Var("y"))
-                   ->equals(new Add(new Var("y"), new Num(7))) );
+    CHECK( (new AddExpr(new VarExpr("x"), new NumExpr(7)))
+                   ->subst("x", new VarExpr("y"))
+                   ->equals(new AddExpr(new VarExpr("y"), new NumExpr(7))) );
 
-    CHECK( (new Var("x"))
-                   ->subst("x", new Add(new Var("y"),new Num(7)))
-                   ->equals(new Add(new Var("y"),new Num(7))));
+    CHECK( (new VarExpr("x"))
+                   ->subst("x", new AddExpr(new VarExpr("y"), new NumExpr(7)))
+                   ->equals(new AddExpr(new VarExpr("y"), new NumExpr(7))));
 
 
 }
 
 TEST_CASE("Checking mult expression substitution") {
-    CHECK( (new Mult(new Var("x"), new Num(24)))
-                   ->subst("x", new Var("y"))
-                   ->equals(new Mult(new Var("y"), new Num(24))) );
+    CHECK( (new MultExpr(new VarExpr("x"), new NumExpr(24)))
+                   ->subst("x", new VarExpr("y"))
+                   ->equals(new MultExpr(new VarExpr("y"), new NumExpr(24))) );
 
-    CHECK_FALSE( (new Mult(new Var("x"), new Num(24)))
-                   ->subst("z", new Var("y"))
-                   ->equals(new Mult(new Var("y"), new Num(24))) );
+    CHECK_FALSE( (new MultExpr(new VarExpr("x"), new NumExpr(24)))
+                   ->subst("z", new VarExpr("y"))
+                   ->equals(new MultExpr(new VarExpr("y"), new NumExpr(24))) );
 }
 
 TEST_CASE("Checking substituting something that isn't in there") {
-    CHECK( (new Add(new Var("x"), new Num(24)))
-                   ->subst("z", new Var("y"))
-                   ->equals(new Add(new Var("x"), new Num(24))) );
+    CHECK( (new AddExpr(new VarExpr("x"), new NumExpr(24)))
+                   ->subst("z", new VarExpr("y"))
+                   ->equals(new AddExpr(new VarExpr("x"), new NumExpr(24))) );
 
-    CHECK( (new Mult(new Var("x"), new Num(24)))
-                   ->subst("z", new Var("y"))
-                   ->equals(new Mult(new Var("x"), new Num(24))) );
+    CHECK( (new MultExpr(new VarExpr("x"), new NumExpr(24)))
+                   ->subst("z", new VarExpr("y"))
+                   ->equals(new MultExpr(new VarExpr("x"), new NumExpr(24))) );
 }
 
 TEST_CASE("CHECKING PRINT") {
-    CHECK( (new Num(10))->to_string() == "10" );
+    CHECK((new NumExpr(10))->to_string() == "10" );
 }
 
 TEST_CASE("CHECKING PRETTY PRINT") {
 
-    CHECK( (new Mult (new Mult (new Num(2), new Num(3)), new Num(4)))->pretty_print_to_string() == "(2 * 3) * 4");
-    CHECK((new Num(1))->pretty_print_to_string() == "1");
-    CHECK((new Var("a"))->pretty_print_to_string() == "a");
-    CHECK((new Add( new Num(1), new Num(3)))->pretty_print_to_string() == "1 + 3");
-    CHECK((new Mult (new Num(2), new Mult (new Num(3), new Num(4))))->pretty_print_to_string() == "2 * 3 * 4");
+    CHECK((new MultExpr (new MultExpr (new NumExpr(2), new NumExpr(3)), new NumExpr(4)))->pretty_print_to_string() == "(2 * 3) * 4");
+    CHECK((new NumExpr(1))->pretty_print_to_string() == "1");
+    CHECK((new VarExpr("a"))->pretty_print_to_string() == "a");
+    CHECK((new AddExpr(new NumExpr(1), new NumExpr(3)))->pretty_print_to_string() == "1 + 3");
+    CHECK((new MultExpr (new NumExpr(2), new MultExpr (new NumExpr(3), new NumExpr(4))))->pretty_print_to_string() == "2 * 3 * 4");
 
 
 }
 
 TEST_CASE("Branden's tests") {
-    Mult* complexMultExprWithVar = new Mult(new Add(new Var("x"), new Mult(new Num(2), new Num(3))), new Num(3));
-    Mult* complexMultExprWithNoVar = new Mult(new Add(new Num(2), new Mult(new Num(2), new Num(3))), new Num(3));
+    MultExpr* complexMultExprWithVar = new MultExpr(new AddExpr(new VarExpr("x"), new MultExpr(new NumExpr(2), new NumExpr(3))), new NumExpr(3));
+    MultExpr* complexMultExprWithNoVar = new MultExpr(new AddExpr(new NumExpr(2), new MultExpr(new NumExpr(2), new NumExpr(3))), new NumExpr(3));
 
 CHECK(complexMultExprWithNoVar->pretty_print_to_string() == "(2 + 2 * 3) * 3");
 CHECK(complexMultExprWithVar->pretty_print_to_string() == "(x + 2 * 3) * 3");
-CHECK((new Mult (new Mult (new Num(2), new Num(3)), new Num(4)))->pretty_print_to_string() == "(2 * 3) * 4");
-CHECK((new Mult (new Num(2), new Mult (new Num(3), new Num(4))))->pretty_print_to_string() == "2 * 3 * 4");
-CHECK((new Mult (new Mult(new Num(1), new Num(2) ), new Mult (new Num(3), new Num(4))))->pretty_print_to_string() == "(1 * 2) * 3 * 4");
-CHECK((new Mult (new Num(2), new Mult (new Num(3), new Num(4))))->pretty_print_to_string() == "2 * 3 * 4");
-CHECK((new Mult(new Num(1), new Add(new Num(2), new Num(3))))->pretty_print_to_string() == "1 * (2 + 3)");
-    CHECK( (new Mult (new Num(1), new Add(new Num(2),new Num(3))))->pretty_print_to_string() == "1 * (2 + 3)");
+CHECK((new MultExpr (new MultExpr (new NumExpr(2), new NumExpr(3)), new NumExpr(4)))->pretty_print_to_string() == "(2 * 3) * 4");
+CHECK((new MultExpr (new NumExpr(2), new MultExpr (new NumExpr(3), new NumExpr(4))))->pretty_print_to_string() == "2 * 3 * 4");
+CHECK((new MultExpr (new MultExpr(new NumExpr(1), new NumExpr(2) ), new MultExpr (new NumExpr(3), new NumExpr(4))))->pretty_print_to_string() == "(1 * 2) * 3 * 4");
+CHECK((new MultExpr (new NumExpr(2), new MultExpr (new NumExpr(3), new NumExpr(4))))->pretty_print_to_string() == "2 * 3 * 4");
+CHECK((new MultExpr(new NumExpr(1), new AddExpr(new NumExpr(2), new NumExpr(3))))->pretty_print_to_string() == "1 * (2 + 3)");
+    CHECK((new MultExpr (new NumExpr(1), new AddExpr(new NumExpr(2), new NumExpr(3))))->pretty_print_to_string() == "1 * (2 + 3)");
 }
 
 //Jons tests
-    TEST_CASE("Pretty Print -- Add"){
-        Num* testNum1 = new Num(1);
-        Num* testNum2 = new Num(2);
-        Num* testNum3 = new Num(3);
-        Num* testNum4 = new Num(4);
+    TEST_CASE("Pretty Print -- AddExpr"){
+        NumExpr* testNum1 = new NumExpr(1);
+        NumExpr* testNum2 = new NumExpr(2);
+        NumExpr* testNum3 = new NumExpr(3);
+        NumExpr* testNum4 = new NumExpr(4);
 
-        Var* testVar1 = new Var("a");
-        Var* testVar2 = new Var("b");
+        VarExpr* testVar1 = new VarExpr("a");
+        VarExpr* testVar2 = new VarExpr("b");
 
-        Add* testAdd1 = new Add(testNum1, testNum2);
-        Add* testAdd2 = new Add(testNum3, testAdd1);
-        Add* testAdd3 = new Add(testAdd1, testNum3);
-        Add* testAdd4 = new Add(testNum3, testNum4);
-        Add* testAdd5 = new Add(testAdd1, testAdd4);
+        AddExpr* testAdd1 = new AddExpr(testNum1, testNum2);
+        AddExpr* testAdd2 = new AddExpr(testNum3, testAdd1);
+        AddExpr* testAdd3 = new AddExpr(testAdd1, testNum3);
+        AddExpr* testAdd4 = new AddExpr(testNum3, testNum4);
+        AddExpr* testAdd5 = new AddExpr(testAdd1, testAdd4);
 
-        Add* testAdd6 = new Add(testNum1, testVar1);
+        AddExpr* testAdd6 = new AddExpr(testNum1, testVar1);
 
-        Mult* testMult1 = new Mult(testNum3, testNum4);
+        MultExpr* testMult1 = new MultExpr(testNum3, testNum4);
 
-        Add* testMixed1 = new Add(testNum1, testMult1);
+        AddExpr* testMixed1 = new AddExpr(testNum1, testMult1);
 
         std::stringstream out("");
         testAdd2->pretty_print(out);
@@ -155,20 +155,20 @@ CHECK((new Mult(new Num(1), new Add(new Num(2), new Num(3))))->pretty_print_to_s
         CHECK(out.str() == "1 + a");
     }
 
-    TEST_CASE("Pretty Print -- Mult"){
-        Num* testNum1 = new Num(1);
-        Num* testNum2 = new Num(2);
-        Num* testNum3 = new Num(3);
-        Num* testNum4 = new Num(4);
+    TEST_CASE("Pretty Print -- MultExpr"){
+        NumExpr* testNum1 = new NumExpr(1);
+        NumExpr* testNum2 = new NumExpr(2);
+        NumExpr* testNum3 = new NumExpr(3);
+        NumExpr* testNum4 = new NumExpr(4);
 
-        Add* testAdd1 = new Add(testNum1, testNum2);
-        Add* testAdd2 = new Add(testNum3, testNum4);
+        AddExpr* testAdd1 = new AddExpr(testNum1, testNum2);
+        AddExpr* testAdd2 = new AddExpr(testNum3, testNum4);
 
-        Mult* testMult1 = new Mult(testNum1, testNum2);
-        Mult* testMult2 = new Mult(testNum3, testMult1);
-        Mult* testMult3 = new Mult(testMult1, testNum3);
-        Mult* testMult4 = new Mult(testNum3, testNum4);
-        Mult* testMult5 = new Mult(testMult1, testMult4);
+        MultExpr* testMult1 = new MultExpr(testNum1, testNum2);
+        MultExpr* testMult2 = new MultExpr(testNum3, testMult1);
+        MultExpr* testMult3 = new MultExpr(testMult1, testNum3);
+        MultExpr* testMult4 = new MultExpr(testNum3, testNum4);
+        MultExpr* testMult5 = new MultExpr(testMult1, testMult4);
 
         std::stringstream out("");
         testMult2->pretty_print(out);
@@ -182,9 +182,9 @@ CHECK((new Mult(new Num(1), new Add(new Num(2), new Num(3))))->pretty_print_to_s
         testMult5->pretty_print(out);
         CHECK(out.str() == "(1 * 2) * 3 * 4");
 
-        Mult* testMixed1 = new Mult(testNum3, testAdd1);
-        Mult* testMixed2 = new Mult(testAdd1, testNum3);
-        Mult* testMixed3 = new Mult(testAdd1, testAdd2);
+        MultExpr* testMixed1 = new MultExpr(testNum3, testAdd1);
+        MultExpr* testMixed2 = new MultExpr(testAdd1, testNum3);
+        MultExpr* testMixed3 = new MultExpr(testAdd1, testAdd2);
 
         out.str("");
         testMixed1->pretty_print(out);
@@ -200,52 +200,52 @@ CHECK((new Mult(new Num(1), new Add(new Num(2), new Num(3))))->pretty_print_to_s
     }
 TEST_CASE("mult_mults_mults_mults from william ")
 {
-CHECK((new Mult( new Mult(new Num(10), new Mult(new Mult(new Num(10), new Num(10)), new Num(10))), new Mult(new Num(10), new Num(10))))
+CHECK((new MultExpr(new MultExpr(new NumExpr(10), new MultExpr(new MultExpr(new NumExpr(10), new NumExpr(10)), new NumExpr(10))), new MultExpr(new NumExpr(10), new NumExpr(10))))
               ->pretty_print_to_string()  == "(10 * (10 * 10) * 10) * 10 * 10");
 }
 
-TEST_CASE("Let print") {
-CHECK((new Let("x", new Num(5), new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2))), new Var("x"))))->to_string() == "(_let x=5 _in ((_let y=3 _in (y+2))+x))");
+TEST_CASE("LetExpr print") {
+CHECK((new LetExpr("x", new NumExpr(5), new AddExpr(new LetExpr("y", new NumExpr(3), new AddExpr(new VarExpr("y"), new NumExpr(2))), new VarExpr("x"))))->to_string() == "(_let x=5 _in ((_let y=3 _in (y+2))+x))");
 }
 
 TEST_CASE("LET STUFF") {
-    CHECK( (new Mult((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Mult(new Var("x"), new Num(2)))), new Num(1))), new Num(7)))-> pretty_print_to_string()
+    CHECK( (new MultExpr((new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new MultExpr(new VarExpr("x"), new NumExpr(2)))), new NumExpr(1))), new NumExpr(7)))-> pretty_print_to_string()
            == "(5 * (_let x = 5\n"
               "      _in  x * 2) + 1) * 7");
-    CHECK( (new Add(new Mult(new Num(5), new Let("x", new Num(5), new Mult(new Var("x"), new Num(2)))), new Num(1)))-> pretty_print_to_string()
+    CHECK( (new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new MultExpr(new VarExpr("x"), new NumExpr(2)))), new NumExpr(1)))-> pretty_print_to_string()
            == "5 * (_let x = 5\n"
               "     _in  x * 2) + 1");
 }
 
 TEST_CASE("william' stuff") {
     SECTION("hw_examples") {
-//        CHECK((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))->interp() == 26);
+//        CHECK((new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new VarExpr("x"))), new NumExpr(1)))->interp() == 26);
     }
 }
 
 TEST_CASE("Pretty Print examples_Kevin"){           //Created from assignment examples
     std::stringstream out("");
-    (new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->pretty_print(out);
+    (new LetExpr("x", new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1))))->pretty_print(out);
     CHECK(out.str() == "_let x = 5\n"
                        "_in  x + 1");
     out.str(std::string());
-    (new Add(new Let("x", new Num(5), new Var("x")), new Num(1)))->pretty_print(out);
+    (new AddExpr(new LetExpr("x", new NumExpr(5), new VarExpr("x")), new NumExpr(1)))->pretty_print(out);
     CHECK(out.str() == "(_let x = 5\n"
                        " _in  x) + 1");
 
     out.str(std::string());
-    (new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))->pretty_print(out);
+    (new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new VarExpr("x"))), new NumExpr(1)))->pretty_print(out);
     CHECK(out.str() == "5 * (_let x = 5\n"
                        "     _in  x) + 1");
     out.str(std::string());
-    (new Let("x", new Num(5), new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2))), new Var("x"))))
+    (new LetExpr("x", new NumExpr(5), new AddExpr(new LetExpr("y", new NumExpr(3), new AddExpr(new VarExpr("y"), new NumExpr(2))), new VarExpr("x"))))
             ->pretty_print(out);
 
     CHECK(out.str() == "_let x = 5\n"
                        "_in  (_let y = 3\n"
                        "      _in  y + 2) + x");
     out.str(std::string());
-    (new Let("x", new Let("y", new Num(6), new Mult(new Var("y"), new Num(2))), new Add(new Var("x"), new Num(1))))->pretty_print(out);
+    (new LetExpr("x", new LetExpr("y", new NumExpr(6), new MultExpr(new VarExpr("y"), new NumExpr(2))), new AddExpr(new VarExpr("x"), new NumExpr(1))))->pretty_print(out);
     CHECK(out.str() == "_let x = _let y = 6\n"
                        "         _in  y * 2\n"
                        "_in  x + 1");
@@ -253,17 +253,17 @@ TEST_CASE("Pretty Print examples_Kevin"){           //Created from assignment ex
 }
 
 TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let") {
-    Let* tripleNestedLet = new Let("x", new Num(1),
-                                   new Let("y", new Num(1),
-                                           new Mult(new Add(new Var("x"), new Var("y")), new Var("z"))));
-    Let* tripleNestedLet2 = new Let("x", new Num(1),
-                                    new Let("y", new Num(1),
-                                            new Let("z", new Add(new Var("x"), new Num(1)),
-                                                    new Add(new Add(new Var("x"), new Var("y")), new Var("z")))));
-    Let* tripleNestedLet3 = new Let("x", new Num(1),
-                                    new Let("y", new Num(1),
-                                            new Let("z", new Add(new Var("x"), new Num(1)),
-                                                    new Mult(new Add(new Var("x"), new Var("y")), new Var("z")))));
+    LetExpr* tripleNestedLet = new LetExpr("x", new NumExpr(1),
+                                           new LetExpr("y", new NumExpr(1),
+                                                       new MultExpr(new AddExpr(new VarExpr("x"), new VarExpr("y")), new VarExpr("z"))));
+    LetExpr* tripleNestedLet2 = new LetExpr("x", new NumExpr(1),
+                                            new LetExpr("y", new NumExpr(1),
+                                                        new LetExpr("z", new AddExpr(new VarExpr("x"), new NumExpr(1)),
+                                                                    new AddExpr(new AddExpr(new VarExpr("x"), new VarExpr("y")), new VarExpr("z")))));
+    LetExpr* tripleNestedLet3 = new LetExpr("x", new NumExpr(1),
+                                            new LetExpr("y", new NumExpr(1),
+                                                        new LetExpr("z", new AddExpr(new VarExpr("x"), new NumExpr(1)),
+                                                                    new MultExpr(new AddExpr(new VarExpr("x"), new VarExpr("y")), new VarExpr("z")))));
 
 
     CHECK(tripleNestedLet -> pretty_print_to_string() ==
@@ -283,12 +283,12 @@ TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let") {
           "     _in  _let z = x + 1\n"
           "          _in  (x + y) * z"
     );
-    Let* tripleNestedLet4 =new Let("x", new Num(5),
-                                   new Let("y", new Num(3),
-                                           new Add(new Var("y"), new Num(2))));
-    Let* tripleNestedLet5 =new Let("x", new Num(5),
-                                   new Add(new Let("y", new Num(3),
-                                                   new Add(new Var("y"), new Num(2))), new Var("x")));
+    LetExpr* tripleNestedLet4 =new LetExpr("x", new NumExpr(5),
+                                           new LetExpr("y", new NumExpr(3),
+                                                       new AddExpr(new VarExpr("y"), new NumExpr(2))));
+    LetExpr* tripleNestedLet5 =new LetExpr("x", new NumExpr(5),
+                                           new AddExpr(new LetExpr("y", new NumExpr(3),
+                                                                   new AddExpr(new VarExpr("y"), new NumExpr(2))), new VarExpr("x")));
     std::stringstream out("");
     out.str("");
     tripleNestedLet4->pretty_print(out);
@@ -302,7 +302,7 @@ TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let") {
                                                           "_in  (_let y = 3\n"
                                                           "      _in  y + 2) + x");
     SECTION("assignment_examples") {
-        CHECK( (new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))-> pretty_print_to_string()
+        CHECK( (new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new VarExpr("x"))), new NumExpr(1)))-> pretty_print_to_string()
                == "5 * (_let x = 5\n"
                   "     _in  x) + 1");
 
@@ -313,19 +313,19 @@ TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let") {
         // then it still needs parentheses within the right-hand size of *).
     SECTION("new_edge") {
 
-        CHECK( (new Add(new Mult(new Num(5), new Let("x", new Num(5), new Mult(new Var("x"), new Num(2)))), new Num(1)))-> pretty_print_to_string()
+        CHECK( (new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new MultExpr(new VarExpr("x"), new NumExpr(2)))), new NumExpr(1)))-> pretty_print_to_string()
                == "5 * (_let x = 5\n"
                   "     _in  x * 2) + 1");
-        CHECK( (new Mult((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Mult(new Var("x"), new Num(2)))), new Num(1))), new Num(7)))-> pretty_print_to_string()
+        CHECK( (new MultExpr((new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new MultExpr(new VarExpr("x"), new NumExpr(2)))), new NumExpr(1))), new NumExpr(7)))-> pretty_print_to_string()
                == "(5 * (_let x = 5\n"
                   "      _in  x * 2) + 1) * 7");
-        CHECK( (new Let("x", new Num(10), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Num(10))), new Mult(new Num(10), new Num(10)))))
+        CHECK( (new LetExpr("x", new NumExpr(10), new MultExpr(new MultExpr(new VarExpr("x"), new MultExpr(new MultExpr(new NumExpr(10), new NumExpr(10)), new NumExpr(10))), new MultExpr(new NumExpr(10), new NumExpr(10)))))
                        ->pretty_print_to_string()  == "_let x = 10\n"
                                                       "_in  (x * (10 * 10) * 10) * 10 * 10");
-        CHECK( (new Let("x", new Num(1), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Var("x"))), new Mult(new Num(10), new Num(10)))))
+        CHECK( (new LetExpr("x", new NumExpr(1), new MultExpr(new MultExpr(new VarExpr("x"), new MultExpr(new MultExpr(new NumExpr(10), new NumExpr(10)), new VarExpr("x"))), new MultExpr(new NumExpr(10), new NumExpr(10)))))
                        -> pretty_print_to_string() == "_let x = 1\n"
                                                       "_in  (x * (10 * 10) * x) * 10 * 10" );
-        CHECK( (new Let("x", new Num(1), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Var("x"))), new Mult(new Var("y"), new Num(10)))))
+        CHECK( (new LetExpr("x", new NumExpr(1), new MultExpr(new MultExpr(new VarExpr("x"), new MultExpr(new MultExpr(new NumExpr(10), new NumExpr(10)), new VarExpr("x"))), new MultExpr(new VarExpr("y"), new NumExpr(10)))))
                        -> pretty_print_to_string() == "_let x = 1\n"
                                                       "_in  (x * (10 * 10) * x) * y * 10" );
     }
@@ -333,60 +333,60 @@ TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let") {
 
 TEST_CASE("Let_equals_mine") {
     SECTION("Values_same") {
-        REQUIRE( (new Let("x", new Num(4), new Add(new Num(2), new Var("x")) ))->equals(new Let("x", new Num(4), new Add(new Num(2), new Var("x")) )));
+        REQUIRE( (new LetExpr("x", new NumExpr(4), new AddExpr(new NumExpr(2), new VarExpr("x")) ))->equals(new LetExpr("x", new NumExpr(4), new AddExpr(new NumExpr(2), new VarExpr("x")) )));
     }
     SECTION("Values_same_different_rhs") {
-        REQUIRE( !(new Let("x", new Num(4), new Add(new Num(2), new Var("x")) ))->equals(new Let("x", new Num(5), new Add(new Num(2), new Var("x")) )));
+        REQUIRE( !(new LetExpr("x", new NumExpr(4), new AddExpr(new NumExpr(2), new VarExpr("x")) ))->equals(new LetExpr("x", new NumExpr(5), new AddExpr(new NumExpr(2), new VarExpr("x")) )));
     }
     SECTION("Values_same_different_lhs") {
-        REQUIRE( !(new Let("x", new Num(4), new Add(new Num(2), new Var("x")) ))->equals(new Let("y", new Num(4), new Add(new Num(2), new Var("x")) )));
+        REQUIRE( !(new LetExpr("x", new NumExpr(4), new AddExpr(new NumExpr(2), new VarExpr("x")) ))->equals(new LetExpr("y", new NumExpr(4), new AddExpr(new NumExpr(2), new VarExpr("x")) )));
     }
     SECTION("Values_same_different_body") {
-        REQUIRE( !(new Let("x", new Num(4), new Add(new Num(2), new Var("x")) ))->equals(new Let("x", new Num(4), new Mult(new Num(3), new Var("y")) )));
+        REQUIRE( !(new LetExpr("x", new NumExpr(4), new AddExpr(new NumExpr(2), new VarExpr("x")) ))->equals(new LetExpr("x", new NumExpr(4), new MultExpr(new NumExpr(3), new VarExpr("y")) )));
     }
     SECTION("different_types") {
-        REQUIRE( !(new Let("x", new Num(4), new Add(new Num(2), new Var("x")) ))->equals( new Mult(new Num(3), new Var("y")) ));
+        REQUIRE( !(new LetExpr("x", new NumExpr(4), new AddExpr(new NumExpr(2), new VarExpr("x")) ))->equals(new MultExpr(new NumExpr(3), new VarExpr("y")) ));
     }
 }
 TEST_CASE("Let_has_variable_mine") {
     SECTION("has") {
-        REQUIRE( (new Let("x", new Num(4), new Add(new Num(2), new Var("x")) ))->has_variable());
+        REQUIRE( (new LetExpr("x", new NumExpr(4), new AddExpr(new NumExpr(2), new VarExpr("x")) ))->has_variable());
     }
     SECTION("does_not_has") {
-        REQUIRE( !(new Let("x", new Num(4), new Add(new Num(2), new Num(4)) ))->has_variable());
+        REQUIRE( !(new LetExpr("x", new NumExpr(4), new AddExpr(new NumExpr(2), new NumExpr(4)) ))->has_variable());
     }
 }
 TEST_CASE("Let_print_mine") {
-    CHECK( (new Let("x", new Num(5), new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2))), new Var("x")))) -> to_string()
+    CHECK( (new LetExpr("x", new NumExpr(5), new AddExpr(new LetExpr("y", new NumExpr(3), new AddExpr(new VarExpr("y"), new NumExpr(2))), new VarExpr("x")))) -> to_string()
            == "(_let x=5 _in ((_let y=3 _in (y+2))+x))");
-    CHECK( (new Let("x", new Num(1),
-                    new Let("y", new Num(1),
-                            new Let("z", new Add(new Var("x"), new Num(1)),
-                                    new Mult(new Add(new Var("x"), new Var("y")), new Var("z")))))) -> to_string()
+    CHECK( (new LetExpr("x", new NumExpr(1),
+                        new LetExpr("y", new NumExpr(1),
+                                    new LetExpr("z", new AddExpr(new VarExpr("x"), new NumExpr(1)),
+                                                new MultExpr(new AddExpr(new VarExpr("x"), new VarExpr("y")), new VarExpr("z")))))) -> to_string()
            == "(_let x=1 _in (_let y=1 _in (_let z=(x+1) _in ((x+y)*z))))");
 }
 TEST_CASE ("Let_interp_mine") {
     SECTION("hw_examples") {
-        CHECK((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))->interp()->equals(new numVal (26)));
-        CHECK((new Mult(new Num(5), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))))->interp()->equals(new numVal (30)));
+        CHECK((new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new VarExpr("x"))), new NumExpr(1)))->interp()->equals(new numVal (26)));
+        CHECK((new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1)))))->interp()->equals(new numVal (30)));
     }
 
     SECTION("from_pretty_print_edge") {
-        CHECK( (new Let("x", new Num(1),
-                        new Let("y", new Num(1),
-                                new Let("z", new Add(new Var("x"), new Num(1)),
-                                        new Mult(new Add(new Var("x"), new Var("y")), new Var("z")))))) -> interp()->equals(new numVal(4)));
-        CHECK( (new Mult((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Mult(new Var("x"), new Num(2)))), new Num(1))), new Num(7))) ->
+        CHECK( (new LetExpr("x", new NumExpr(1),
+                            new LetExpr("y", new NumExpr(1),
+                                        new LetExpr("z", new AddExpr(new VarExpr("x"), new NumExpr(1)),
+                                                    new MultExpr(new AddExpr(new VarExpr("x"), new VarExpr("y")), new VarExpr("z")))))) -> interp()->equals(new numVal(4)));
+        CHECK( (new MultExpr((new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new MultExpr(new VarExpr("x"), new NumExpr(2)))), new NumExpr(1))), new NumExpr(7))) ->
         interp()->equals(new numVal (357))); // 51 * 7
-        CHECK( (new Let("x", new Num(10), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Num(10))), new Mult(new Num(10), new Num(10)))))
+        CHECK( (new LetExpr("x", new NumExpr(10), new MultExpr(new MultExpr(new VarExpr("x"), new MultExpr(new MultExpr(new NumExpr(10), new NumExpr(10)), new NumExpr(10))), new MultExpr(new NumExpr(10), new NumExpr(10)))))
                        ->interp()->equals(new numVal (1000000)));
-        CHECK( (new Let("x", new Num(1), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Var("x"))), new Mult(new Num(10), new Num(10)))))
+        CHECK( (new LetExpr("x", new NumExpr(1), new MultExpr(new MultExpr(new VarExpr("x"), new MultExpr(new MultExpr(new NumExpr(10), new NumExpr(10)), new VarExpr("x"))), new MultExpr(new NumExpr(10), new NumExpr(10)))))
                        ->interp()->equals(new numVal (10000)));
-        CHECK_THROWS_WITH( ((new Let("x", new Num(1), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Var("x"))), new Mult(new Var("y"), new Num(10)))))
+        CHECK_THROWS_WITH( ((new LetExpr("x", new NumExpr(1), new MultExpr(new MultExpr(new VarExpr("x"), new MultExpr(new MultExpr(new NumExpr(10), new NumExpr(10)), new VarExpr("x"))), new MultExpr(new VarExpr("y"), new NumExpr(10)))))
                                     -> interp()->equals(new numVal (10000))), "no value for variable");
     }
     SECTION("bypass_middle_let") {
-        CHECK ((new Let("x", new Num(2), new Let("z", new Num(4), new Add(new Var("x"), new Num(10)))))
+        CHECK ((new LetExpr("x", new NumExpr(2), new LetExpr("z", new NumExpr(4), new AddExpr(new VarExpr("x"), new NumExpr(10)))))
                        -> interp()->equals(new numVal (12)));
     }
 }
@@ -395,39 +395,39 @@ TEST_CASE("Nabil's parse") {
     CHECK_THROWS_WITH(parse_str("()"), "invalid input");
 
 //
-    CHECK(parse_str("(1)")->equals(new Num(1)));
-    CHECK(parse_str("(((1)))")->equals(new Num(1)));
+    CHECK(parse_str("(1)")->equals(new NumExpr(1)));
+    CHECK(parse_str("(((1)))")->equals(new NumExpr(1)));
 //
     CHECK_THROWS_WITH( parse_str("(1"), "missing close parenthesis" );
 ////
-    CHECK( parse_str("1")->equals(new Num(1)) );
-    CHECK( parse_str("10")->equals(new Num(10)) );
-    CHECK( parse_str("-3")->equals(new Num(-3)) );
-    CHECK( parse_str("  \n 5  ")->equals(new Num(5)) );
+    CHECK( parse_str("1")->equals(new NumExpr(1)) );
+    CHECK( parse_str("10")->equals(new NumExpr(10)) );
+    CHECK( parse_str("-3")->equals(new NumExpr(-3)) );
+    CHECK( parse_str("  \n 5  ")->equals(new NumExpr(5)) );
     CHECK_THROWS_WITH( parse_str("-"), "invalid input" );
 
     CHECK_THROWS_WITH( parse_str(" -   5  "), "invalid input" );
-    CHECK( parse_str("x")->equals(new Var("x")) );
-    CHECK( parse_str("xyz")->equals(new Var("xyz")) );
-    CHECK( parse_str("xYz")->equals(new Var("xYz")) );
+    CHECK( parse_str("x")->equals(new VarExpr("x")) );
+    CHECK( parse_str("xyz")->equals(new VarExpr("xyz")) );
+    CHECK( parse_str("xYz")->equals(new VarExpr("xYz")) );
     CHECK_THROWS_WITH( parse_str("x_z"), "invalid input" );
 
-    CHECK( parse_str("x + y")->equals(new Add(new Var("x"), new Var("y"))) );
+    CHECK( parse_str("x + y")->equals(new AddExpr(new VarExpr("x"), new VarExpr("y"))) );
 
-    CHECK( parse_str("x * y")->equals(new Mult(new Var("x"), new Var("y"))) );
+    CHECK( parse_str("x * y")->equals(new MultExpr(new VarExpr("x"), new VarExpr("y"))) );
 //
     CHECK( parse_str("z * x + y")
-                   ->equals(new Add(new Mult(new Var("z"), new Var("x")),
-                                    new Var("y"))) );
+                   ->equals(new AddExpr(new MultExpr(new VarExpr("z"), new VarExpr("x")),
+                                        new VarExpr("y"))) );
 //
     CHECK( parse_str("z * (x + y)")
-                   ->equals(new Mult(new Var("z"),
-                                     new Add(new Var("x"), new Var("y"))) ));
+                   ->equals(new MultExpr(new VarExpr("z"),
+                                         new AddExpr(new VarExpr("x"), new VarExpr("y"))) ));
 }
 
 TEST_CASE("my parse") {
-    CHECK(parse_str("_let x=5 _in ((_let y=3 _in (y+2))+x)")->equals(new Let("x", new Num(5), new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2))), new Var("x")))));
-    CHECK(parse_str("_let x = 2 _in x + 5")->equals(new Let("x", new Num(2), new Add(new Var("x"), new Num(5)))));
+    CHECK(parse_str("_let x=5 _in ((_let y=3 _in (y+2))+x)")->equals(new LetExpr("x", new NumExpr(5), new AddExpr(new LetExpr("y", new NumExpr(3), new AddExpr(new VarExpr("y"), new NumExpr(2))), new VarExpr("x")))));
+    CHECK(parse_str("_let x = 2 _in x + 5")->equals(new LetExpr("x", new NumExpr(2), new AddExpr(new VarExpr("x"), new NumExpr(5)))));
 }
 
 TEST_CASE("consume") {
@@ -449,22 +449,22 @@ TEST_CASE("parse") {
     ss.put('+');
     ss.put('3');
 
-    CHECK((parse(ss))->equals(new Add(new Num(2), new Num(3))));
+    CHECK((parse(ss))->equals(new AddExpr(new NumExpr(2), new NumExpr(3))));
 
 }
 
 TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let againadsf") {
-    Let* tripleNestedLet = new Let("x", new Num(1),
-                                   new Let("y", new Num(1),
-                                           new Mult(new Add(new Var("x"), new Var("y")), new Var("z"))));
-    Let* tripleNestedLet2 = new Let("x", new Num(1),
-                                    new Let("y", new Num(1),
-                                            new Let("z", new Add(new Var("x"), new Num(1)),
-                                                    new Add(new Add(new Var("x"), new Var("y")), new Var("z")))));
-    Let* tripleNestedLet3 = new Let("x", new Num(1),
-                                    new Let("y", new Num(1),
-                                            new Let("z", new Add(new Var("x"), new Num(1)),
-                                                    new Mult(new Add(new Var("x"), new Var("y")), new Var("z")))));
+    LetExpr* tripleNestedLet = new LetExpr("x", new NumExpr(1),
+                                           new LetExpr("y", new NumExpr(1),
+                                                       new MultExpr(new AddExpr(new VarExpr("x"), new VarExpr("y")), new VarExpr("z"))));
+    LetExpr* tripleNestedLet2 = new LetExpr("x", new NumExpr(1),
+                                            new LetExpr("y", new NumExpr(1),
+                                                        new LetExpr("z", new AddExpr(new VarExpr("x"), new NumExpr(1)),
+                                                                    new AddExpr(new AddExpr(new VarExpr("x"), new VarExpr("y")), new VarExpr("z")))));
+    LetExpr* tripleNestedLet3 = new LetExpr("x", new NumExpr(1),
+                                            new LetExpr("y", new NumExpr(1),
+                                                        new LetExpr("z", new AddExpr(new VarExpr("x"), new NumExpr(1)),
+                                                                    new MultExpr(new AddExpr(new VarExpr("x"), new VarExpr("y")), new VarExpr("z")))));
 
 
     CHECK(tripleNestedLet -> pretty_print_to_string() ==
@@ -484,12 +484,12 @@ TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let againadsf
           "     _in  _let z = x + 1\n"
           "          _in  (x + y) * z"
     );
-    Let* tripleNestedLet4 =new Let("x", new Num(5),
-                                   new Let("y", new Num(3),
-                                           new Add(new Var("y"), new Num(2))));
-    Let* tripleNestedLet5 =new Let("x", new Num(5),
-                                   new Add(new Let("y", new Num(3),
-                                                   new Add(new Var("y"), new Num(2))), new Var("x")));
+    LetExpr* tripleNestedLet4 =new LetExpr("x", new NumExpr(5),
+                                           new LetExpr("y", new NumExpr(3),
+                                                       new AddExpr(new VarExpr("y"), new NumExpr(2))));
+    LetExpr* tripleNestedLet5 =new LetExpr("x", new NumExpr(5),
+                                           new AddExpr(new LetExpr("y", new NumExpr(3),
+                                                                   new AddExpr(new VarExpr("y"), new NumExpr(2))), new VarExpr("x")));
     std::stringstream out("");
     out.str("");
     tripleNestedLet4->pretty_print(out);
@@ -503,10 +503,10 @@ TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let againadsf
                                                           "_in  (_let y = 3\n"
                                                           "      _in  y + 2) + x");
     SECTION("assignment_examples") {
-        CHECK( (new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))-> pretty_print_to_string()
+        CHECK( (new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new VarExpr("x"))), new NumExpr(1)))-> pretty_print_to_string()
                == "5 * (_let x = 5\n"
                   "     _in  x) + 1");
-        CHECK( (new Mult(new Mult(new Num (2), new Let("x", new Num(5), new Add(new Var("x") ,new  Num(1)) )), new Num(3) )) -> pretty_print_to_string()
+        CHECK( (new MultExpr(new MultExpr(new NumExpr (2), new LetExpr("x", new NumExpr(5), new AddExpr(new VarExpr("x") , new  NumExpr(1)) )), new NumExpr(3) )) -> pretty_print_to_string()
                == "(2 * _let x = 5\n"
                   "     _in  x + 1) * 3");
     }
@@ -515,44 +515,78 @@ TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let againadsf
         // (that is, if the _let used in place of the whole * would need parentheses,
         // then it still needs parentheses within the right-hand size of *).
     SECTION("new_edge") {
-        CHECK( (new Mult(new Num (2), new Let("x", new Num(5), new Add(new Var("x") ,new  Num(1)) ) )) -> pretty_print_to_string()
+        CHECK( (new MultExpr(new NumExpr (2), new LetExpr("x", new NumExpr(5), new AddExpr(new VarExpr("x") , new  NumExpr(1)) ) )) -> pretty_print_to_string()
                == "2 * _let x = 5\n"
                   "    _in  x + 1");
-        CHECK( (new Add(new Mult(new Num(5), new Let("x", new Num(5), new Mult(new Var("x"), new Num(2)))), new Num(1)))-> pretty_print_to_string()
+        CHECK( (new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new MultExpr(new VarExpr("x"), new NumExpr(2)))), new NumExpr(1)))-> pretty_print_to_string()
                == "5 * (_let x = 5\n"
                   "     _in  x * 2) + 1");
-        CHECK( (new Mult((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Mult(new Var("x"), new Num(2)))), new Num(1))), new Num(7)))-> pretty_print_to_string()
+        CHECK( (new MultExpr((new AddExpr(new MultExpr(new NumExpr(5), new LetExpr("x", new NumExpr(5), new MultExpr(new VarExpr("x"), new NumExpr(2)))), new NumExpr(1))), new NumExpr(7)))-> pretty_print_to_string()
                == "(5 * (_let x = 5\n"
                   "      _in  x * 2) + 1) * 7");
-        CHECK( (new Let("x", new Num(10), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Num(10))), new Mult(new Num(10), new Num(10)))))
+        CHECK( (new LetExpr("x", new NumExpr(10), new MultExpr(new MultExpr(new VarExpr("x"), new MultExpr(new MultExpr(new NumExpr(10), new NumExpr(10)), new NumExpr(10))), new MultExpr(new NumExpr(10), new NumExpr(10)))))
                        ->pretty_print_to_string()  == "_let x = 10\n"
                                                       "_in  (x * (10 * 10) * 10) * 10 * 10");
-        CHECK( (new Let("x", new Num(1), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Var("x"))), new Mult(new Num(10), new Num(10)))))
+        CHECK( (new LetExpr("x", new NumExpr(1), new MultExpr(new MultExpr(new VarExpr("x"), new MultExpr(new MultExpr(new NumExpr(10), new NumExpr(10)), new VarExpr("x"))), new MultExpr(new NumExpr(10), new NumExpr(10)))))
                        -> pretty_print_to_string() == "_let x = 1\n"
                                                       "_in  (x * (10 * 10) * x) * 10 * 10" );
-        CHECK( (new Let("x", new Num(1), new Mult( new Mult(new Var("x"), new Mult(new Mult(new Num(10), new Num(10)), new Var("x"))), new Mult(new Var("y"), new Num(10)))))
+        CHECK( (new LetExpr("x", new NumExpr(1), new MultExpr(new MultExpr(new VarExpr("x"), new MultExpr(new MultExpr(new NumExpr(10), new NumExpr(10)), new VarExpr("x"))), new MultExpr(new VarExpr("y"), new NumExpr(10)))))
                        -> pretty_print_to_string() == "_let x = 1\n"
                                                       "_in  (x * (10 * 10) * x) * y * 10" );
     }
 }
 
 TEST_CASE("val to string") {
-    CHECK((new Num(5))->interp()->to_string() == "5");
+    CHECK((new NumExpr(5))->interp()->to_string() == "5");
 }
 TEST_CASE("toExpr") {
-    CHECK((new numVal(4))->toExpr()->equals(new Num(4)) == true);
+    CHECK((new numVal(4))->toExpr()->equals(new NumExpr(4)) == true);
 }
 TEST_CASE("equals bad") {
     CHECK_FALSE((new numVal (4))->equals(nullptr));
 }
 
 TEST_CASE("addto bad") {
-    CHECK_THROWS_WITH((new numVal(5))->add_to(reinterpret_cast<Val *>(new Num(5))), "add of non-number");
+    CHECK_THROWS_WITH((new numVal(5))->add_to(reinterpret_cast<Val *>(new NumExpr(5))), "add of non-number");
 }
 
 TEST_CASE("multTo bad") {
-    CHECK_THROWS_WITH((new numVal(5))->mult_to(reinterpret_cast<Val *>(new Num(5))), "add of non-number");
+    CHECK_THROWS_WITH((new numVal(5))->mult_to(reinterpret_cast<Val *>(new NumExpr(5))), "add of non-number");
 }
+
+TEST_CASE("BoolExpr EQUALS") {
+    CHECK((new BoolExpr(true))->equals(new BoolExpr(true)) == true);
+    CHECK((new BoolExpr(true))->equals(new BoolExpr(false)) == false);
+    CHECK((new BoolExpr(false))->equals(new BoolExpr(false)) == true);
+    CHECK_FALSE((new BoolExpr(true))->equals(new NumExpr(5)));
+}
+
+
+TEST_CASE("BoolExpr INTERP") {
+    CHECK((new BoolExpr(true))->interp()->equals(new boolVal("_true")));
+    CHECK((new BoolExpr(false))->interp()->equals(new boolVal("_false")));
+}
+
+TEST_CASE("BoolExpr hasVar") {
+    CHECK_FALSE((new BoolExpr(true))->has_variable());
+    CHECK_FALSE((new BoolExpr(false))->has_variable());
+}
+
+TEST_CASE("BoolExpr subst") {
+    CHECK((new BoolExpr(true))->subst("x", new VarExpr("y"))->equals(new BoolExpr(true)));
+    CHECK_FALSE((new BoolExpr(false))->subst("x", new VarExpr("y"))->equals(new BoolExpr(true)));
+}
+TEST_CASE("BoolExpr print") {
+    CHECK((new BoolExpr(true))->to_string() == "_true");
+    CHECK_FALSE((new BoolExpr(false))->to_string() == "_true");
+    CHECK((new BoolExpr(false))->to_string() == "_false");
+}
+
+TEST_CASE("BoolExpr print_print") {
+    CHECK((new BoolExpr(true))->pretty_print_to_string() == "_true");
+    CHECK((new BoolExpr(false))->pretty_print_to_string() == "_false");
+}
+
 
 
 #endif //MSDSCRIPT_EXPTEST_H

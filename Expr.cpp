@@ -26,12 +26,11 @@ std::string Expr::to_string() {
 }
 
 
-
 /**
  * \brief - Returns an expression with correct parentheses
  * \return - Returns a string to be printed
  */
-std::string Expr::pretty_print_to_string(){
+std::string Expr::pretty_print_to_string() {
     std::stringstream st("");
     this->pretty_print(st);
     return st.str();
@@ -47,12 +46,12 @@ void Expr::pretty_print(std::ostream &stream) {
     pretty_print_at(stream, prec_none, sPos, needsPar);
 }
 
-//**************Num class methods***************
+//**************NumExpr class methods***************
 /**
  * \brief - Constructor for a number
  * \param val - takes in an int
  */
-Num::Num(int val) {
+NumExpr::NumExpr(int val) {
     this->val = val;
 }
 
@@ -61,8 +60,8 @@ Num::Num(int val) {
  * \param e - the expression on the right
  * \return  - if expression is equal to another
  */
-bool Num::equals(Expr *e) {
-    Num *n = dynamic_cast<Num *>(e);
+bool NumExpr::equals(Expr *e) {
+    NumExpr *n = dynamic_cast<NumExpr *>(e);
     if (n == nullptr) {
         return false;
     } else {
@@ -74,7 +73,7 @@ bool Num::equals(Expr *e) {
  * \brief - Gives the value of the number
  * \return - Returns the value of the number
  */
-Val* Num::interp() {
+Val *NumExpr::interp() {
     numVal *v = new numVal(this->val);
     return v;
 }
@@ -83,7 +82,7 @@ Val* Num::interp() {
  * \brief - Checks to see if the number has any variables which is always false
  * \return  - False since a num can't have a var
  */
-bool Num::has_variable() {
+bool NumExpr::has_variable() {
     return false;
 }
 
@@ -93,7 +92,7 @@ bool Num::has_variable() {
  * \param expr - the expression being checked
  * \return - the number being called
  */
-Expr* Num::subst(std::string variable, Expr* expr) {
+Expr *NumExpr::subst(std::string variable, Expr *expr) {
     return this;
 }
 
@@ -101,8 +100,8 @@ Expr* Num::subst(std::string variable, Expr* expr) {
  * \brief - prints the object calling to the stream
  * \param stream - the stream being utilized
  */
-void Num::print(std::ostream& stream){
-    stream<<std::to_string(val);
+void NumExpr::print(std::ostream &stream) {
+    stream << std::to_string(val);
 }
 
 /**
@@ -110,24 +109,24 @@ void Num::print(std::ostream& stream){
  * \param stream - the stream being utilized
  * \param prec_none - the precedence is always zero for nums
  */
-void Num::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) {
-    stream<<this->val;
+void NumExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
+    stream << this->val;
 }
 
-//**************Var class methods***************
+//**************VarExpr class methods***************
 /**
- * \brief - the constructor for a Var
+ * \brief - the constructor for a VarExpr
  * \param val - the string representing the var
  */
-Var::Var(std::string val) {
+VarExpr::VarExpr(std::string val) {
     this->val = val;
 }
 
 /**
- * \brief - Returns true as Var class is a var
+ * \brief - Returns true as VarExpr class is a var
  * \return - True
  */
-bool Var::has_variable() {
+bool VarExpr::has_variable() {
     return true;
 }
 
@@ -135,8 +134,8 @@ bool Var::has_variable() {
  * \brief - prints the object calling to the stream
  * \param stream - the stream being utilized
  */
-void Var::print(std::ostream& stream) {
-    stream<<val;
+void VarExpr::print(std::ostream &stream) {
+    stream << val;
 }
 
 /**
@@ -144,18 +143,18 @@ void Var::print(std::ostream& stream) {
  * \param stream - the stream being utilized
  * \param prec_none - the precedence is always zero for nums
  */
-void Var::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) {
-    stream<<this->val;
+void VarExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
+    stream << this->val;
 }
 
 
 /**
- * \brief - Returns an expression if the value is the variable, otherwise it returns the Var
+ * \brief - Returns an expression if the value is the variable, otherwise it returns the VarExpr
  * \param variable - the variable being checked in string format
  * \param expr - the expression being checked
- * \return - Returns an expression if the value is the variable, otherwise it returns the Var
+ * \return - Returns an expression if the value is the variable, otherwise it returns the VarExpr
  */
-Expr* Var::subst(std::string variable, Expr* expr) {
+Expr *VarExpr::subst(std::string variable, Expr *expr) {
 
     if (val == variable) {
         return expr;
@@ -168,8 +167,8 @@ Expr* Var::subst(std::string variable, Expr* expr) {
  * \param e - the expression on the right
  * \return  - if expression is equal to another
  */
-bool Var::equals(Expr *e) {
-    Var *v = dynamic_cast<Var *>(e);
+bool VarExpr::equals(Expr *e) {
+    VarExpr *v = dynamic_cast<VarExpr *>(e);
     if (v == nullptr) {
         return false;
     } else {
@@ -181,17 +180,17 @@ bool Var::equals(Expr *e) {
  * \brief - throws an exception as there is no value for Vars
  * \return - exception
  */
-Val* Var::interp() {
-    throw std::runtime_error( "no value for variable" );
+Val *VarExpr::interp() {
+    throw std::runtime_error("no value for variable");
 }
 
-//**************Add class methods***************
+//**************AddExpr class methods***************
 /**
- * \brief - constructor for Add class
+ * \brief - constructor for AddExpr class
  * \param lhs - left hand side of the equation
  * \param rhs - right hand side of the equation
  */
-Add::Add(Expr *lhs, Expr *rhs) {
+AddExpr::AddExpr(Expr *lhs, Expr *rhs) {
     this->lhs = lhs;
     this->rhs = rhs;
 }
@@ -200,7 +199,7 @@ Add::Add(Expr *lhs, Expr *rhs) {
  * \brief - Gives the value of the number at the bottom of the expression
  * \return - Returns the value of the number adding to the other bottom of the expression
  */
-Val* Add::interp() {
+Val *AddExpr::interp() {
 
     return this->lhs->interp()->add_to(this->rhs->interp());
 }
@@ -210,7 +209,7 @@ Val* Add::interp() {
  * @return - Returns if the left hand side or the right hand side expression has a variable
  *
  */
-bool Add::has_variable() {
+bool AddExpr::has_variable() {
     return (this->lhs->has_variable() || this->rhs->has_variable());
 }
 
@@ -219,8 +218,8 @@ bool Add::has_variable() {
  * \param e - the expression on the right
  * \return  - if expression is equal to another
  */
-bool Add::equals(Expr *e) {
-    Add *n = dynamic_cast<Add *>(e);
+bool AddExpr::equals(Expr *e) {
+    AddExpr *n = dynamic_cast<AddExpr *>(e);
     if (n == nullptr) {
         return false;
     } else {
@@ -230,25 +229,25 @@ bool Add::equals(Expr *e) {
 }
 
 /**
- * \brief - Returns an expression if the value is the variable, otherwise it returns the Var
+ * \brief - Returns an expression if the value is the variable, otherwise it returns the VarExpr
  * \param variable - the variable being checked in string format
  * \param replacement - the expression being checked
- * \return - Returns an expression if the value is the variable, otherwise it returns the Var
+ * \return - Returns an expression if the value is the variable, otherwise it returns the VarExpr
  */
-Expr* Add::subst(std::string variable, Expr* replacement) {
-    return new Add(lhs->subst(variable, replacement), rhs->subst(variable, replacement));
+Expr *AddExpr::subst(std::string variable, Expr *replacement) {
+    return new AddExpr(lhs->subst(variable, replacement), rhs->subst(variable, replacement));
 }
 
 /**
  * \brief - Prints the left side and right side within parentheses
  * \param stream - the stream to be utilized
  */
-void Add::print(std::ostream& stream) {
-    stream<<("(");
+void AddExpr::print(std::ostream &stream) {
+    stream << ("(");
     lhs->print(stream);
-    stream<<("+");
+    stream << ("+");
     rhs->print(stream);
-    stream<<(")");
+    stream << (")");
 }
 
 /**
@@ -256,27 +255,27 @@ void Add::print(std::ostream& stream) {
  * \param stream - the stream being utilized
  * \param prec - the precedence is always 1 for Adds
  */
-void Add::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) {
+void AddExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
 
     if (prec >= prec_add) {
-        stream<<("(");
+        stream << ("(");
     }
     lhs->pretty_print_at(stream, prec_add, sPos, true);
-    stream<<(" + ");
+    stream << (" + ");
     rhs->pretty_print_at(stream, prec_none, sPos, false);
 
     if (prec >= prec_add) {
-        stream<<(")");
+        stream << (")");
     }
 }
 
-//**************Mult class methods***************
+//**************MultExpr class methods***************
 /**
- * \brief - the constructor for Mult class
+ * \brief - the constructor for MultExpr class
  * \param lhs - the lhs expression of the equation
  * \param rhs - the rhs expression of the equation
  */
-Mult::Mult(Expr *lhs, Expr *rhs) {
+MultExpr::MultExpr(Expr *lhs, Expr *rhs) {
     this->lhs = lhs;
     this->rhs = rhs;
 }
@@ -285,15 +284,15 @@ Mult::Mult(Expr *lhs, Expr *rhs) {
  * \brief - Gives the value of the number at the bottom of the expression
  * \return - Returns the value of the number adding to the other bottom of the expression
  */
-Val* Mult::interp() {
+Val *MultExpr::interp() {
     return this->lhs->interp()->mult_to(this->rhs->interp());
 }
 
 /**
  * \brief - Tells if the expression calling has a variable on the left or right hand side
- * \return - Returns true if either expression has a Var
+ * \return - Returns true if either expression has a VarExpr
  */
-bool Mult::has_variable() {
+bool MultExpr::has_variable() {
     return (this->lhs->has_variable() || this->rhs->has_variable());
 }
 
@@ -302,8 +301,8 @@ bool Mult::has_variable() {
  * \param e - the expression on the right
  * \return  - if expression is equal to another
  */
-bool Mult::equals(Expr *e) {
-    Mult *n = dynamic_cast<Mult *>(e);
+bool MultExpr::equals(Expr *e) {
+    MultExpr *n = dynamic_cast<MultExpr *>(e);
     if (n == nullptr) {
         return false;
     } else {
@@ -314,25 +313,25 @@ bool Mult::equals(Expr *e) {
 }
 
 /**
- * \brief - Returns an expression if the value is the variable, otherwise it returns the Var
+ * \brief - Returns an expression if the value is the variable, otherwise it returns the VarExpr
  * \param variable - the variable being checked in string format
  * \param replacement - the expression being checked
- * \return - Returns an expression if the value is the variable, otherwise it returns the Var
+ * \return - Returns an expression if the value is the variable, otherwise it returns the VarExpr
  */
-Expr* Mult::subst(std::string variable, Expr* replacement) {
-    return new Mult(lhs->subst(variable, replacement), rhs->subst(variable, replacement));
+Expr *MultExpr::subst(std::string variable, Expr *replacement) {
+    return new MultExpr(lhs->subst(variable, replacement), rhs->subst(variable, replacement));
 }
 
 /**
  * \brief - Prints the right hand side and left hand side with a '*' in between. The whole thing is surrounded by parentheses
  * \param stream - The stream being utilized
  */
-void Mult::print(std::ostream& stream) {
-    stream<<("(");
+void MultExpr::print(std::ostream &stream) {
+    stream << ("(");
     lhs->print(stream);
-    stream<<("*");
+    stream << ("*");
     rhs->print(stream);
-    stream<<(")");
+    stream << (")");
 }
 
 /**
@@ -340,7 +339,7 @@ void Mult::print(std::ostream& stream) {
  * \param stream - the stream being utilized
  * \param prec - the precedence is always 2 for Mults
  */
-void Mult::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) {
+void MultExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
 
     if (prec == prec_mult) {
         stream << ("(");
@@ -348,28 +347,27 @@ void Mult::pretty_print_at(std::ostream &stream, precedence_t prec, std::streamp
 
     lhs->pretty_print_at(stream, prec_mult, sPos, true);
     stream << (" * ");
-    if(prec == prec_add) {
-        rhs->pretty_print_at(stream,prec_add,sPos, true);
-    }
-    else rhs->pretty_print_at(stream, prec_add, sPos, false);
+    if (prec == prec_add) {
+        rhs->pretty_print_at(stream, prec_add, sPos, true);
+    } else rhs->pretty_print_at(stream, prec_add, sPos, false);
 
     if (prec == prec_mult) {
         stream << (")");
     }
 }
 
-Let::Let(std::string lhs, Expr *rhs, Expr *body) {
+LetExpr::LetExpr(std::string lhs, Expr *rhs, Expr *body) {
     this->lhs = lhs;
     this->rhs = rhs;
     this->body = body;
 }
 
-bool Let::has_variable() {
+bool LetExpr::has_variable() {
     return (this->rhs->has_variable() || this->body->has_variable());
 }
 
-bool Let::equals(Expr *e) {
-    Let *n = dynamic_cast<Let *>(e);
+bool LetExpr::equals(Expr *e) {
+    LetExpr *n = dynamic_cast<LetExpr *>(e);
     if (n == nullptr) {
         return false;
     } else {
@@ -379,16 +377,16 @@ bool Let::equals(Expr *e) {
     }
 }
 
-void Let::print(std::ostream& stream) {
-    stream<<"(";
-    stream<<"_let ";
-    stream<<lhs << "=" << rhs->to_string();
-    stream<<" _in ";
-    stream<<body->to_string();
-    stream<<")";
+void LetExpr::print(std::ostream &stream) {
+    stream << "(";
+    stream << "_let ";
+    stream << lhs << "=" << rhs->to_string();
+    stream << " _in ";
+    stream << body->to_string();
+    stream << ")";
 }
 
-void Let::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar) {
+void LetExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
     if (needPar) {
         stream << "(";
     }
@@ -398,7 +396,7 @@ void Let::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampo
     stream << "_let ";
     stream << lhs << " = ";
     rhs->pretty_print_at(stream, prec_none, sPos, false);
-    stream<<"\n";
+    stream << "\n";
     sPos = stream.tellp();
 
 
@@ -415,23 +413,181 @@ void Let::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampo
 
 }
 
-Expr* Let::subst(std::string variable, Expr* expr){
+Expr *LetExpr::subst(std::string variable, Expr *expr) {
     if (lhs == variable) {
-        return new Let(lhs, rhs->subst(variable, expr), body);
+        return new LetExpr(lhs, rhs->subst(variable, expr), body);
     }
-    return new Let(lhs, (rhs->subst(variable, expr)), body->subst(variable, expr));
+    return new LetExpr(lhs, (rhs->subst(variable, expr)), body->subst(variable, expr));
 }
 
-Val* Let::interp(){
-
-
-    return(this->body->subst(lhs,rhs)->interp());
-
+Val *LetExpr::interp() {
+    return (this->body->subst(lhs, rhs)->interp());
 }
 
 
+/**
+ * *******************************
+ *         BOOLEXPR
+ * *******************************
+ *
+ * @param e
+ * @return
+ */
+
+BoolExpr::BoolExpr(bool buh) {
+    if (buh) {
+        this->b = true;
+    } else {
+        b = false;
+    }
+}
+
+bool BoolExpr::equals(Expr *e) {
+    BoolExpr *n = dynamic_cast<BoolExpr *>(e);
+    if (n == nullptr) {
+        return false;
+    } else {
+        return (this->b == n->b);
+    }
+}
+
+Val *BoolExpr::interp() {
+    return new boolVal(b);
+}
+
+bool BoolExpr::has_variable() {
+    return false;
+}
+
+/**
+ * \brief - Returns a number being called
+ * \param variable - the variable being checked in string format
+ * \param expr - the expression being checked
+ * \return - the number being called
+ */
+Expr *BoolExpr::subst(std::string variable, Expr *expr) {
+    return this;
+}
+
+/**
+ * \brief - prints the object calling to the stream
+ * \param stream - the stream being utilized
+ */
+void BoolExpr::print(std::ostream &stream) {
+    if (b) {
+        stream << "_true";
+    } else {
+        stream << "_false";
+    }
+}
+
+/**
+ * \brief - utilizes the precedence from the parent to print correct parentheses
+ * \param stream - the stream being utilized
+ * \param prec_none - the precedence is always zero for nums
+ */
+void BoolExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
+    if (b) {
+        stream << "_true";
+    } else {
+        stream << "_false";
+    }
+}
+
+/****************
+* if then else
+*****************/
+
+IfExpr::IfExpr(Expr *test, Expr *then, Expr *els) {
+    test_part = test;
+    then_part = then;
+    else_part = els;
+}
+
+bool IfExpr::equals(Expr *e) {
+    IfExpr *n = dynamic_cast<IfExpr *>(e);
+    if (n == nullptr) {
+        return false;
+    } else {
+        return (this->test_part->equals(n)
+                && this->then_part->equals(n) && this->else_part->equals(n));
+    }
+}
+
+Val *IfExpr::interp() {
+    if (this->test_part->interp()->is_true()) {
+        return this->then_part->interp();
+    } else return this->else_part->interp();
+}
+
+Expr *IfExpr::subst(std::string variable, Expr *expr) {
+    return new IfExpr(this->test_part->subst(variable, expr), this->then_part->subst(variable, expr),
+                      this->else_part->subst(variable, expr));
+}
+
+bool IfExpr::has_variable() {
+    return this->test_part->has_variable() || this->else_part->has_variable() || this->then_part->has_variable();
+}
+
+void IfExpr::print(std::ostream &stream) {
+    stream << "_if ";
+    test_part->print(stream);
+    stream << std::endl;
+    stream << "_then ";
+    then_part->print(stream);
+    stream << std::endl;
+    stream << "_else ";
+    else_part->print(stream);
+}
+
+void IfExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
+    this->print(stream);
+}
+
+/*********************
+ *      Equals
+ *********************/
+
+EqExpr::EqExpr(Expr *lhs, Expr *rhs) {
+    this->lhs = lhs;
+    this->rhs = rhs;
+}
+
+bool EqExpr::equals(Expr *e) {
+    EqExpr *n = dynamic_cast<EqExpr *>(e);
+    if (n == nullptr) {
+        return false;
+    } else {
+        return (this->lhs->equals(n->lhs) && this->rhs->equals(n->rhs));
+    }
+}
+
+Val* EqExpr::interp() {
+    if (lhs->equals(rhs)) {
+        return new boolVal(true);
+    }
+    else {
+        return new boolVal(false);
+    }
+}
+
+bool EqExpr::has_variable() {
+    return lhs->has_variable() || rhs->has_variable();
+}
+
+Expr* EqExpr::subst(std::string variable, Expr* expr) {
+    return new EqExpr(lhs->subst(variable, expr), rhs->subst(variable, expr));
+}
+
+void EqExpr::print(std::ostream& stream) {
+    lhs->print(stream);
+    stream<<"==";
+    rhs->print(stream);
+}
+
+void EqExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
+    this->print(stream);
+}
 
 
 
-
-//
