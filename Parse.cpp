@@ -67,7 +67,9 @@ Expr *parse_addend(std::istream &in) {
 
     Expr *e;
     e = parse_multicand(in);
+    std::cout<<"got out of parsemultcaind";
     skip_whitespace(in);
+    cout<<"after whitespace";
     int c = in.peek();
     if (c == '*') {
         consume(in, '*');
@@ -127,29 +129,27 @@ Expr *parseLet(std::istream &in) {
 Expr *parseIf(std::istream &in) {
     skip_whitespace(in);
 
+    cout<<"before parse statement"<<endl;
     Expr *statement = parse_expr(in);
     skip_whitespace(in);
 
     consume(in, '_');
-
     if (parse_keyword(in) != "then") {
         throw std::runtime_error("invalid argument for 'then' statement");
     }
-    Expr *then = parse_expr(in);
     skip_whitespace(in);
 
+    Expr *then = parse_expr(in);
+    skip_whitespace(in);
 
     consume(in, '_');
     if (parse_keyword(in) != "else") {
         throw std::runtime_error("invalid argument for 'else' statement");
     }
+    cout<<"do i get here";
     Expr *els = parse_expr(in);
-
     return new IfExpr(statement, then, els);
-
-
 }
-
 
 Expr *parse_multicand(std::istream &in) {
     skip_whitespace(in);
@@ -169,13 +169,13 @@ Expr *parse_multicand(std::istream &in) {
             cout << "in true";
             return new BoolExpr(true);
         } else if (result == "false") {
-            cout << "in false";
+            cout << "in false"<<endl;
             return new BoolExpr(false);
         } else {
             throw runtime_error("did not get a proper command");
         }
     } else if (c == '(') {
-        consume(in, '(');
+        consume(in,'(');
         Expr *e = parse_expr(in);
         skip_whitespace(in);
         c = in.get();

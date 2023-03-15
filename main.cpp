@@ -42,18 +42,6 @@ int main(int argc, const char * argv[]) {
             cerr<<"No available command called";
         }
 
-//        while (1) {
-//            Expr *e = parse_expr(std::cin);
-//            std::cout<<"The answer is: ";
-//            std::cout<<to_string(e->interp());
-//            std::cout << "\n";
-//            e->pretty_print(std::cout);
-//            std::cout << "\n";
-//            skip_whitespace(std::cin);
-//            std::cout<<EOF;
-//            if (std::cin.eof())
-//                break;
-//        }
     }
     catch (std::runtime_error exn) {
         std::cerr << exn.what() << "\n";

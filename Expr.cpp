@@ -530,14 +530,15 @@ bool IfExpr::has_variable() {
 }
 
 void IfExpr::print(std::ostream &stream) {
-    stream << "_if ";
+
+    stream << "(_if ";
     test_part->print(stream);
-    stream << std::endl;
-    stream << "_then ";
+    stream << " _then ";
     then_part->print(stream);
-    stream << std::endl;
-    stream << "_else ";
+
+    stream << " _else ";
     else_part->print(stream);
+    stream<<")";
 }
 
 void IfExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
@@ -563,7 +564,7 @@ bool EqExpr::equals(Expr *e) {
 }
 
 Val* EqExpr::interp() {
-    if (lhs->equals(rhs)) {
+    if (lhs->interp()->equals(rhs->interp())) {
         return new boolVal(true);
     }
     else {

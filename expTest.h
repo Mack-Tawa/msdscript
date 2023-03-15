@@ -551,7 +551,7 @@ TEST_CASE("addto bad") {
 }
 
 TEST_CASE("multTo bad") {
-    CHECK_THROWS_WITH((new numVal(5))->mult_to(reinterpret_cast<Val *>(new NumExpr(5))), "add of non-number");
+    CHECK_THROWS_WITH((new numVal(5))->mult_to(reinterpret_cast<Val *>(new NumExpr(5))), "mult of non-number");
 }
 
 TEST_CASE("BoolExpr EQUALS") {
@@ -608,161 +608,163 @@ TEST_CASE(("IfExpr hasVar")) {
 
 TEST_CASE(("IfExpr print")) {
     CHECK((new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new NumExpr(5), new NumExpr(6)))->to_string() ==
-    "_if (1==2)\n_then 5\n_else 6");
+    "(_if (1==2) _then 5 _else 6)");
     CHECK((new IfExpr(new BoolExpr(true), new NumExpr(5), new BoolExpr(true + 1)))->interp()->equals(new numVal(5)));
 }
 
-TEST_CASE("Bool tests") {
-    CHECK((new Bool(true)) -> equals(new Bool(true)));
-    CHECK(!(new Bool(false)) -> equals(new Bool(true)));
-    CHECK(!((new Bool(false)) -> equals(new Num(10))) );
-    CHECK(((new Bool(true)) -> equals(new Bool((new Num(1)) -> equals(new Num (1)))) ));
+TEST_CASE("BoolExpr tests") {
+    CHECK((new BoolExpr(true)) -> equals(new BoolExpr(true)));
+    CHECK(!(new BoolExpr(false)) -> equals(new BoolExpr(true)));
+    CHECK(!((new BoolExpr(false)) -> equals(new NumExpr(10))) );
+    CHECK(((new BoolExpr(true)) -> equals(new BoolExpr((new NumExpr(1)) -> equals(new NumExpr (1)))) ));
 
 
-    CHECK(((new Bool(true)) -> interp()) -> equals(new BoolVal(true)));
-    CHECK(((new Bool(false)) -> interp()) -> equals(new BoolVal(false)));
-    CHECK(!((new Bool(false)) -> interp()) -> equals(new BoolVal(true)));
+    CHECK(((new BoolExpr(true)) -> interp()) -> equals(new boolVal(true)));
+    CHECK(((new BoolExpr(false)) -> interp()) -> equals(new boolVal(false)));
+    CHECK(!((new BoolExpr(false)) -> interp()) -> equals(new boolVal(true)));
 
-    CHECK(((new Bool(true)) -> has_variable()) == false);
+    CHECK(((new BoolExpr(true)) -> has_variable()) == false);
 
-    CHECK(((new Bool(true)) -> subst("x", new Num(4)) -> equals(new Bool(true))));
+    CHECK(((new BoolExpr(true)) -> subst("x", new NumExpr(4)) -> equals(new BoolExpr(true))));
 
-    CHECK((((new Bool(true)) -> to_string()) == "_true"));
-    CHECK((((new Bool(false)) -> to_string()) == "_false"));
+    CHECK((((new BoolExpr(true)) -> to_string()) == "_true"));
+    CHECK((((new BoolExpr(false)) -> to_string()) == "_false"));
 
-    CHECK((((new Bool(true)) -> pretty_print_to_string()) == "_true"));
-    CHECK((((new Bool(false)) -> pretty_print_to_string()) == "_false"));
+    CHECK((((new BoolExpr(true)) -> pretty_print_to_string()) == "_true"));
+    CHECK((((new BoolExpr(false)) -> pretty_print_to_string()) == "_false"));
 }
 
 TEST_CASE("NumVal tests") {
-    CHECK_THROWS_WITH( ((new NumVal(5)) ->addTo(new BoolVal(true))) , "add of non-number");
-    CHECK_THROWS_WITH(((new NumVal(5))->multBy(new BoolVal(true))) , "mult of non-number");
+    CHECK_THROWS_WITH( ((new numVal(5)) ->add_to(new boolVal(true))) , "add of non-number");
+    CHECK_THROWS_WITH(((new numVal(5))->mult_to(new boolVal(true))) , "mult of non-number");
 
-    CHECK(((new NumVal(5)) -> toString()) == "5");
+    CHECK(((new numVal(5)) -> to_string()) == "5");
 
-    CHECK(!((new NumVal(5)) ->equals(new BoolVal(false))));
+    CHECK(!((new numVal(5)) ->equals(new boolVal(false))));
 
-    CHECK_THROWS_WITH( ((new NumVal(5)) ->isTrue()) , "cannot be evaluated to boolean");
+    CHECK_THROWS_WITH( ((new numVal(5)) ->is_true()) , "invalid argument");
 }
 
 
 TEST_CASE("BoolVal tests") {
-    CHECK_THROWS_WITH( ((new BoolVal(true)) ->addTo(new NumVal(7))) , "add of non-number");
-    CHECK_THROWS_WITH(((new BoolVal(true))->multBy(new NumVal(8))) , "mult of non-number");
+    CHECK_THROWS_WITH( ((new boolVal(true)) ->add_to(new numVal(7))) , "trying to add two boolVals dingus");
+    CHECK_THROWS_WITH(((new boolVal(true))->mult_to(new numVal(8))) , "trying to mult two boolVals ya poopoo head");
 
-    CHECK(((new BoolVal(true)) ->toExpr()) -> equals(new Bool(true)));
-    CHECK(((new BoolVal(false)) ->toExpr()) -> equals(new Bool(false)));
+    CHECK(((new boolVal(true)) ->toExpr()) -> equals(new BoolExpr(true)));
+    CHECK(((new boolVal(false)) ->toExpr()) -> equals(new BoolExpr(false)));
 
-    CHECK(((new BoolVal(true)) ->toString()) == "_true");
-    CHECK(((new BoolVal(false)) ->toString()) == "_false");
+    CHECK(((new boolVal(true)) ->to_string()) == "_true");
+    CHECK(((new boolVal(false)) ->to_string()) == "_false");
 
-    CHECK(!((new BoolVal(true)) ->equals(new NumVal(4))));
-    CHECK(((new BoolVal(true)) ->equals(new BoolVal(true))));
-    CHECK(((new BoolVal(false)) ->equals(new BoolVal(false))));
+    CHECK(!((new boolVal(true)) ->equals(new numVal(4))));
+    CHECK(((new boolVal(true)) ->equals(new boolVal(true))));
+    CHECK(((new boolVal(false)) ->equals(new boolVal(false))));
 
-    CHECK(!((new BoolVal(false)) ->isTrue()));
-    CHECK(((new BoolVal(true)) ->isTrue()));
+    CHECK(!((new boolVal(false)) ->is_true()));
+    CHECK(((new boolVal(true)) ->is_true()));
 }
 
 TEST_CASE("If and Equality tests") {
-    CHECK((new If(new Equality(new Num(4), new Num(4)), new Num(6), new Num(7))) -> equals((new If(new Equality(new Num(4), new Num(4)), new Num(6), new Num(7)))));
-    CHECK(!(new If(new Equality(new Num(4), new Num(4)), new Num(6), new Num(7))) -> equals((new If(new Equality(new Num(7), new Num(4)), new Num(6), new Num(7)))));
-    CHECK(!(new If(new Equality(new Num(4), new Num(4)), new Num(6), new Num(7))) -> equals((new If(new Bool(true), new Num(6), new Num(7)))));
-    CHECK(!(new If(new Equality(new Num(4), new Num(4)), new Num(6), new Num(7))) -> equals((new Bool(true))));
+    CHECK((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> equals((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new NumExpr(6), new NumExpr(7)))));
+    CHECK(!(new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> equals((new IfExpr(new EqExpr(new NumExpr(7), new NumExpr(4)), new NumExpr(6), new NumExpr(7)))));
+    CHECK(!(new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> equals((new IfExpr(new BoolExpr(true), new NumExpr(6), new NumExpr(7)))));
+    CHECK(!(new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> equals((new BoolExpr(true))));
 
-    CHECK_THROWS_WITH( (new If(new Num(4), new Num(6), new Num(7))) -> interp(), "cannot be evaluated to boolean");
-    CHECK((new If(new Equality(new Num(4), new Num(4)), new Num(6), new Num(7))) -> interp() -> toString() == "6" );
-    CHECK((new If(new Equality(new Num(2), new Num(4)), new Num(6), new Num(7))) -> interp() -> toString() == "7" );
+    CHECK_THROWS_WITH( (new IfExpr(new NumExpr(4), new NumExpr(6), new NumExpr(7))) -> interp(), "invalid argument");
+    CHECK((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> interp() -> to_string() == "6" );
+    CHECK((new IfExpr(new EqExpr(new NumExpr(2), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> interp() -> to_string() == "7" );
 
-    CHECK(!((new If(new Equality(new Num(4), new Num(4)), new Num(6), new Num(7))) -> has_variable()));
-    CHECK(((new If(new Equality(new Var("x"), new Num(4)), new Num(6), new Num(7))) -> has_variable()));
-    CHECK(((new If(new Equality(new Num(4), new Num(4)), new Var("y"), new Num(7))) -> has_variable()));
-    CHECK(((new If(new Equality(new Num(4), new Num(4)), new Num(77), new Var("z"))) -> has_variable()));
+    CHECK(!((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> has_variable()));
+    CHECK(((new IfExpr(new EqExpr(new VarExpr("x"), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> has_variable()));
+    CHECK(((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new VarExpr("y"), new NumExpr(7))) -> has_variable()));
+    CHECK(((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new NumExpr(77), new VarExpr("z"))) -> has_variable()));
 
-    CHECK((((new If(new Equality(new Var("x"), new Num(4)), new Num(6), new Num(7))) -> subst("x", new Num(4))) -> interp()) -> equals(new NumVal(6)));
-    CHECK((((new If(new Equality(new Var("x"), new Num(4)), new Num(6), new Var("y"))) -> subst("y", new Num(7))) -> interp()) -> equals(new NumVal(7)));
-    CHECK((((new If(new Equality(new Num(4), new Num(4)), new Var("y"), new Num(7))) -> subst("y", new Num(77))) -> interp()) -> equals(new NumVal(77)));
-    CHECK((((new If(new Equality(new Num(4), new Num(4)), new Var("y"), new Num(7))) -> subst("y", new Num(77))) -> interp()) -> equals(new NumVal(77)));
+    CHECK((((new IfExpr(new EqExpr(new VarExpr("x"), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> subst("x", new NumExpr(4))) -> interp()) -> equals(new numVal(6)));
+    CHECK((((new IfExpr(new EqExpr(new VarExpr("x"), new NumExpr(4)), new NumExpr(6), new VarExpr("y"))) -> subst("y", new NumExpr(7))) -> interp()) -> equals(new numVal(7)));
+    CHECK((((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new VarExpr("y"), new NumExpr(7))) -> subst("y", new NumExpr(77))) -> interp()) -> equals(new numVal(77)));
+    CHECK((((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new VarExpr("y"), new NumExpr(7))) -> subst("y", new NumExpr(77))) -> interp()) -> equals(new numVal(77)));
 
 
-    CHECK(((new If(new Equality(new Num(4), new Num(4)), new Num(6), new Num(7))) -> to_string()) == "(_if (4==4)_then 6_else 7)" );
-    CHECK(((new If(new Equality(new Num(4), new Num(4)), new Num(6), new Num(7))) -> pretty_print_to_string()) == "(_if (4==4)_then 6_else 7)" );
+    CHECK(((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> to_string())
+    == "(_if (4==4) _then 6 _else 7)" );
+    CHECK(((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> pretty_print_to_string())
+    == "(_if (4==4) _then 6 _else 7)" );
 
-    CHECK(((new Equality(new Num(4), new Num(4))) -> pretty_print_to_string()) == "(4==4)");
+    CHECK(((new EqExpr(new NumExpr(4), new NumExpr(4))) -> pretty_print_to_string()) == "(4 == 4)");
 }
 
 TEST_CASE("Conditional parse tests") {
     SECTION("from quiz") {
         CHECK( (parse_str ( "_if 1 == 2 _then 5 _else 6")) ->
-                equals(new If(new Equality(new Num(1), new Num(2)), new Num(5), new Num(6))));
+                equals(new IfExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new NumExpr(5), new NumExpr(6))));
 
-        CHECK( (((parse_str ( "_if 1 == 2 _then 5 _else 6")) -> interp()) -> toString()) == "6");
-        CHECK( (((parse_str ( "1 == 2")) -> interp()) -> toString()) == "_false");
-        CHECK( (((parse_str ( "(1 + 2) == (3 + 0)")) -> interp()) -> toString()) == "_true");
-        CHECK( (((parse_str ( "1 + 2 == 3 + 0")) -> interp()) -> toString()) == "_true");
-        CHECK_THROWS_WITH(( (((parse_str ( "(1 == 2) + 3 ")) -> interp()) -> toString()) == "_true"), "add of non-number");
-        CHECK( (((parse_str ( "1==2+3")) -> interp()) -> toString()) == "_false");
+        CHECK( (((parse_str ( "_if 1 == 2 _then 5 _else 6")) -> interp()) -> to_string()) == "6");
+        CHECK( (((parse_str ( "1 == 2")) -> interp()) -> to_string()) == "_false");
+        CHECK( (((parse_str ( "(1 + 2) == (3 + 0)")) -> interp()) -> to_string()) == "_true");
+        CHECK( (((parse_str ( "1 + 2 == 3 + 0")) -> interp()) -> to_string()) == "_true");
+        CHECK_THROWS_WITH(( (((parse_str ( "(1 == 2) + 3 ")) -> interp()) -> to_string()) == "_true"), "trying to add two boolVals dingus");
+        CHECK( (((parse_str ( "1==2+3")) -> interp()) -> to_string()) == "_false");
         CHECK( (((parse_str ( "_if _false\n"
                               "_then 5\n"
-                              "_else 6")) -> interp()) -> toString()) == "6");
+                              "_else 6")) -> interp()) -> to_string()) == "6");
         CHECK( (((parse_str ( "_if _false\n"
                               "_then _false\n"
-                              "_else _true")) -> interp()) -> toString()) == "_true");
-        CHECK( (((parse_str ( "_if _false\n"
+                              "_else _true")) -> interp()) -> to_string()) == "_true");
+        CHECK( (((parse_str ( "_if\n"
                               "_then 5\n"
-                              "_else _false")) -> interp()) -> toString()) == "_false");
-        CHECK_THROWS_WITH(( (((parse_str ( "_true + _false")) -> interp()) -> toString()) == "_false"), "add of non-number");
-        CHECK_THROWS_WITH(( (((parse_str ( "_true + 1")) -> interp()) -> toString()) == "_false"), "add of non-number");
-        CHECK( (((parse_str ( "_true == _true")) -> interp()) -> toString()) == "_true");
-        CHECK( (((parse_str ( "1 == _true")) -> interp()) -> toString()) == "_false");
+                              "_else _false")) -> interp()) -> to_string()) == "_false");
+        CHECK_THROWS_WITH(( (((parse_str ( "_true + _false")) -> interp()) -> to_string()) == "_false"), "trying to add two boolVals dingus");
+        CHECK_THROWS_WITH(( (((parse_str ( "_true + 1")) -> interp()) -> to_string()) == "_false"), "trying to add two boolVals dingus");
+        CHECK( (((parse_str ( "_true == _true")) -> interp()) -> to_string()) == "_true");
+        CHECK( (((parse_str ( "1 == _true")) -> interp()) -> to_string()) == "_false");
         CHECK_THROWS_WITH(( (((parse_str ( "_if 1 + 2\n"
                                            "_then _false\n"
-                                           "_else _true")) -> interp()) -> toString()) == "_false"), "cannot be evaluated to boolean");
+                                           "_else _true")) -> interp()) -> to_string()) == "_false"), "cannot be evaluated to boolean");
         CHECK( (((parse_str ( "_if _true\n"
                               "_then 5\n"
-                              "_else _true + 1")) -> interp()) -> toString()) == "5");
+                              "_else _true + 1")) -> interp()) -> to_string()) == "5");
         CHECK_THROWS_WITH(( (((parse_str ( "_if _false\n"
                                            "_then 5\n"
-                                           "_else _true + 1")) -> interp()) -> toString()) == "_false"), "add of non-number");
+                                           "_else _true + 1")) -> interp()) -> to_string()) == "_false"), "add of non-number");
 
         CHECK_THROWS_WITH(( (((parse_str ( "_let x = _true + 1\n"
                                            "_in  _if _true\n"
                                            "     _then 5\n"
-                                           "     _else x")) -> interp()) -> toString()) == "_false"), "add of non-number");
+                                           "     _else x")) -> interp()) -> to_string()) == "_false"), "add of non-number");
         CHECK_THROWS_WITH(( (((parse_str ( "_let x = _true + 1\n"
                                            "_in  _if _true\n"
                                            "     _then 5\n"
-                                           "     _else x")) -> interp()) -> toString()) == "_false"), "add of non-number");
+                                           "     _else x")) -> interp()) -> to_string()) == "_false"), "add of non-number");
         CHECK( (((parse_str ( "(_if _true\n"
                               " _then 5\n"
-                              " _else _true) + 1")) -> interp()) -> toString()) == "6");
+                              " _else _true) + 1")) -> interp()) -> to_string()) == "6");
         CHECK( (((parse_str ( "_if (_if 1 == 2\n"
                               "     _then _false\n"
                               "     _else _true)\n"
                               "_then 5\n"
-                              "_else 6")) -> interp()) -> toString()) == "5");
+                              "_else 6")) -> interp()) -> to_string()) == "5");
         CHECK( (((parse_str ( "_if (_if 1 == 2\n"
                               "     _then _true\n"
                               "      _else _false)\n"
                               "_then 5\n"
-                              "_else 6")) -> interp()) -> toString()) == "6");
+                              "_else 6")) -> interp()) -> to_string()) == "6");
     }
     SECTION("Stu tests"){
-        CHECK( (new If(new Equality(new Num(1),new Num(2)),new Num(5), new Num(6)))->interp()->equals(new NumVal(6)));
-        CHECK( (new Add(new Equality(new Num(1), new Num(2)), new Num(3)))->to_string() == "((1==2)+3)");
+        CHECK( (new IfExpr(new EqExpr(new NumExpr(1),new NumExpr(2)),new NumExpr(5), new NumExpr(6)))->interp()->equals(new numVal(6)));
+        CHECK( (new AddExpr(new EqExpr(new NumExpr(1), new NumExpr(2)), new NumExpr(3)))->to_string() == "((1==2)+3)");
     };
     SECTION("to complete coverage") {
         // misspell then and else for parsing
         CHECK_THROWS_WITH(( (((parse_str ( "(_if _true\n"
                                            " _thn 5\n"
-                                           " _else _true) + 1")) -> interp()) -> toString()) == "6"), "expected then");
+                                           " _else _true) + 1")) -> interp()) -> to_string()) == "6"), "expected then");
         CHECK_THROWS_WITH(( (((parse_str ( "(_if _true\n"
                                            " _then 5\n"
-                                           " _ele _true) + 1")) -> interp()) -> toString()) == "6"), "expected else");
+                                           " _ele _true) + 1")) -> interp()) -> to_string()) == "6"), "expected else");
         // misspell in for let
         CHECK_THROWS_WITH(( (parse_str ( "_let x = _let y = 6\n"
                                          "         _n  y * 2\n"
-                                         "_i  x + 1")) -> equals(new Let("x", new Let("y", new Num(6), new Mult(new Var("y"), new Num(2))), new Add(new Var("x"), new Num(1))))), "expected in");
+                                         "_i  x + 1")) -> equals(new LetExpr("x", new LetExpr("y", new NumExpr(6), new MultExpr(new VarExpr("y"), new NumExpr(2))), new AddExpr(new VarExpr("x"), new NumExpr(1))))), "expected in");
     }
 }
 
