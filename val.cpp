@@ -19,14 +19,14 @@ bool numVal::equals(Val *rhs) {
 Val *numVal::mult_to(Val *other_val) {
     numVal *other_num = dynamic_cast<numVal *>(other_val);
     if (other_num == nullptr) throw std::runtime_error("mult of non-number");
-    return new numVal(val * other_num->val);
+    return new numVal(unsigned((unsigned)val * (unsigned)other_num->val));
 }
 
 
 Val *numVal::add_to(Val *other_val) {
     numVal *other_num = dynamic_cast<numVal *>(other_val);
     if (other_num == nullptr) throw std::runtime_error("add of non-number");
-    return new numVal(val + other_num->val);
+    return new numVal(unsigned((unsigned )val + (unsigned)other_num->val));
 }
 
 numVal::numVal(int input) {

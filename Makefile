@@ -3,7 +3,7 @@ CFLAGS = -std=c++11
 CCSOURCE = ${wildcards *.cpp}
 CXXSOURCE = main.o cmdline.o Expr.o expTest.o Parse.o val.o
 HEADERS = ${wildcards *.h}
-CXXFLAGS = --std=c++17 -O2
+CXXFLAGS = -fsanitize=undefined -fno-sanitize-recover=undefined --std=c++17 -O2
 EXECUTABLE = ./msdscript
 
 otherEXECUTABLE = test_msdscript.o exec.o
@@ -45,4 +45,4 @@ val.o: val.cpp val.h
 
 
 clean:
-	rm -f *.o program
+	rm -f *.o msdscript

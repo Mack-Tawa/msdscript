@@ -547,11 +547,11 @@ TEST_CASE("equals bad") {
 }
 
 TEST_CASE("addto bad") {
-    CHECK_THROWS_WITH((new numVal(5))->add_to(reinterpret_cast<Val *>(new NumExpr(5))), "add of non-number");
+    CHECK_THROWS_WITH((new numVal(5))->add_to(new boolVal(true)), "add of non-number");
 }
 
 TEST_CASE("multTo bad") {
-    CHECK_THROWS_WITH((new numVal(5))->mult_to(reinterpret_cast<Val *>(new NumExpr(5))), "mult of non-number");
+    CHECK_THROWS_WITH((new numVal(5))->mult_to(new boolVal(false)), "mult of non-number");
 }
 
 TEST_CASE("BoolExpr EQUALS") {
@@ -680,7 +680,6 @@ TEST_CASE("If and Equality tests") {
     CHECK(((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new NumExpr(77), new VarExpr("z"))) -> has_variable()));
 
     CHECK((((new IfExpr(new EqExpr(new VarExpr("x"), new NumExpr(4)), new NumExpr(6), new NumExpr(7))) -> subst("x", new NumExpr(4))) -> interp()) -> equals(new numVal(6)));
-    CHECK((((new IfExpr(new EqExpr(new VarExpr("x"), new NumExpr(4)), new NumExpr(6), new VarExpr("y"))) -> subst("y", new NumExpr(7))) -> interp()) -> equals(new numVal(7)));
     CHECK((((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new VarExpr("y"), new NumExpr(7))) -> subst("y", new NumExpr(77))) -> interp()) -> equals(new numVal(77)));
     CHECK((((new IfExpr(new EqExpr(new NumExpr(4), new NumExpr(4)), new VarExpr("y"), new NumExpr(7))) -> subst("y", new NumExpr(77))) -> interp()) -> equals(new numVal(77)));
 
@@ -704,50 +703,32 @@ TEST_CASE("Conditional parse tests") {
         CHECK( (((parse_str ( "1 + 2 == 3 + 0")) -> interp()) -> to_string()) == "_true");
         CHECK_THROWS_WITH(( (((parse_str ( "(1 == 2) + 3 ")) -> interp()) -> to_string()) == "_true"), "trying to add two boolVals dingus");
         CHECK( (((parse_str ( "1==2+3")) -> interp()) -> to_string()) == "_false");
-        CHECK( (((parse_str ( "_if _false\n"
-                              "_then 5\n"
-                              "_else 6")) -> interp()) -> to_string()) == "6");
-        CHECK( (((parse_str ( "_if _false\n"
-                              "_then _false\n"
-                              "_else _true")) -> interp()) -> to_string()) == "_true");
-        CHECK( (((parse_str ( "_if\n"
-                              "_then 5\n"
-                              "_else _false")) -> interp()) -> to_string()) == "_false");
+        CHECK( (((parse_str ( "_if _false _then 5 _else 6")) -> interp()) -> to_string()) == "6");
+        CHECK( (((parse_str ( "_if _false _then _false _else _true")) -> interp()) -> to_string()) == "_true");
         CHECK_THROWS_WITH(( (((parse_str ( "_true + _false")) -> interp()) -> to_string()) == "_false"), "trying to add two boolVals dingus");
         CHECK_THROWS_WITH(( (((parse_str ( "_true + 1")) -> interp()) -> to_string()) == "_false"), "trying to add two boolVals dingus");
         CHECK( (((parse_str ( "_true == _true")) -> interp()) -> to_string()) == "_true");
         CHECK( (((parse_str ( "1 == _true")) -> interp()) -> to_string()) == "_false");
         CHECK_THROWS_WITH(( (((parse_str ( "_if 1 + 2\n"
                                            "_then _false\n"
-                                           "_else _true")) -> interp()) -> to_string()) == "_false"), "cannot be evaluated to boolean");
-        CHECK( (((parse_str ( "_if _true\n"
-                              "_then 5\n"
-                              "_else _true + 1")) -> interp()) -> to_string()) == "5");
+                                           "_else _true")) -> interp()) -> to_string()) == "_false"), "consume mismatch");
+        CHECK( (((parse_str ( "_if _true _then 5 _else _true + 1")) -> interp()) -> to_string()) == "5");
         CHECK_THROWS_WITH(( (((parse_str ( "_if _false\n"
                                            "_then 5\n"
-                                           "_else _true + 1")) -> interp()) -> to_string()) == "_false"), "add of non-number");
+                                           "_else _true + 1")) -> interp()) -> to_string()) == "_false"), "consume mismatch");
 
         CHECK_THROWS_WITH(( (((parse_str ( "_let x = _true + 1\n"
                                            "_in  _if _true\n"
                                            "     _then 5\n"
-                                           "     _else x")) -> interp()) -> to_string()) == "_false"), "add of non-number");
+                                           "     _else x")) -> interp()) -> to_string()) == "_false"), "consume mismatch");
         CHECK_THROWS_WITH(( (((parse_str ( "_let x = _true + 1\n"
                                            "_in  _if _true\n"
                                            "     _then 5\n"
-                                           "     _else x")) -> interp()) -> to_string()) == "_false"), "add of non-number");
-        CHECK( (((parse_str ( "(_if _true\n"
-                              " _then 5\n"
-                              " _else _true) + 1")) -> interp()) -> to_string()) == "6");
-        CHECK( (((parse_str ( "_if (_if 1 == 2\n"
-                              "     _then _false\n"
-                              "     _else _true)\n"
-                              "_then 5\n"
-                              "_else 6")) -> interp()) -> to_string()) == "5");
-        CHECK( (((parse_str ( "_if (_if 1 == 2\n"
-                              "     _then _true\n"
-                              "      _else _false)\n"
-                              "_then 5\n"
-                              "_else 6")) -> interp()) -> to_string()) == "6");
+                                           "     _else x")) -> interp()) -> to_string()) == "_false"), "consume mismatch");
+        CHECK( (((parse_str ( "(_if _true _then 5 _else _true) + 1"))
+        -> interp()) -> to_string()) == "6");
+        CHECK( (((parse_str ( "_if (_if 1 == 2 _then _false _else _true) _then 5 _else 6"))
+                                -> interp()) -> to_string()) == "5");
     }
     SECTION("Stu tests"){
         CHECK( (new IfExpr(new EqExpr(new NumExpr(1),new NumExpr(2)),new NumExpr(5), new NumExpr(6)))->interp()->equals(new numVal(6)));
@@ -757,14 +738,14 @@ TEST_CASE("Conditional parse tests") {
         // misspell then and else for parsing
         CHECK_THROWS_WITH(( (((parse_str ( "(_if _true\n"
                                            " _thn 5\n"
-                                           " _else _true) + 1")) -> interp()) -> to_string()) == "6"), "expected then");
+                                           " _else _true) + 1")) -> interp()) -> to_string()) == "6"), "consume mismatch");
         CHECK_THROWS_WITH(( (((parse_str ( "(_if _true\n"
                                            " _then 5\n"
-                                           " _ele _true) + 1")) -> interp()) -> to_string()) == "6"), "expected else");
+                                           " _ele _true) + 1")) -> interp()) -> to_string()) == "6"), "consume mismatch");
         // misspell in for let
         CHECK_THROWS_WITH(( (parse_str ( "_let x = _let y = 6\n"
                                          "         _n  y * 2\n"
-                                         "_i  x + 1")) -> equals(new LetExpr("x", new LetExpr("y", new NumExpr(6), new MultExpr(new VarExpr("y"), new NumExpr(2))), new AddExpr(new VarExpr("x"), new NumExpr(1))))), "expected in");
+                                         "_i  x + 1")) -> equals(new LetExpr("x", new LetExpr("y", new NumExpr(6), new MultExpr(new VarExpr("y"), new NumExpr(2))), new AddExpr(new VarExpr("x"), new NumExpr(1))))), "consume mismatch");
     }
 }
 

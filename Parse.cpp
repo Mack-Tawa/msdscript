@@ -56,7 +56,7 @@ Expr *parse_comparg(std::istream &in) {
     int c = in.peek();
     if (c == '+') {
         consume(in, '+');
-        Expr *rhs = parse_expr(in);
+        Expr *rhs = parse_addend(in);
         return new AddExpr(e, rhs);
     } else {
         return e;
@@ -67,9 +67,7 @@ Expr *parse_addend(std::istream &in) {
 
     Expr *e;
     e = parse_multicand(in);
-    std::cout<<"got out of parsemultcaind";
     skip_whitespace(in);
-    cout<<"after whitespace";
     int c = in.peek();
     if (c == '*') {
         consume(in, '*');
@@ -129,7 +127,6 @@ Expr *parseLet(std::istream &in) {
 Expr *parseIf(std::istream &in) {
     skip_whitespace(in);
 
-    cout<<"before parse statement"<<endl;
     Expr *statement = parse_expr(in);
     skip_whitespace(in);
 
@@ -146,7 +143,6 @@ Expr *parseIf(std::istream &in) {
     if (parse_keyword(in) != "else") {
         throw std::runtime_error("invalid argument for 'else' statement");
     }
-    cout<<"do i get here";
     Expr *els = parse_expr(in);
     return new IfExpr(statement, then, els);
 }
@@ -166,10 +162,8 @@ Expr *parse_multicand(std::istream &in) {
         } else if (result == "if") {
             return parseIf(in);
         } else if (result == "true") {
-            cout << "in true";
             return new BoolExpr(true);
         } else if (result == "false") {
-            cout << "in false"<<endl;
             return new BoolExpr(false);
         } else {
             throw runtime_error("did not get a proper command");
@@ -189,7 +183,7 @@ Expr *parse_multicand(std::istream &in) {
 }
 
 Expr *parse_num(std::istream &in) {
-    int n = 0;
+    long n = 0;
     bool negative = false;
     int d = in.peek();
     if (d == '-') {
@@ -211,6 +205,11 @@ Expr *parse_num(std::istream &in) {
 
     if (negative)
         n = -n;
+
+    if (n > INT_MAX || n < INT_MIN) {
+        throw std::runtime_error("Integer overflow error");
+    }
+
     return new NumExpr(n);
 }
 

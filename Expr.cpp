@@ -201,7 +201,7 @@ AddExpr::AddExpr(Expr *lhs, Expr *rhs) {
  */
 Val *AddExpr::interp() {
 
-    return this->lhs->interp()->add_to(this->rhs->interp());
+    return lhs->interp()->add_to(rhs->interp());
 }
 
 /**
