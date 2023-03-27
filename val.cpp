@@ -19,14 +19,24 @@ bool numVal::equals(Val *rhs) {
 Val *numVal::mult_to(Val *other_val) {
     numVal *other_num = dynamic_cast<numVal *>(other_val);
     if (other_num == nullptr) throw std::runtime_error("mult of non-number");
-    return new numVal(unsigned((unsigned)val * (unsigned)other_num->val));
+
+    if ((long) val * (long) other_num->val > INT_MAX || (long) val * (long) other_num->val < INT_MIN) {
+        throw std::runtime_error("input too big or too small");
+    }
+
+    return new numVal((unsigned) val * (unsigned) other_num->val);
 }
 
 
 Val *numVal::add_to(Val *other_val) {
     numVal *other_num = dynamic_cast<numVal *>(other_val);
     if (other_num == nullptr) throw std::runtime_error("add of non-number");
-    return new numVal(unsigned((unsigned )val + (unsigned)other_num->val));
+
+    if ((long) val * (long) other_num->val > INT_MAX || (long) val + (long) other_num->val < INT_MIN) {
+        throw std::runtime_error("input too big or too small");
+    }
+
+    return new numVal((unsigned) val + (unsigned) other_num->val);
 }
 
 numVal::numVal(int input) {
@@ -46,6 +56,11 @@ bool numVal::is_true() {
     throw std::runtime_error("invalid argument");
 }
 
+Val *numVal::call(Val *actualArg) {
+    throw std::runtime_error("Cannot use 'call' for a numVal");
+}
+
+
 /********************************************
  *                boolVal                   *
  ********************************************/
@@ -53,15 +68,14 @@ bool numVal::is_true() {
 boolVal::boolVal(bool bol) {
     if (bol) {
         this->b = "_true";
-    }
-    else this->b = "_false";
+    } else this->b = "_false";
 }
 
-Val* boolVal::add_to(Val *other_val) {
+Val *boolVal::add_to(Val *other_val) {
     throw std::runtime_error("trying to add two boolVals dingus");
 }
 
-Val* boolVal::mult_to(Val *other_val) {
+Val *boolVal::mult_to(Val *other_val) {
     throw std::runtime_error("trying to mult two boolVals ya poopoo head");
 }
 
@@ -72,8 +86,7 @@ std::string boolVal::to_string() {
 Expr *boolVal::toExpr() {
     if (b == "_true") {
         return new BoolExpr(true);
-    }
-    else {
+    } else {
         return new BoolExpr(false);
     }
 }
@@ -91,6 +104,54 @@ bool boolVal::is_true() {
     return this->b == "_true";
 }
 
+Val *boolVal::call(Val *actualArg) {
+    throw std::runtime_error("Cannot use 'call' with a boolVal");
+}
 
+/********************************************
+ *                FunVal                   *
+ ********************************************/
 
+FunVal::FunVal(std::string formalArgInput, Expr *body) {
+    this->formalArg = formalArgInput;
+    this->body = body;
+}
 
+Val *FunVal::add_to(Val *other_val) {
+    throw std::runtime_error("trying to add two funVals dingus");
+}
+
+Val *FunVal::mult_to(Val *other_val) {
+    throw std::runtime_error("trying to mult two boolVals ya poopoo head");
+}
+
+bool FunVal::equals(Val *rhs) {
+    FunVal *v = dynamic_cast<FunVal *>(rhs);
+    if (v == nullptr) {
+        return false;
+    }
+    if (this->formalArg == v->formalArg && this->body->equals(v->body)) {
+        return true;
+    }
+}
+
+std::string FunVal::to_string() {
+    std::string output = "_fun (";
+    output += formalArg;
+    output += ") ";
+    output += body->to_string();
+    return output;
+}
+
+Expr *FunVal::toExpr() {
+    return new FunExpr(this->formalArg, this->body);
+}
+
+bool FunVal::is_true() {
+    throw std::runtime_error("Trying to use 'is_true' on a funval");
+}
+#include <iostream>
+Val *FunVal::call(Val *actualArg) {
+    std::cout << "In FunVal::call";
+    return this->body->subst(formalArg, actualArg->toExpr())->interp();
+}

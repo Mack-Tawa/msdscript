@@ -79,14 +79,6 @@ Val *NumExpr::interp() {
 }
 
 /**
- * \brief - Checks to see if the number has any variables which is always false
- * \return  - False since a num can't have a var
- */
-bool NumExpr::has_variable() {
-    return false;
-}
-
-/**
  * \brief - Returns a number being called
  * \param variable - the variable being checked in string format
  * \param expr - the expression being checked
@@ -122,13 +114,6 @@ VarExpr::VarExpr(std::string val) {
     this->val = val;
 }
 
-/**
- * \brief - Returns true as VarExpr class is a var
- * \return - True
- */
-bool VarExpr::has_variable() {
-    return true;
-}
 
 /**
  * \brief - prints the object calling to the stream
@@ -204,14 +189,6 @@ Val *AddExpr::interp() {
     return lhs->interp()->add_to(rhs->interp());
 }
 
-/**
- * \brief - Returns if the left hand side or the right hand side expression has a variable
- * @return - Returns if the left hand side or the right hand side expression has a variable
- *
- */
-bool AddExpr::has_variable() {
-    return (this->lhs->has_variable() || this->rhs->has_variable());
-}
 
 /**
  * \brief - returns if an expression is equal to another
@@ -288,13 +265,6 @@ Val *MultExpr::interp() {
     return this->lhs->interp()->mult_to(this->rhs->interp());
 }
 
-/**
- * \brief - Tells if the expression calling has a variable on the left or right hand side
- * \return - Returns true if either expression has a VarExpr
- */
-bool MultExpr::has_variable() {
-    return (this->lhs->has_variable() || this->rhs->has_variable());
-}
 
 /**
  * \brief - returns if an expression is equal to another
@@ -362,9 +332,6 @@ LetExpr::LetExpr(std::string lhs, Expr *rhs, Expr *body) {
     this->body = body;
 }
 
-bool LetExpr::has_variable() {
-    return (this->rhs->has_variable() || this->body->has_variable());
-}
 
 bool LetExpr::equals(Expr *e) {
     LetExpr *n = dynamic_cast<LetExpr *>(e);
@@ -455,10 +422,6 @@ Val *BoolExpr::interp() {
     return new boolVal(b);
 }
 
-bool BoolExpr::has_variable() {
-    return false;
-}
-
 /**
  * \brief - Returns a number being called
  * \param variable - the variable being checked in string format
@@ -525,9 +488,6 @@ Expr *IfExpr::subst(std::string variable, Expr *expr) {
                       this->else_part->subst(variable, expr));
 }
 
-bool IfExpr::has_variable() {
-    return this->test_part->has_variable() || this->else_part->has_variable() || this->then_part->has_variable();
-}
 
 void IfExpr::print(std::ostream &stream) {
 
@@ -572,9 +532,6 @@ Val* EqExpr::interp() {
     }
 }
 
-bool EqExpr::has_variable() {
-    return lhs->has_variable() || rhs->has_variable();
-}
 
 Expr* EqExpr::subst(std::string variable, Expr* expr) {
     return new EqExpr(lhs->subst(variable, expr), rhs->subst(variable, expr));
@@ -596,5 +553,98 @@ void EqExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::strea
     stream<<")";
 }
 
+/**
+ * ********************  FunExpr  ********************
+ * @param formalArg
+ * @param body
+ * ********************  FunExpr  ********************/
+FunExpr::FunExpr(std::string formalArg, Expr* body) {
+    this->formalArg = std::move(formalArg);
+    this->body = body;
+}
+
+Val* FunExpr::interp() {
+    return new FunVal(this->formalArg, this->body);
+}
+
+bool FunExpr::equals(Expr *e) {
+    FunExpr *n = dynamic_cast<FunExpr *>(e);
+    if (n == nullptr) {
+        return false;
+    } else {
+        return (this->formalArg == n->formalArg && this->body->equals(n->body));
+    }
+}
+
+Expr* FunExpr::subst(std::string variable, Expr* expr) {
+    if (formalArg == variable) {
+        return this;
+    }
+    return new FunExpr(this->formalArg, this->body->subst(variable, expr));
+}
+
+void FunExpr::print(std::ostream& stream) {
+    stream<<"_fun (" + formalArg + ") " + body->to_string();
+}
+
+void FunExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
+//    stream<<"(";
+//    lhs->print(stream);
+//    stream<<" == ";
+//    rhs->print(stream);
+//    stream<<")";
+}
+
+/**
+ * ********************  CallExpr  ********************
+ * @param formalArg
+ * @param body
+ * ********************  CallExpr  ********************/
+
+CallExpr::CallExpr(Expr* toBeCalledFrom, Expr* actualArg) {
+    this->toBeCalled = toBeCalledFrom;
+    this-> actualArg = actualArg;
+}
+#include <iostream>
+Val* CallExpr::interp() {
+    //need to convert funexpr to a funval
+    std::cout << "In CallExpr:interp()\n";
+    std::cout << "To Be Called: \t'" << toBeCalled->to_string() << "'\n";
+    std::cout << "Actual Arg: \t'"<< actualArg->to_string() << "'\n";
+
+    Val* temp = this->toBeCalled->interp();
+    std::cout<< "TBC-interp: \t'" << temp->to_string() << "'\n";
+    Val* act_arg = actualArg->interp();
+
+    std::cout<< "AA-interp: \t'" << act_arg->to_string() << "'\n";
+
+    Val * ret = temp->call(act_arg);
+    std::cout<< "Ret: '" << ret->to_string() << "'\n";
+
+    return ret;
 
 
+}
+
+bool CallExpr::equals(Expr *e) {
+    CallExpr *n = dynamic_cast<CallExpr *>(e);
+    if (n == nullptr) {
+        return false;
+    } else {
+        return (this->actualArg->equals(n->actualArg) && this->toBeCalled->equals(n->toBeCalled));
+    }
+}
+
+Expr* CallExpr::subst(std::string variable, Expr* expr) {
+    return new CallExpr(this->toBeCalled->subst(variable, expr), this->actualArg->subst(variable, expr));
+}
+
+void CallExpr::print(std::ostream& stream) {
+    stream<<this->toBeCalled->to_string();
+    stream<<" ("  + actualArg->to_string() + ')';
+}
+
+void CallExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
+    stream<<this->toBeCalled->to_string();
+    stream<<" ("  + actualArg->to_string() + ')';
+}

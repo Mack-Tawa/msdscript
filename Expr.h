@@ -11,7 +11,8 @@ typedef enum {
 
     prec_none,      // = 0
     prec_add,       // = 1
-    prec_mult       // = 2
+    prec_mult,       // = 2
+    prec_fun         // = 3
 } precedence_t;
 
 
@@ -21,7 +22,6 @@ class Expr {
 public:
     virtual bool equals(Expr *e) = 0; // 0 means subclass must overwrite equals
     virtual Val* interp() = 0;
-    virtual bool has_variable() = 0;
     virtual Expr* subst(std::string variable, Expr* expr) = 0;
     virtual void print(std::ostream& stream) = 0;
     std::string to_string();
@@ -37,7 +37,6 @@ public:
     NumExpr(int val);
     bool equals(Expr *n)override;
     Val* interp()override;
-    bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr)override;
     void print(std::ostream& stream)override;
     void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
@@ -50,7 +49,6 @@ public:
     VarExpr(std::string val);
     bool equals(Expr *n) override;
     Val* interp()override;
-    bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr)override;
     void print(std::ostream& stream)override;
 
@@ -64,7 +62,6 @@ public:
     AddExpr(Expr *lhs, Expr *rhs);
     bool equals(Expr *n) override;
     Val* interp()override;
-    bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr)override;
     void print(std::ostream& stream)override;
     void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
@@ -77,7 +74,6 @@ public:
     MultExpr(Expr *lhs, Expr *rhs);
     bool equals(Expr *n) override;
     Val* interp()override;
-    bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr) override;
     void print(std::ostream& stream) override;
     void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
@@ -94,7 +90,6 @@ public:
     Expr *body;
     bool equals(Expr *n) override;
     Val* interp() override;
-    bool has_variable() override;
     Expr* subst(std::string variable, Expr* expr) override;
     void print(std::ostream& stream) override;
 
@@ -107,7 +102,6 @@ public:
     bool b;
     bool equals(Expr *e) override;
     Val* interp()override;
-    bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr)override;
     void print(std::ostream& stream)override;
     void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
@@ -123,7 +117,6 @@ public:
 
     bool equals(Expr *e)override ;
     Val* interp()override;
-    bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr)override;
     void print(std::ostream& stream)override;
     void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
@@ -137,10 +130,41 @@ public:
     EqExpr(Expr*lhs, Expr*rhs);
     bool equals(Expr *e) override;
     Val* interp()override;
-    bool has_variable()override;
     Expr* subst(std::string variable, Expr* expr)override;
     void print(std::ostream& stream)override;
     void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
 
 };
+
+class FunExpr : public Expr {
+public:
+    std::string formalArg;
+    Expr* body;
+    FunExpr(std::string formalArg, Expr *body);
+
+    bool equals(Expr *e) override;
+    Val* interp()override;
+    Expr* subst(std::string variable, Expr* expr)override;
+    void print(std::ostream& stream)override;
+    void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
+};
+
+class CallExpr : public Expr {
+public:
+
+    Expr* toBeCalled;
+    Expr* actualArg;
+    CallExpr(Expr *toBeCalled, Expr *actualArg);
+
+
+    bool equals(Expr *e) override;
+    Val* interp()override;
+    Expr* subst(std::string variable, Expr* expr)override;
+    void print(std::ostream& stream)override;
+    void pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos& sPos, bool needPar)override;
+
+};
+
+
+
 #endif //EXPRESSIONSHW_EXPR_H

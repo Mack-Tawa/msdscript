@@ -206,11 +206,11 @@ Expr *parse_num(std::istream &in) {
     if (negative)
         n = -n;
 
-    if (n > INT_MAX || n < INT_MIN) {
+    if ((signed int)n > INT_MAX || (long)n < INT_MIN) {
         throw std::runtime_error("Integer overflow error");
     }
 
-    return new NumExpr(n);
+    return new NumExpr((int)n);
 }
 
 void skip_whitespace(std::istream &in) {
