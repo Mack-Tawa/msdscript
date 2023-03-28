@@ -7,12 +7,22 @@
 #include <iostream>
 
 Expr *parse(std::istream &in) {
+    skip_whitespace(in);
+    if (!in.eof()) {
+        throw std::runtime_error("Invalid input in parse");
+    }
+    char c = in.peek();
+    if (c == 10)
+        consume(in, c);
     return parse_expr(in);
 }
 
 Expr *parse_str(std::string s) {
     std::stringstream in(s);
     Expr *e = parse_expr(in);
+    if (!in.eof()) {
+        throw std::runtime_error("Invalid input in parse");
+    }
     return e;
 }
 
@@ -30,6 +40,8 @@ std::string parse_keyword(std::istream &in) {
     return result;
 
 }
+
+
 
 Expr *parse_expr(std::istream &in) {
     Expr *e;
@@ -79,16 +91,16 @@ Expr *parse_addend(std::istream &in) {
 
 Expr *parseVar(std::istream &in) {
     stringstream ss;
-    while (1) {
+    while (true) {
         int c = in.peek();
-        if (c == '_') {
-            consume(in, c);
-            throw ("invalid input");
-        }
         if (isalpha(c)) {
             ss.put(c);
             consume(in, c);
-        } else
+        }
+        else if (c == '_') {
+            throw ("parsevar invalid input");
+        }
+        else
             break;
     }
     return new VarExpr(ss.str());
@@ -98,7 +110,6 @@ Expr *parseLet(std::istream &in) {
     LetExpr *building = new LetExpr("test", 0, 0);
 
     skip_whitespace(in);
-    int c = in.peek();
 
     std::string variableName = "";
     while (1) {
@@ -147,40 +158,6 @@ Expr *parseIf(std::istream &in) {
     return new IfExpr(statement, then, els);
 }
 
-Expr *parse_multicand(std::istream &in) {
-    skip_whitespace(in);
-    int c = in.peek();
-    if ((c == '-') || isdigit(c))
-        return parse_num(in);
-    else if (isalpha(c)) {
-        return parseVar(in);
-    } else if (c == '_') {
-        consume(in, '_');
-        std::string result = parse_keyword(in);
-        if (result == "let") {
-            return parseLet(in);
-        } else if (result == "if") {
-            return parseIf(in);
-        } else if (result == "true") {
-            return new BoolExpr(true);
-        } else if (result == "false") {
-            return new BoolExpr(false);
-        } else {
-            throw runtime_error("did not get a proper command");
-        }
-    } else if (c == '(') {
-        consume(in,'(');
-        Expr *e = parse_expr(in);
-        skip_whitespace(in);
-        c = in.get();
-        if (c != ')')
-            throw std::runtime_error("missing close parenthesis");
-        return e;
-    } else {
-        consume(in, c);
-        throw std::runtime_error("invalid input");
-    }
-}
 
 Expr *parse_num(std::istream &in) {
     long n = 0;
@@ -190,7 +167,7 @@ Expr *parse_num(std::istream &in) {
         negative = true;
         consume(in, '-');
         if (!isdigit(in.peek()) || in.peek() == EOF) {
-            throw std::runtime_error("invalid input");
+            throw std::runtime_error("parse num invalid input");
         }
     }
 
@@ -214,9 +191,6 @@ Expr *parse_num(std::istream &in) {
 }
 
 void skip_whitespace(std::istream &in) {
-    if (in.peek() == 10) {
-        return;
-    }
     while (true) {
         int c = in.peek();
         if (!isspace(c))
@@ -227,7 +201,86 @@ void skip_whitespace(std::istream &in) {
 
 void consume(std::istream &in, int expect) {
     int c = in.get();
+
     if (c != expect)
         throw std::runtime_error("consume mismatch");
+}
+
+Expr* parse_fun(std::istream &in) {
+
+    skip_whitespace(in);
+
+    std::string variableName = "";
+    consume(in, '(');
+    while (1) {
+        int c = in.peek();
+        if (isalpha(c)) {
+            consume(in, c);
+            variableName += c;
+        } else
+            break;
+    }
+    skip_whitespace(in);
+    consume(in, ')');
+    skip_whitespace(in);
+
+    Expr* body = parse_expr(in);
+    skip_whitespace(in);
+
+    return new FunExpr(variableName, body);
+}
+
+
+Expr* parse_inner(std::istream &in) {
+    skip_whitespace(in);
+    int c = in.peek();
+
+    if ((c == '-') || isdigit(c))
+        return parse_num(in);
+    else if (isalpha(c)) {
+        return parseVar(in);
+    } else if (c == '_') {
+        consume(in, '_');
+        std::string result = parse_keyword(in);
+        if (result == "let") {
+            return parseLet(in);
+        } else if (result == "if") {
+            return parseIf(in);
+        } else if (result == "true") {
+            return new BoolExpr(true);
+        } else if (result == "false") {
+            return new BoolExpr(false);
+        }
+        else if (result == "fun") {
+            return parse_fun(in);
+        }
+        else {
+            throw runtime_error("did not get a proper command");
+        }
+    } else if (c == '(') {
+        consume(in,'(');
+        Expr *e = parse_expr(in);
+        skip_whitespace(in);
+        c = in.get();
+        if (c != ')')
+            throw std::runtime_error("missing close parenthesis");
+        return e;
+    } else {
+        consume(in, c);
+        throw std::runtime_error("parse_inner invalid input");
+    }
+}
+
+Expr* parse_multicand(std::istream &in) {
+
+    Expr* expr = parse_inner(in);
+    while (in.peek() == '(') {
+        consume(in, '(');
+        Expr* actual_arg = parse_expr(in);
+        consume(in, ')');
+        expr = new CallExpr(expr,
+                            actual_arg);
+    }
+    return expr;
 }
 

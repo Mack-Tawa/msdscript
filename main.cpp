@@ -23,7 +23,7 @@ int main(int argc, const char * argv[]) {
             Val* result = e->interp();
             std::string resultString = result->to_string();
 
-            std::cout<<endl<<"main reuslt is: "<<resultString<<endl;
+            std::cout<<resultString<<endl;
             exit(0);
         }
         else if (temp == do_print) {

@@ -388,7 +388,9 @@ Expr *LetExpr::subst(std::string variable, Expr *expr) {
 }
 
 Val *LetExpr::interp() {
-    return (this->body->subst(lhs, rhs)->interp());
+    Val* rhs = this->rhs->interp();
+
+    return (this->body->subst(lhs, rhs->toExpr())->interp());
 }
 
 
@@ -608,19 +610,12 @@ CallExpr::CallExpr(Expr* toBeCalledFrom, Expr* actualArg) {
 #include <iostream>
 Val* CallExpr::interp() {
     //need to convert funexpr to a funval
-    std::cout << "In CallExpr:interp()\n";
-    std::cout << "To Be Called: \t'" << toBeCalled->to_string() << "'\n";
-    std::cout << "Actual Arg: \t'"<< actualArg->to_string() << "'\n";
+
 
     Val* temp = this->toBeCalled->interp();
-    std::cout<< "TBC-interp: \t'" << temp->to_string() << "'\n";
+//    std::cout<< "TBC-interp: \t'" << temp->to_string() << "'\n";
     Val* act_arg = actualArg->interp();
-
-    std::cout<< "AA-interp: \t'" << act_arg->to_string() << "'\n";
-
     Val * ret = temp->call(act_arg);
-    std::cout<< "Ret: '" << ret->to_string() << "'\n";
-
     return ret;
 
 

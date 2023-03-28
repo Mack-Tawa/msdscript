@@ -72,7 +72,7 @@ boolVal::boolVal(bool bol) {
 }
 
 Val *boolVal::add_to(Val *other_val) {
-    throw std::runtime_error("trying to add two boolVals dingus");
+    throw std::runtime_error("trying to add a boolVal ya dingus");
 }
 
 Val *boolVal::mult_to(Val *other_val) {

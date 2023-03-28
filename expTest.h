@@ -445,7 +445,7 @@ TEST_CASE ("Let_interp_mine") {
 }
 
 TEST_CASE("Nabil's parse") {
-    CHECK_THROWS_WITH(parse_str("()"), "invalid input");
+    CHECK_THROWS_WITH(parse_str("()"), "parse_inner invalid input");
 
 //
     CHECK(parse_str("(1)")->equals(new NumExpr(1)));
@@ -457,13 +457,13 @@ TEST_CASE("Nabil's parse") {
     CHECK(parse_str("10")->equals(new NumExpr(10)));
     CHECK(parse_str("-3")->equals(new NumExpr(-3)));
     CHECK(parse_str("  \n 5  ")->equals(new NumExpr(5)));
-    CHECK_THROWS_WITH(parse_str("-"), "invalid input");
+    CHECK_THROWS_WITH(parse_str("-"), "parse num invalid input");
 
-    CHECK_THROWS_WITH(parse_str(" -   5  "), "invalid input");
+    CHECK_THROWS_WITH(parse_str(" -   5  "), "parse num invalid input");
     CHECK(parse_str("x")->equals(new VarExpr("x")));
     CHECK(parse_str("xyz")->equals(new VarExpr("xyz")));
     CHECK(parse_str("xYz")->equals(new VarExpr("xYz")));
-    CHECK_THROWS_WITH(parse_str("x_z"), "invalid input");
+    CHECK_THROWS_WITH(parse_str("x_z"), "parsevar invalid input");
 
     CHECK(parse_str("x + y")->equals(new AddExpr(new VarExpr("x"), new VarExpr("y"))));
 
@@ -496,17 +496,6 @@ TEST_CASE("consume") {
     CHECK_THROWS_WITH(consume(ss, 'j'), "consume mismatch");
 }
 
-TEST_CASE("parse") {
-    std::string test = "yeehaw";
-    std::stringstream ss(test);
-
-    ss.put('2');
-    ss.put('+');
-    ss.put('3');
-
-    CHECK((parse(ss))->equals(new AddExpr(new NumExpr(2), new NumExpr(3))));
-
-}
 
 TEST_CASE("pretty_print_let_mine_some_reuse_of_kevin_triple_nested_let againadsf") {
     LetExpr *tripleNestedLet = new LetExpr("x", new NumExpr(1),
@@ -707,7 +696,7 @@ TEST_CASE("BoolExpr tests") {
     CHECK((((new BoolExpr(false))->pretty_print_to_string()) == "_false"));
 }
 
-TEST_CASE("NumVal tests") {
+TEST_CASE("numVal tests") {
     CHECK_THROWS_WITH(((new numVal(5))->add_to(new boolVal(true))), "add of non-number");
     CHECK_THROWS_WITH(((new numVal(5))->mult_to(new boolVal(true))), "mult of non-number");
 
@@ -720,7 +709,7 @@ TEST_CASE("NumVal tests") {
 
 
 TEST_CASE("BoolVal tests") {
-    CHECK_THROWS_WITH(((new boolVal(true))->add_to(new numVal(7))), "trying to add two boolVals dingus");
+    CHECK_THROWS_WITH(((new boolVal(true))->add_to(new numVal(7))), "trying to add a boolVal ya dingus");
     CHECK_THROWS_WITH(((new boolVal(true))->mult_to(new numVal(8))), "trying to mult two boolVals ya poopoo head");
 
     CHECK(((new boolVal(true))->toExpr())->equals(new BoolExpr(true)));
@@ -786,32 +775,32 @@ TEST_CASE("Conditional parse tests") {
         CHECK((((parse_str("(1 + 2) == (3 + 0)"))->interp())->to_string()) == "_true");
         CHECK((((parse_str("1 + 2 == 3 + 0"))->interp())->to_string()) == "_true");
         CHECK_THROWS_WITH(((((parse_str("(1 == 2) + 3 "))->interp())->to_string()) == "_true"),
-                          "trying to add two boolVals dingus");
+                          "trying to add a boolVal ya dingus");
         CHECK((((parse_str("1==2+3"))->interp())->to_string()) == "_false");
         CHECK((((parse_str("_if _false _then 5 _else 6"))->interp())->to_string()) == "6");
         CHECK((((parse_str("_if _false _then _false _else _true"))->interp())->to_string()) == "_true");
         CHECK_THROWS_WITH(((((parse_str("_true + _false"))->interp())->to_string()) == "_false"),
-                          "trying to add two boolVals dingus");
+                          "trying to add a boolVal ya dingus");
         CHECK_THROWS_WITH(((((parse_str("_true + 1"))->interp())->to_string()) == "_false"),
-                          "trying to add two boolVals dingus");
+                          "trying to add a boolVal ya dingus");
         CHECK((((parse_str("_true == _true"))->interp())->to_string()) == "_true");
         CHECK((((parse_str("1 == _true"))->interp())->to_string()) == "_false");
         CHECK_THROWS_WITH(((((parse_str("_if 1 + 2\n"
                                         "_then _false\n"
-                                        "_else _true"))->interp())->to_string()) == "_false"), "consume mismatch");
+                                        "_else _true"))->interp())->to_string()) == "_false"), "invalid argument");
         CHECK((((parse_str("_if _true _then 5 _else _true + 1"))->interp())->to_string()) == "5");
         CHECK_THROWS_WITH(((((parse_str("_if _false\n"
                                         "_then 5\n"
-                                        "_else _true + 1"))->interp())->to_string()) == "_false"), "consume mismatch");
+                                        "_else _true + 1"))->interp())->to_string()) == "_false"), "trying to add a boolVal ya dingus");
 
         CHECK_THROWS_WITH(((((parse_str("_let x = _true + 1\n"
                                         "_in  _if _true\n"
                                         "     _then 5\n"
-                                        "     _else x"))->interp())->to_string()) == "_false"), "consume mismatch");
+                                        "     _else x"))->interp())->to_string()) == "false"), "trying to add a boolVal ya dingus");
         CHECK_THROWS_WITH(((((parse_str("_let x = _true + 1\n"
                                         "_in  _if _true\n"
                                         "     _then 5\n"
-                                        "     _else x"))->interp())->to_string()) == "_false"), "consume mismatch");
+                                        "     _else x"))->interp())->to_string()) == "false"), "trying to add a boolVal ya dingus");
         CHECK((((parse_str("(_if _true _then 5 _else _true) + 1"))
                 ->interp())->to_string()) == "6");
         CHECK((((parse_str("_if (_if 1 == 2 _then _false _else _true) _then 5 _else 6"))
@@ -825,10 +814,10 @@ TEST_CASE("Conditional parse tests") {
         // misspell then and else for parsing
         CHECK_THROWS_WITH(((((parse_str("(_if _true\n"
                                         " _thn 5\n"
-                                        " _else _true) + 1"))->interp())->to_string()) == "6"), "consume mismatch");
+                                        " _else _true) + 1"))->interp())->to_string()) == "6"), "invalid argument for 'then' statement");
         CHECK_THROWS_WITH(((((parse_str("(_if _true\n"
                                         " _then 5\n"
-                                        " _ele _true) + 1"))->interp())->to_string()) == "6"), "consume mismatch");
+                                        " _ele _true) + 1"))->interp())->to_string()) == "6"), "invalid argument for 'else' statement");
         // misspell in for let
         CHECK_THROWS_WITH(((parse_str("_let x = _let y = 6\n"
                                       "         _n  y * 2\n"
@@ -841,7 +830,7 @@ TEST_CASE("Conditional parse tests") {
 TEST_CASE("CallExpr to_string") {
     CHECK((new CallExpr(
             new FunExpr(("x"), new AddExpr(new VarExpr("x"), new NumExpr(1))), new NumExpr(10)))->to_string() ==
-          "test");
+          "_fun (x) (x+1) (10)");
 }
 
 
@@ -854,5 +843,152 @@ TEST_CASE("CallExpr interp") {
             new NumExpr(10)))->interp()->to_string() == "11");
 }
 
+
+TEST_CASE("quiz function vals") {
+    // 1
+    CHECK(parse_str("_let f = _fun (x) x+ 1 \n"
+                                 "_in f(5) ")->interp()->equals(new numVal(6)));
+
+//    // 2
+    CHECK(parse_str("_let f = _fun (x)\n"
+                                 "           7\n"
+                                 "_in f(5)")->interp()->equals(new numVal(7)));
+
+    // 3
+    CHECK(parse_str("_let f = _fun (x)\n"
+                                 "           _true\n"
+                                 "_in f(5) ")->interp()->equals(new boolVal(true)));
+
+    // 4
+    CHECK_THROWS_WITH(parse_str("_let f = _fun (x)\n"
+                                             "           x + _true\n"
+                                             "_in f(5) ")->interp(), "add of non-number");
+
+    // 5
+    CHECK(parse_str("_let f = _fun (x)\n"
+                                 "           x + _true\n"
+                                 "_in 5 + 1 ")->interp()->equals(new numVal(6)));
+
+    // 6
+    CHECK_THROWS_WITH(parse_str("_let f = _fun (x)\n"
+                                             "           7\n"
+                                             "_in  f(5 + _true)")->interp(), "add of non-number");
+
+    // 7
+    CHECK_THROWS_WITH(parse_str("_let f = _fun (x) x+ 1\n"
+                                             "_in f + 5")->interp(),"trying to add two funVals dingus");
+
+    // 8
+    CHECK(parse_str("_let f = _fun (x) x+ 1 \n"
+                                 "_in _if _false\n"
+                                 "    _then f(5)\n"
+                                 "    _else f(6)")->interp()->equals(new numVal(7)));
+
+    // 9
+    CHECK(parse_str("_let f = _fun (x) x+ 1 \n"
+                                 "_in _let g = _fun (y) y+ 2 \n"
+                                 "_in _if _true\n"
+                                 "    _then f(5)\n"
+                                 "    _else g(5)")->interp()->equals(new numVal(6)));
+
+    // 10
+    CHECK(parse_str("_let f = _fun (x) x+ 1 \n"
+                                 "_in _let g = _fun (y) y+ 2 \n"
+                                 "_in f(g(5)) ")->interp()->equals(new numVal(8)));
+
+    // 11
+    CHECK(parse_str("_let f = _fun (x) x+ 1 \n"
+                                 "_in _let g = _fun (y)\n"
+                                 "              f(y + 2)\n"
+                                 "_in g(5) ")->interp()->equals(new numVal(8)));
+
+    // 12
+    CHECK(parse_str("_let f = _fun (x) x+ 1 \n"
+                                 "_in _let g = _fun (x)\n"
+                                 "              f(2) + x\n"
+                                 "_in g(5) ")->interp()->equals(new numVal(8)));
+
+    // 13
+    CHECK_THROWS_WITH(parse_str("_let f = _fun (x) x+ 1 \n"
+                                             "_in f 5 ")->interp(), "Invalid input in parse");
+
+    // 14
+    CHECK(parse_str("_let f = _fun (x) x+ 1 \n"
+                                 "_in (f)(5) ")->interp()->equals(new numVal(6)));
+
+    // 15
+    auto *add_x_1 = new AddExpr(new VarExpr("x"), new NumExpr(1));
+    auto *fun_val_x_add_x_1 = new FunVal("x", add_x_1);
+    CHECK(parse_str("_fun (x) x+ 1 ")->interp()->equals(fun_val_x_add_x_1));
+
+    //16
+    CHECK(parse_str("_let f = _fun (x) x+ 1 \n"
+                                 "_in f ")->interp()->equals(fun_val_x_add_x_1));
+
+    // 17
+    CHECK(parse_str("(_fun (x)\n"
+                                 "   x + 1)(5)")->interp()->equals(new numVal(6)));
+
+    // 18
+    CHECK(parse_str("_let f = _if _false\n"
+                                 "            _then _fun (x)  \n"
+                                 "                        x+ 1 \n"
+                                 "           _else _fun (x)\n"
+                                 "                       x+ 2\n"
+                                 "_in f(5)")->interp()->equals(new numVal(7)));
+
+    // 19
+    CHECK(parse_str("(_if _false \n"
+                                 "  _then _fun (x)\n"
+                                 "            x+ 1\n"
+                                 "   _else _fun (x)\n"
+                                 "                x + 2)(5)")->interp()->equals(new numVal(7)));
+
+    // 20
+    CHECK(parse_str("_let f = _fun (g)\n"
+                                 "           g(5)\n"
+                                 "_in _let g = _fun (y)  \n"
+                                 "             y + 2\n"
+                                 "_in f(g) ")->interp()->equals(new numVal(7)));
+
+    // 21
+    CHECK(parse_str("_let f = _fun (g)\n"
+                                 "           g(5)\n"
+                                 "_in f(_fun (y)\n"
+                                 "        y + 2)")->interp()->equals(new numVal(7)));
+
+    // 22
+    CHECK(parse_str("_let f = _fun (x)\n"
+                                 "           _fun (y)\n"
+                                 "x+ y _in (f(5))(1) ")->interp()->equals(new numVal(6)));
+
+    // 23
+    CHECK(parse_str("_let f = _fun (x)\n"
+                                 "           _fun (y)\n"
+                                 "x+ y _in f(5)(1) ")->interp()->equals(new numVal(6)));
+
+    // 24
+    CHECK(parse_str("_let f = _fun (x)\n"
+                                 "           _fun (g)\n"
+                                 "             g(x + 1)\n"
+                                 "_in _let g = _fun (y)\n"
+                                 "              y+ 2 \n"
+                                 "_in (f(5))(g) ")->interp()->equals(new numVal(8)));
+
+    // 25
+    CHECK(parse_str("_let f = _fun (x)\n"
+                                 "           _fun (g)\n"
+                                 "             g(x + 1)\n"
+                                 "_in _let g = _fun (y)\n"
+                                 "y+ 2 _in f(5)(g)")->interp()->equals(new numVal(8)));
+
+    // 26
+    CHECK(parse_str("_let f = _fun (f)\n"
+                                 "           _fun (x)\n"
+                                 "             _if x == 0\n"
+                                 "             _then 0\n"
+                                 "             _else x + f(f)(x + -1)\n"
+                                 "_in f(f)(3)")->interp()->equals(new numVal(6)));
+}
 
 #endif //MSDSCRIPT_EXPTEST_H
