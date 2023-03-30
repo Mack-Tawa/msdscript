@@ -579,6 +579,7 @@ bool FunExpr::equals(Expr *e) {
 }
 
 Expr* FunExpr::subst(std::string variable, Expr* expr) {
+
     if (formalArg == variable) {
         return this;
     }

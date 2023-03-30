@@ -989,6 +989,8 @@ TEST_CASE("quiz function vals") {
                                  "             _then 0\n"
                                  "             _else x + f(f)(x + -1)\n"
                                  "_in f(f)(3)")->interp()->equals(new numVal(6)));
+    CHECK(parse_str("_let factrl = _fun (factrl) _fun (x) _if x == 1 _then 1 _else x * factrl(factrl)(x + -1) _in  factrl(factrl)(10)")->interp()->to_string() == "3628800");
+
 }
 
 #endif //MSDSCRIPT_EXPTEST_H
