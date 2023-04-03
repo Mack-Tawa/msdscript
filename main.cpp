@@ -7,7 +7,7 @@
 
 
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char *argv[]) {
 
     try {
         run_mode_t temp = use_arguments(argc, const_cast<char **>(argv));
@@ -17,23 +17,23 @@ int main(int argc, const char * argv[]) {
 
         }
         else if (temp == do_interp) {
-            Expr *e = parse_expr(std::cin);
+            PTR(Expr)e = parse_expr(std::cin);
             cout<<endl;
             e->print(std::cout);
-            Val* result = e->interp();
+            PTR(Val) result = e->interp();
             std::string resultString = result->to_string();
 
-            std::cout<<resultString<<endl;
+            std::cout<<endl<<"main reuslt is: "<<resultString<<endl;
             exit(0);
         }
         else if (temp == do_print) {
-            Expr *e = parse_expr(std::cin);
+            PTR(Expr)e = parse_expr(std::cin);
             e->print(std::cout);
             std::cout<<endl;
             exit(0);
         }
         else if( temp == do_pretty_print) {
-            Expr *e = parse_expr(std::cin);
+            PTR(Expr)e = parse_expr(std::cin);
             std::string pp = e->pretty_print_to_string();
             std::cout<<pp<<endl;
             exit(0);

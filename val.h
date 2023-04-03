@@ -4,62 +4,62 @@
 
 #ifndef CLION_BULL_VAL_H
 #define CLION_BULL_VAL_H
-#include <string>
+#include "pointer.h"
 
 
 class Expr;
-class Val {
+CLASS(Val) {
 public:
-    virtual Val * add_to(Val *other_val) = 0;
-    virtual Val * mult_to(Val *other_val) = 0;
-    virtual bool equals(Val *other_val) = 0;
+    virtual PTR(Val) add_to(PTR(Val)other_val) = 0;
+    virtual  PTR(Val) mult_to( PTR(Val)other_val) = 0;
+    virtual bool equals( PTR(Val)other_val) = 0;
     virtual std::string to_string() = 0;
-    virtual Expr* toExpr() = 0;
+    virtual  PTR(Expr) toExpr() = 0;
     virtual bool is_true() = 0;
-    virtual Val* call(Val* actualArg) = 0;
+    virtual  PTR(Val) call( PTR(Val) actualArg) = 0;
 };
 
 class numVal : public Val {
 public:
     int val;
     numVal(int input);
-    bool equals(Val*rhs);
-    Val * add_to(Val *other_val) override;
-    Val *mult_to(Val *other_val) override;
+    bool equals( PTR(Val)rhs);
+     PTR(Val) add_to( PTR(Val)other_val) override;
+     PTR(Val)mult_to( PTR(Val)other_val) override;
     std::string to_string() override;
-    Expr* toExpr() override;
+     PTR(Expr) toExpr() override;
     bool is_true();
-    Val* call(Val* actualArg);
+     PTR(Val) call( PTR(Val) actualArg);
 };
 
 class boolVal : public Val {
 public:
     std::string b = "";
     boolVal(bool bol);
-    bool equals(Val*rhs) override;
-    Val * add_to(Val *other_val) override;
-    Val *mult_to(Val *other_val) override;
+    bool equals( PTR(Val) rhs) override;
+     PTR(Val) add_to( PTR(Val)other_val) override;
+    PTR(Val)mult_to(PTR(Val)other_val) override;
     std::string to_string() override;
-    Expr* toExpr() override;
+    PTR(Expr) toExpr() override;
     bool is_true();
-    Val* call(Val* actualArg);
+    PTR(Val) call(PTR(Val) actualArg);
 };
 
 class FunVal : public Val {
 public:
 //    std::string b = "";
     std::string formalArg;
-    Expr* body;
-    FunVal(std::string formalArg, Expr *body);
+    PTR(Expr) body;
+    FunVal(std::string formalArg, PTR(Expr)body);
 
 
-    bool equals(Val*rhs) override;
-    Val * add_to(Val *other_val) override;
-    Val *mult_to(Val *other_val) override;
+    bool equals(PTR(Val)rhs) override;
+    PTR(Val) add_to(PTR(Val)other_val) override;
+    PTR(Val)mult_to(PTR(Val)other_val) override;
     std::string to_string() override;
-    Expr* toExpr() override;
+    PTR(Expr) toExpr() override;
     bool is_true();
-    Val* call(Val* actualArg);
+    PTR(Val) call(PTR(Val) actualArg);
 };
 
 
