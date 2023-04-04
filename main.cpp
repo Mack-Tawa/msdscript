@@ -3,11 +3,14 @@
 #include "Expr.h"
 #include "Parse.h"
 #include "val.h"
+#include "Env.h"
 
 
 
 
 int main(int argc, const char *argv[]) {
+    PTR(Env) empty = NEW(emptyEnv)();
+
 
     try {
         run_mode_t temp = use_arguments(argc, const_cast<char **>(argv));
@@ -20,7 +23,7 @@ int main(int argc, const char *argv[]) {
             PTR(Expr)e = parse_expr(std::cin);
             cout<<endl;
             e->print(std::cout);
-            PTR(Val) result = e->interp();
+            PTR(Val) result = e->interp(empty);
             std::string resultString = result->to_string();
 
             std::cout<<endl<<"main reuslt is: "<<resultString<<endl;

@@ -6,6 +6,8 @@
 #include <string>
 #include "val.h"
 #include "Expr.h"
+#include "pointer.h"
+#include "Env.h"
 
 bool numVal::equals(PTR(Val)rhs) {
     PTR(numVal)v = CAST(numVal) (rhs);
@@ -63,9 +65,6 @@ std::string numVal::to_string() {
     return output;
 }
 
-PTR(Expr)numVal::toExpr() {
-    return NEW(NumExpr)(this->val);
-}
 
 bool numVal::is_true() {
     throw std::runtime_error("invalid argument");
@@ -98,13 +97,6 @@ std::string boolVal::to_string() {
     return b;
 }
 
-PTR(Expr)boolVal::toExpr() {
-    if (b == "_true") {
-        return NEW(BoolExpr)(true);
-    } else {
-        return NEW(BoolExpr)(false);
-    }
-}
 
 bool boolVal::equals(PTR(Val)rhs) {
     PTR(boolVal)v = CAST(boolVal) (rhs);
@@ -127,9 +119,10 @@ PTR(Val)boolVal::call(PTR(Val)actualArg) {
  *                FunVal                   *
  ********************************************/
 
-FunVal::FunVal(std::string formalArgInput, PTR(Expr)body) {
+FunVal::FunVal(std::string formalArgInput, PTR(Expr)body, PTR(Env) env) {
     this->formalArg = formalArgInput;
     this->body = body;
+    this->env = env;
 }
 
 PTR(Val)FunVal::add_to(PTR(Val)other_val) {
@@ -151,6 +144,7 @@ bool FunVal::equals(PTR(Val)rhs) {
 }
 
 std::string FunVal::to_string() {
+
     std::string output = "_fun (";
     output += formalArg;
     output += ") ";
@@ -158,13 +152,9 @@ std::string FunVal::to_string() {
     return output;
 }
 
-PTR(Expr)FunVal::toExpr() {
-    return NEW(FunExpr)(this->formalArg, this->body);
-}
 
 bool FunVal::is_true() {
     throw std::runtime_error("Trying to use 'is_true' on a funval");
 }
 PTR(Val)FunVal::call(PTR(Val)actualArg) {
-    return this->body->subst(formalArg, actualArg->toExpr())->interp();
-}
+    return body->interp(NEW(ExtendedEnv)(formalArg, actualArg, env));}

@@ -6,13 +6,7 @@
 #include "val.h"
 #include "Expr.h"
 #include "pointer.h"
-//
-//
-//Expr *parse_expr(std::istream &in);
-//Expr *parse_num(std::istream &in);
-//Expr *parse_multicand(std::istream &in);
-//Expr *parse_addend(std::istream &in);
-//
+#include "Env.h"
 
 /**
  * \brief - Returns an expression as a string
@@ -74,7 +68,7 @@ bool NumExpr::equals(PTR(Expr) e) {
  * \brief - Gives the value of the number
  * \return - Returns the value of the number
  */
-PTR(Val)NumExpr::interp() {
+PTR(Val)NumExpr::interp(PTR(Env) env) {
     PTR(numVal) v = NEW(numVal)(this->val);
     return v;
 }
@@ -115,7 +109,6 @@ VarExpr::VarExpr(std::string val) {
     this->val = val;
 }
 
-
 /**
  * \brief - prints the object calling to the stream
  * \param stream - the stream being utilized
@@ -132,7 +125,6 @@ void VarExpr::print(std::ostream &stream) {
 void VarExpr::pretty_print_at(std::ostream &stream, precedence_t prec, std::streampos &sPos, bool needPar) {
     stream << this->val;
 }
-
 
 /**
  * \brief - Returns an expression if the value is the variable, otherwise it returns the VarExpr
@@ -166,8 +158,8 @@ bool VarExpr::equals(PTR(Expr)e) {
  * \brief - throws an exception as there is no value for Vars
  * \return - exception
  */
-PTR(Val)VarExpr::interp() {
-    throw std::runtime_error("no value for variable");
+PTR(Val)VarExpr::interp(PTR(Env) env) {
+    return (env->lookup(this->val));
 }
 
 //**************AddExpr class methods***************
@@ -185,10 +177,9 @@ AddExpr::AddExpr(PTR(Expr)lhs, PTR(Expr)rhs) {
  * \brief - Gives the value of the number at the bottom of the expression
  * \return - Returns the value of the number adding to the other bottom of the expression
  */
-PTR(Val)AddExpr::interp() {
+PTR(Val)AddExpr::interp(PTR(Env) env) {
 
-    return lhs->interp()->add_to(rhs->interp());
-}
+    return lhs->interp(env)->add_to(rhs->interp(env));}
 
 
 /**
@@ -262,8 +253,8 @@ MultExpr::MultExpr(PTR(Expr)lhs, PTR(Expr)rhs) {
  * \brief - Gives the value of the number at the bottom of the expression
  * \return - Returns the value of the number adding to the other bottom of the expression
  */
-PTR(Val)MultExpr::interp() {
-    return this->lhs->interp()->mult_to(this->rhs->interp());
+PTR(Val)MultExpr::interp(PTR(Env) env) {
+    return this->lhs->interp(env)->mult_to(this->rhs->interp(env));
 }
 
 
@@ -388,10 +379,10 @@ PTR(Expr)LetExpr::subst(std::string variable, PTR(Expr)expr) {
     return NEW(LetExpr)(lhs, (rhs->subst(variable, expr)), body->subst(variable, expr));
 }
 
-PTR(Val)LetExpr::interp() {
-    PTR(Val) rhs = this->rhs->interp();
-
-    return (this->body->subst(lhs, rhs->toExpr())->interp());
+PTR(Val)LetExpr::interp(PTR(Env) env) {
+    PTR(Val) rhs_val = rhs->interp(env);
+    PTR(Env) new_env = NEW(ExtendedEnv)(lhs, rhs_val, env);
+    return body->interp(new_env);
 }
 
 
@@ -421,7 +412,7 @@ bool BoolExpr::equals(PTR(Expr)e) {
     }
 }
 
-PTR(Val)BoolExpr::interp() {
+PTR(Val)BoolExpr::interp(PTR(Env) env){
     return NEW(boolVal)(b);
 }
 
@@ -480,10 +471,10 @@ bool IfExpr::equals(PTR(Expr)e) {
     }
 }
 
-PTR(Val)IfExpr::interp() {
-    if (this->test_part->interp()->is_true()) {
-        return this->then_part->interp();
-    } else return this->else_part->interp();
+PTR(Val)IfExpr::interp(PTR(Env) env) {
+    if (this->test_part->interp(env)->is_true()) {
+        return this->then_part->interp(env);
+    } else return this->else_part->interp(env);
 }
 
 PTR(Expr)IfExpr::subst(std::string variable, PTR(Expr)expr) {
@@ -526,8 +517,8 @@ bool EqExpr::equals(PTR(Expr)e) {
     }
 }
 
-PTR(Val) EqExpr::interp() {
-    if (lhs->interp()->equals(rhs->interp())) {
+PTR(Val) EqExpr::interp(PTR(Env) env) {
+    if (lhs->interp(env)->equals(rhs->interp(env))) {
         return NEW(boolVal)(true);
     }
     else {
@@ -566,8 +557,8 @@ FunExpr::FunExpr(std::string formalArg, PTR(Expr) body) {
     this->body = body;
 }
 
-PTR(Val) FunExpr::interp() {
-    return NEW(FunVal)(this->formalArg, this->body);
+PTR(Val) FunExpr::interp(PTR(Env) env) {
+    return NEW(FunVal)(this->formalArg, this->body, env);
 }
 
 bool FunExpr::equals(PTR(Expr)e) {
@@ -609,13 +600,13 @@ CallExpr::CallExpr(PTR(Expr) toBeCalledFrom, PTR(Expr) actualArg) {
     this->toBeCalled = toBeCalledFrom;
     this-> actualArg = actualArg;
 }
-PTR(Val) CallExpr::interp() {
+PTR(Val) CallExpr::interp(PTR(Env) env) {
     //need to convert funexpr to a funval
 
 
-    PTR(Val) temp = this->toBeCalled->interp();
+    PTR(Val) temp = this->toBeCalled->interp(env);
 //    std::cout<< "TBC-interp: \t'" << temp->to_string() << "'\n";
-    PTR(Val) act_arg = actualArg->interp();
+    PTR(Val) act_arg = actualArg->interp(env);
     PTR(Val) ret = temp->call(act_arg);
     return ret;
 
